@@ -1,0 +1,28 @@
+Analysis,Case,PhysicalParameter,ParameterValue,Rho,Objective,Metric,NominalGeometry,ConditionSpecificOptimum
+Task emphasis,"Task emphasis, rho = 0",rho,0,0,Task-oriented design,q_star,2.22218134100936,2.39852707150297
+Task emphasis,"Task emphasis, rho = 0.159558",rho,0.159558261211197,0.159558261211197,Task-oriented design,q_star,1.95747911899159,2.04914479514109
+Task emphasis,"Task emphasis, rho = 0.319117",rho,0.319116522422393,0.319116522422393,Task-oriented design,q_star,1.77185392863963,1.77185392863963
+Task emphasis,"Task emphasis, rho = 0.659558",rho,0.659558261211197,0.659558261211197,Task-oriented design,q_star,1.67897296496768,1.77357820358214
+Task emphasis,"Task emphasis, rho = 1",rho,1,1,Task-oriented design,q_star,2.17500906931665,2.37058773299253
+Actuator capacity,"Actuator upper bound = 0.8",mu_max,0.8,NaN,Task-oriented design,q_star,1.065679808604,1.5292349522308
+Actuator capacity,"Actuator upper bound = 0.9",mu_max,0.9,NaN,Task-oriented design,q_star,1.42044827627135,1.67218553175188
+Actuator capacity,"Actuator upper bound = 1",mu_max,1,NaN,Task-oriented design,q_star,1.77185392863963,1.77185392863963
+Actuator capacity,"Actuator upper bound = 1.1",mu_max,1.1,NaN,Task-oriented design,q_star,1.77185392863963,1.93854403063776
+Actuator capacity,"Actuator upper bound = 1.2",mu_max,1.2,NaN,Task-oriented design,q_star,1.77185392863963,2.09385273352012
+Reaction-moment ratio,"Reaction-moment ratio = 0",kappa,0,NaN,Task-oriented design,q_star,1.75687104051756,1.77873965610471
+Reaction-moment ratio,"Reaction-moment ratio = 0.015",kappa,0.015,NaN,Task-oriented design,q_star,1.76600516886323,1.79833148622078
+Reaction-moment ratio,"Reaction-moment ratio = 0.03",kappa,0.03,NaN,Task-oriented design,q_star,1.77185392863963,1.77185392863963
+Reaction-moment ratio,"Reaction-moment ratio = 0.045",kappa,0.045,NaN,Task-oriented design,q_star,1.77119642455717,1.80065989903952
+Reaction-moment ratio,"Reaction-moment ratio = 0.06",kappa,0.06,NaN,Task-oriented design,q_star,1.77092677560741,1.81401786691617
+Characteristic length,"L = 0.5",L,0.5,NaN,Weakest-gain design,sigma_min,1.40908145373987,1.41413903199924
+Characteristic length,"L = 0.5",L,0.5,NaN,Isotropy design,condition_number,1.98722948488169,1.10124523097496
+Characteristic length,"L = 0.707107",L,0.707106781186547,NaN,Weakest-gain design,sigma_min,1.40908145311447,1.41409527304728
+Characteristic length,"L = 0.707107",L,0.707106781186547,NaN,Isotropy design,condition_number,1.40518542273887,1.04066817891939
+Characteristic length,"L = 1",L,1,NaN,Weakest-gain design,sigma_min,1.40900529773168,1.40900529773168
+Characteristic length,"L = 1",L,1,NaN,Isotropy design,condition_number,1.00659790116273,1.00659790116273
+Characteristic length,"L = 1.414214",L,1.4142135623731,NaN,Weakest-gain design,sigma_min,0.996318623035448,0.999828554650763
+Characteristic length,"L = 1.414214",L,1.4142135623731,NaN,Isotropy design,condition_number,1.42335735829601,1.42334987971967
+Characteristic length,"L = 2",L,2,NaN,Weakest-gain design,sigma_min,0.70450365545577,0.707144686944322
+Characteristic length,"L = 2",L,2,NaN,Isotropy design,condition_number,2.01292905163161,2.01291901352892
+Actuator directionality,"Unidirectional bounds",actuator_bounds,0,NaN,Task-oriented design,q_star,1.77185392863963,1.77185392863963
+Actuator directionality,"Bidirectional bounds",actuator_bounds,1,NaN,Task-oriented design,q_star,1.7752167439387,3.641212947357

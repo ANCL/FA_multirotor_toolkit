@@ -1,0 +1,2 @@
+parameterization,objective,attempted_independent_runs,valid_independent_runs,best_objective_value,median_objective_value,worst_objective_value,absolute_run_spread,relative_run_spread
+planar_shared,sigma_min,1,1,1.24325115818068,1.24325115818068,1.24325115818068,0,0

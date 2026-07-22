@@ -1,0 +1,13 @@
+function validate_pareto_outputs(summary,solver)
+%VALIDATE_PARETO_OUTPUTS Check completeness and feasibility of the front.
+if height(summary) ~= solver.pareto_points || ...
+        numel(unique(summary.threshold_index)) ~= solver.pareto_points
+    error('fa:IncompleteParetoFront', ...
+        'Expected one selected solution for each threshold.');
+end
+if any(~isfinite(summary.constraint_violation)) || ...
+        any(summary.constraint_violation > solver.constraint_tolerance)
+    error('fa:InvalidParetoSolution', ...
+        'A trade-off point violates constraints.');
+end
+end

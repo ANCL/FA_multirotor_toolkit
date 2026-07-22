@@ -1,0 +1,11 @@
+case_name,kappa,design,minus_q
+kappa_0,0,Nominal geometry,-1.75687104051756
+kappa_0p015,0.015,Nominal geometry,-1.76600516886323
+kappa_0p03,0.03,Nominal geometry,-1.77185392863963
+kappa_0p045,0.045,Nominal geometry,-1.77119642455717
+kappa_0p06,0.06,Nominal geometry,-1.77092677560741
+kappa_0,0,Condition-specific optimum,-1.77873965610471
+kappa_0p015,0.015,Condition-specific optimum,-1.79833148622078
+kappa_0p03,0.03,Condition-specific optimum,-1.77185392863963
+kappa_0p045,0.045,Condition-specific optimum,-1.80065989903952
+kappa_0p06,0.06,Condition-specific optimum,-1.81401786691617

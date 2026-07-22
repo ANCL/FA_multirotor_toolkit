@@ -1,0 +1,2 @@
+CaseName,Parameterization,Objective,NormalizationCase,Seed,Valid,SelectedSolver,ObjectiveValue,ForceAuthority,SigmaMin,ConditionNumber,HoverEffort,TaskScale,MaximumConstraintViolation,ElapsedSeconds
+example_planar_shared_condition_number_optimization_planar_shared_condition_number_n0_run_01,planar_shared,condition_number,0,2090537767,1,ga,1.3730248835767,0.457867772078749,1.2427382416394,1.3730248835767,0.343500569413704,0.839558213902362,0,1.6544352

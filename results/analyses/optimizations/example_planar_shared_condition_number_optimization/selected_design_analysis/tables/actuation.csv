@@ -1,0 +1,2 @@
+NumberOfRotors,RankA,RankAf,RankAtau,AlgebraicallyFullRank,SigmaMin,ConditionNumber,LengthScale,SigmaThreshold,NumericallyFullyActuated,HoverStatus,HoverFeasible,HoverEffort,HoverSaturationMargin,ForceSetDimension,MomentSetDimension,ZeroMomentForceSetDimension,ZeroMomentForceAuthority,HoverForceInsideF0,TaskScale,TaskScaleValid,TaskVerticesVerified
+6,6,3,3,1,1.2427382416394,1.3730248835767,1,0.0001,1,feasible_unique,1,0.343500569413704,0.23926992059656,3,3,3,0.457867772078749,1,0.839558213902362,1,1

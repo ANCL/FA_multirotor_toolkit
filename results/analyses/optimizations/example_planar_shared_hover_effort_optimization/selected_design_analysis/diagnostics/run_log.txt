@@ -1,0 +1,17 @@
+
+Run opened: 2026-07-22 04:27:37
+Log: \\silver\home\mohssene\Fully Actuated\Codes\FA_multirotor_toolkit\results\analyses\optimizations\example_planar_shared_hover_effort_optimization\selected_design_analysis\diagnostics\run_log.txt
+============================================================
+CONFIGURATION ANALYSIS - EXAMPLE_PLANAR_SHARED_HOVER_EFFORT_OPTIMIZATION SELECTED DESIGN
+Cases: 1 total | 0 completed | 1 remaining
+============================================================
+
+[1/1] Model, metrics, and feasible sets
+Completed 1/1 | completed | rank(A)=6, sigma_min=0.000125274, hover=feasible_unique | 4.7 s | ETA 0.0 s
+
+============================================================
+CONFIGURATION ANALYSIS COMPLETED
+Completed: 1/1 | resumed: 0 | new valid: 1 | new invalid: 0
+Runtime: 5.2 s
+============================================================
+Run closed: 2026-07-22 04:27:42

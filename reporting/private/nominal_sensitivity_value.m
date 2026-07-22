@@ -1,0 +1,9 @@
+function value = nominal_sensitivity_value(T,analysis,case_name,design_name,metric)
+%NOMINAL_SENSITIVITY_VALUE Read one nominal-geometry sensitivity value.
+rows = string(T.analysis)==string(analysis) & ...
+    string(T.case_name)==string(case_name) & ...
+    string(T.design_name)==string(design_name);
+values = T.(metric);
+value = unique_reporting_scalar(values(rows), ...
+    sprintf('nominal %s/%s/%s',analysis,case_name,design_name));
+end

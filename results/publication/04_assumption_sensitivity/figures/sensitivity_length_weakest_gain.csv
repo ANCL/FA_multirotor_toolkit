@@ -1,0 +1,11 @@
+case_name,L,design,minus_sigma_min
+L_0p5,0.5,Nominal geometry,-1.40908145373987
+L_0p707107,0.707106781186547,Nominal geometry,-1.40908145311447
+L_1,1,Nominal geometry,-1.40900529773168
+L_1p414214,1.4142135623731,Nominal geometry,-0.996318623035448
+L_2,2,Nominal geometry,-0.70450365545577
+L_0p5,0.5,Condition-specific optimum,-1.41413903199924
+L_0p707107,0.707106781186547,Condition-specific optimum,-1.41409527304728
+L_1,1,Condition-specific optimum,-1.40900529773168
+L_1p414214,1.4142135623731,Condition-specific optimum,-0.999828554650763
+L_2,2,Condition-specific optimum,-0.707144686944322

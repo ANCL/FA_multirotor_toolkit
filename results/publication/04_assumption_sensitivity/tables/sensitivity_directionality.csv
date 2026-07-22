@@ -1,0 +1,3 @@
+Case,ActuatorBounds,NominalGeometry,ConditionSpecificOptimum
+Unidirectional bounds,0 <= mu_i <= 1,1.77185392863963,1.77185392863963
+Bidirectional bounds,-1 <= mu_i <= 1,1.7752167439387,3.641212947357

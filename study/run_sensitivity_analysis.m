@@ -1,0 +1,329 @@
+function output = run_sensitivity_analysis()
+%RUN_SENSITIVITY_ANALYSIS Physical sensitivity with case-level resume.
+% Removing only results/current/04_sensitivity starts a clean sensitivity
+% run and resets only its checkpoint store. Once that folder exists, an
+% interrupted run resumes compatible missing cases without touching others.
+
+[root,parameters,solver,runtime,cleanup] = begin_stage('sensitivity'); %#ok<NASGU>
+try
+    folders = output_folders(root);
+    source_file = fullfile(folders.designs,'rotorwise_selected_designs.mat');
+    if ~isfile(source_file)
+        error('fa:MissingStage01','Run the design-comparison study first.');
+    end
+    design_provenance = assert_compatible_result( ...
+        source_file,'design_comparison',parameters,solver);
+    source = load(source_file,'selected');
+    selected = source.selected;
+
+    plan = sensitivity_case_plan(parameters,solver,selected);
+    provenance = study_provenance('sensitivity',parameters,solver, ...
+        plan.provenance,design_provenance);
+
+    stage_folder = folders.sensitivity;
+    checkpoint_folder = fullfile(ensure_folder(folders.checkpoints), ...
+        '04_sensitivity');
+    clean_start = ~isfolder(stage_folder);
+    if clean_start && isfolder(checkpoint_folder)
+        [ok,message] = rmdir(checkpoint_folder,'s');
+        if ~ok
+            error('fa:SensitivityCheckpointReset', ...
+                'Could not reset %s: %s',checkpoint_folder,message);
+        end
+    end
+    stage_folder = ensure_folder(stage_folder);
+    store = open_case_store(checkpoint_folder,'sensitivity');
+    require_current_sensitivity_store(store,plan.specifications);
+
+    statuses = arrayfun(@(x) optimization_case_status(store,x), ...
+        plan.specifications);
+    incompatible = statuses(string({statuses.state}) == "incompatible");
+    if ~isempty(incompatible)
+        first = incompatible(1);
+        error('fa:IncompatibleSensitivityCheckpoint', ...
+            ['Incompatible sensitivity checkpoint for case %s.\n' ...
+             'Mismatching component(s): %s\n' ...
+             'Remove results/current/04_sensitivity and rerun to start ' ...
+             'the sensitivity study cleanly. Affected file: %s'], ...
+            char(first.case_name),strjoin(cellstr(first.mismatches),', '), ...
+            char(first.path));
+    end
+    resumed = sum([statuses.compatible]);
+    total_cases = plan.fixed_evaluation_count+plan.optimization_case_count;
+    logger = study_log('stage_start','Stage 04','Sensitivity studies', ...
+        total_cases,resumed);
+
+    %% Nominal-geometry evaluations
+    rows = empty_nominal_rows();
+    for case_index = 1:numel(plan.fixed_cases)
+        [rows,logger] = append_nominal_evaluations( ...
+            rows,logger,selected,plan.fixed_cases(case_index),solver);
+    end
+    nominal_summary = struct2table(rows);
+    if height(nominal_summary) ~= plan.expected_summary_rows
+        error('fa:IncompleteNominalSensitivity', ...
+            'Expected %d nominal rows, but obtained %d.', ...
+            plan.expected_summary_rows,height(nominal_summary));
+    end
+    save(fullfile(stage_folder,'nominal_geometry_sensitivity_raw.mat'), ...
+        'nominal_summary','rows','parameters','solver','provenance','-v7.3');
+    write_table_bundle(nominal_summary,stage_folder, ...
+        'nominal_geometry_sensitivity');
+
+    %% Condition-specific optima
+    [condition_specific_results,logger,runtime] = run_optimization_cases( ...
+        plan.specifications,store,logger,solver,runtime);
+    condition_specific_summary = summarize_condition_specific_results( ...
+        condition_specific_results,plan.optimization_groups, ...
+        plan.baseline_cases,selected);
+    expected_summary_rows = plan.optimization_group_count+ ...
+        plan.baseline_result_count;
+    if height(condition_specific_summary) ~= expected_summary_rows
+        error('fa:IncompleteSensitivityOptimization', ...
+            ['Expected %d condition-specific sensitivity rows, but obtained %d. ' ...
+             'No valid selected result was found for one or more cases.'], ...
+            expected_summary_rows,height(condition_specific_summary));
+    end
+    condition_specific_repeatability = ...
+        assess_condition_specific_repeatability(condition_specific_results);
+    expected_cases = {plan.specifications.case_name}.';
+    save(fullfile(stage_folder,'condition_specific_sensitivity.mat'), ...
+        'condition_specific_results','condition_specific_summary', ...
+        'condition_specific_repeatability','expected_cases', ...
+        'parameters','solver','provenance','-v7.3');
+    validate_optimization_result_set( ...
+        fullfile(stage_folder,'condition_specific_sensitivity.mat'));
+    write_table_bundle(condition_specific_summary,stage_folder, ...
+        'condition_specific_sensitivity_summary');
+    write_table_bundle(condition_specific_repeatability,stage_folder, ...
+        'condition_specific_repeatability');
+    write_table_bundle(optimization_run_table(condition_specific_results), ...
+        stage_folder,'condition_specific_design_runs');
+
+    output = struct('nominal_geometry_summary',nominal_summary, ...
+        'condition_specific_results',condition_specific_results, ...
+        'condition_specific_summary',condition_specific_summary, ...
+        'condition_specific_repeatability',condition_specific_repeatability, ...
+        'plan',plan,'folder',stage_folder);
+    study_log('stage_finish',logger);
+catch ME
+    study_log('error',ME);
+    rethrow(ME);
+end
+end
+
+function require_current_sensitivity_store(store,specifications)
+listing = dir(fullfile(store.case_folder,'*.mat'));
+if isempty(listing), return; end
+expected = string({specifications.case_name})+".mat";
+actual = string({listing.name});
+unknown = actual(~ismember(actual,expected));
+if ~isempty(unknown)
+    error('fa:UnexpectedSensitivityCheckpoint', ...
+        ['The sensitivity checkpoint folder contains %d case(s) outside ' ...
+         'the current physical plan. Remove results/current/04_sensitivity ' ...
+         'and rerun; the runner will reset only the sensitivity checkpoints. ' ...
+         'Example: %s'],numel(unknown),char(unknown(1)));
+end
+end
+
+function [rows,logger] = append_nominal_evaluations( ...
+    rows,logger,designs,case_spec,solver)
+for objective_index = 1:numel(case_spec.objectives)
+    objective = case_spec.objectives{objective_index};
+    design = designs(strcmp({designs.name},objective));
+    if numel(design) ~= 1
+        error('fa:MissingSensitivityBaseline', ...
+            'Expected one selected nominal geometry for objective %s.',objective);
+    end
+    description = sprintf('%s | %s | Nominal geometry | objective %s', ...
+        case_spec.analysis,case_spec.case_id,objective);
+    study_log('case_start',logger.completed+1,logger.total,description);
+    case_timer = tic;
+    metrics = evaluate_design(design.geometry,case_spec.parameters,solver);
+    if isfield(metrics,'internal_error_identifier') && ...
+            ~isempty(metrics.internal_error_identifier)
+        error(metrics.internal_error_identifier,'%s',metrics.failure_reason);
+    end
+    rows(end+1) = nominal_row(case_spec,objective,design.name,metrics); %#ok<AGROW>
+    detail = sprintf('q_star %.8g | r_F0 %.8g',metrics.q_star,metrics.r_F0);
+    logger = study_log('case_complete',logger,metrics.valid,detail,toc(case_timer));
+end
+end
+
+function row = nominal_row(case_spec,objective,design_name,metrics)
+lambda = case_spec.task_diagonal(:);
+row = struct('analysis',string(case_spec.analysis), ...
+    'case_name',string(case_spec.case_id), ...
+    'physical_parameter',string(case_spec.physical_parameter), ...
+    'parameter_value',case_spec.physical_value,'rho',case_spec.rho, ...
+    'lambda_Fx',lambda(1),'lambda_Fy',lambda(2),'lambda_Fz',lambda(3), ...
+    'lambda_Mx',lambda(4),'lambda_My',lambda(5),'lambda_Mz',lambda(6), ...
+    'objective',string(objective),'design_name',string(design_name), ...
+    'geometry_role',"Nominal geometry", ...
+    'r_F0',metrics.r_F0,'sigma_min',metrics.sigma_min, ...
+    'condition_number',metrics.condition_number, ...
+    'hover_effort',metrics.hover_effort,'q_star',metrics.q_star, ...
+    'task_feasible',metrics.task_feasible,'valid',metrics.valid);
+end
+
+function rows = empty_nominal_rows()
+rows = struct('analysis',{},'case_name',{},'physical_parameter',{}, ...
+    'parameter_value',{},'rho',{},'lambda_Fx',{},'lambda_Fy',{}, ...
+    'lambda_Fz',{},'lambda_Mx',{},'lambda_My',{},'lambda_Mz',{}, ...
+    'objective',{},'design_name',{},'geometry_role',{},'r_F0',{}, ...
+    'sigma_min',{},'condition_number',{},'hover_effort',{},'q_star',{}, ...
+    'task_feasible',{},'valid',{});
+end
+
+function summary = summarize_condition_specific_results( ...
+    results,groups,baseline_cases,selected)
+rows = repmat(condition_specific_row_template(),0,1);
+for baseline_index = 1:numel(baseline_cases)
+    item = baseline_cases(baseline_index);
+    for objective_index = 1:numel(item.objectives)
+        objective = item.objectives{objective_index};
+        design = selected(strcmp({selected.name},objective));
+        if numel(design) ~= 1
+            error('fa:MissingSensitivityBaseline', ...
+                'Expected one nominal selected design for %s.',objective);
+        end
+        rows(end+1) = condition_specific_row_from_metrics( ... %#ok<AGROW>
+            item,objective,design.optimization_result.metrics, ...
+            design.optimization_result.normalization_case, ...
+            design.optimization_result.seed, ...
+            design.optimization_result.elapsed_seconds,"baseline");
+    end
+end
+for group_index = 1:numel(groups)
+    group = groups(group_index);
+    for objective_index = 1:numel(group.objectives)
+        objective = group.objectives{objective_index};
+        mask = arrayfun(@(x) result_matches(x,group.case_id,objective),results);
+        candidates = results(mask & [results.valid]);
+        if isempty(candidates), continue; end
+        [~,best_index] = min([candidates.objective_value]);
+        best = candidates(best_index);
+        rows(end+1) = condition_specific_row_from_metrics( ... %#ok<AGROW>
+            group,objective,best.metrics,best.normalization_case,best.seed, ...
+            best.elapsed_seconds,"checkpoint");
+    end
+end
+summary = struct2table(rows);
+end
+
+function yes = result_matches(result,case_id,objective)
+yes = strcmp(result.objective_name,objective) && ...
+    isfield(result,'context') && isfield(result.context,'sensitivity_case') && ...
+    strcmp(char(string(result.context.sensitivity_case)),case_id);
+end
+
+function row = condition_specific_row_from_metrics( ...
+    item,objective,metrics,normalization_case,seed,elapsed_seconds,source)
+lambda = item.task_diagonal(:);
+row = struct('analysis',string(item.analysis), ...
+    'case_name',string(item.case_id), ...
+    'physical_parameter',string(item.physical_parameter), ...
+    'parameter_value',item.physical_value,'rho',item.rho, ...
+    'lambda_Fx',lambda(1),'lambda_Fy',lambda(2),'lambda_Fz',lambda(3), ...
+    'lambda_Mx',lambda(4),'lambda_My',lambda(5),'lambda_Mz',lambda(6), ...
+    'objective',string(objective), ...
+    'geometry_role',"Condition-specific optimum", ...
+    'r_F0',metrics.r_F0,'sigma_min',metrics.sigma_min, ...
+    'condition_number',metrics.condition_number, ...
+    'hover_effort',metrics.hover_effort,'q_star',metrics.q_star, ...
+    'task_feasible',metrics.task_feasible,'valid',metrics.valid, ...
+    'normalization_case',normalization_case,'seed',seed, ...
+    'elapsed_seconds',elapsed_seconds,'source',string(source));
+end
+
+function row = condition_specific_row_template()
+row = struct('analysis',"",'case_name',"",'physical_parameter',"", ...
+    'parameter_value',NaN,'rho',NaN,'lambda_Fx',NaN,'lambda_Fy',NaN, ...
+    'lambda_Fz',NaN,'lambda_Mx',NaN,'lambda_My',NaN,'lambda_Mz',NaN, ...
+    'objective',"",'geometry_role',"Condition-specific optimum", ...
+    'r_F0',NaN,'sigma_min',NaN,'condition_number',NaN, ...
+    'hover_effort',NaN,'q_star',NaN,'task_feasible',false,'valid',false, ...
+    'normalization_case',NaN,'seed',NaN,'elapsed_seconds',NaN,'source',"");
+end
+
+function summary = assess_condition_specific_repeatability(results)
+%ASSESS_CONDITION_SPECIFIC_REPEATABILITY Descriptive spread across repeats.
+if isempty(results), summary = table(); return; end
+keys = sensitivity_keys(results);
+unique_keys = unique(keys,'stable');
+rows = repmat(repeatability_row_template(),numel(unique_keys),1);
+for k = 1:numel(unique_keys)
+    subset = results(keys == unique_keys(k));
+    repeat_number = nan(numel(subset),1);
+    for j = 1:numel(subset)
+        token = regexp(subset(j).case_name,'_run_(\d+)$','tokens','once');
+        if ~isempty(token), repeat_number(j) = str2double(token{1}); end
+    end
+    attempted_ids = unique(repeat_number(isfinite(repeat_number)));
+    valid_ids = unique(repeat_number(isfinite(repeat_number) & [subset.valid].'));
+    values = nan(numel(valid_ids),1);
+    for j = 1:numel(valid_ids)
+        candidates = subset(repeat_number == valid_ids(j) & [subset.valid].');
+        [~,best_index] = min([candidates.objective_value]);
+        values(j) = scientific_value(candidates(best_index));
+    end
+    rows(k) = make_repeatability_row( ...
+        subset(1),numel(attempted_ids),numel(valid_ids),values);
+end
+summary = struct2table(rows);
+end
+
+function keys = sensitivity_keys(results)
+keys = strings(numel(results),1);
+for k = 1:numel(results)
+    case_name = "unknown";
+    if isfield(results(k).context,'sensitivity_case')
+        case_name = string(results(k).context.sensitivity_case);
+    end
+    keys(k) = case_name+"|"+string(results(k).objective_name);
+end
+end
+
+function row = repeatability_row_template()
+row = struct('sensitivity_case',"",'objective',"", ...
+    'attempted_independent_runs',0,'valid_independent_runs',0, ...
+    'best_objective_value',NaN,'median_objective_value',NaN, ...
+    'worst_objective_value',NaN,'absolute_run_spread',NaN, ...
+    'relative_run_spread',NaN);
+end
+
+function row = make_repeatability_row(first,attempted,valid,values)
+values = values(isfinite(values));
+if is_maximized(first.objective_name)
+    values = sort(values,'descend');
+else
+    values = sort(values,'ascend');
+end
+if isempty(values)
+    best = NaN; med = NaN; worst = NaN; spread = NaN; relative = NaN;
+else
+    best = values(1); med = median(values); worst = values(end);
+    spread = abs(worst-best); relative = spread/max(abs(best),eps);
+end
+row = struct('sensitivity_case',string(first.context.sensitivity_case), ...
+    'objective',string(first.objective_name), ...
+    'attempted_independent_runs',attempted,'valid_independent_runs',valid, ...
+    'best_objective_value',best,'median_objective_value',med, ...
+    'worst_objective_value',worst,'absolute_run_spread',spread, ...
+    'relative_run_spread',relative);
+end
+
+function value = scientific_value(result)
+name = char(string(result.objective_name));
+if isstruct(result.metrics) && isfield(result.metrics,name)
+    value = result.metrics.(name);
+else
+    value = result.objective_value;
+    if is_maximized(name), value = -value; end
+end
+end
+
+function yes = is_maximized(objective)
+yes = ismember(char(string(objective)),{'r_F0','sigma_min','q_star'});
+end

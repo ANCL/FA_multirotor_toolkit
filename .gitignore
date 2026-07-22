@@ -1,0 +1,61 @@
+
+# MATLAB temporary and autosave files
+
+*.asv
+
+*.m~
+
+*.autosave
+
+*.slxc
+
+
+
+# MATLAB generated folders
+
+slprj/
+
+codegen/
+
+
+
+# Compiled MATLAB files
+
+*.mexw64
+
+
+
+# Operating-system files
+
+.DS_Store
+
+Thumbs.db
+
+desktop.ini
+
+
+
+# Editor settings
+
+.vscode/
+
+.idea/
+
+
+
+# Temporary files
+
+*.tmp
+
+*.temp
+
+~$*
+
+
+
+# Large generated numerical datasets
+
+/results/current/
+**/checkpoints/
+
+

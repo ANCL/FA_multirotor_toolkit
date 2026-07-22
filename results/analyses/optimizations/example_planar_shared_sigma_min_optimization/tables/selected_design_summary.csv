@@ -1,0 +1,2 @@
+CaseName,Parameterization,Objective,NormalizationCase,Seed,Valid,SelectedSolver,ObjectiveValue,ForceAuthority,SigmaMin,ConditionNumber,HoverEffort,TaskScale,MaximumConstraintViolation,ElapsedSeconds
+example_planar_shared_sigma_min_optimization_planar_shared_sigma_min_n0_run_01,planar_shared,sigma_min,0,2083571500,1,ga,1.24325115818068,0.458176321799014,1.24325115818068,1.37306108702687,0.343802327484221,0.839999564673262,0,1.5116316

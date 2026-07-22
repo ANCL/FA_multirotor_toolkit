@@ -1,0 +1,11 @@
+case_name,mu_max,design,minus_q
+mu_max_0p8,0.8,Nominal geometry,-1.065679808604
+mu_max_0p9,0.9,Nominal geometry,-1.42044827627135
+mu_max_1,1,Nominal geometry,-1.77185392863963
+mu_max_1p1,1.1,Nominal geometry,-1.77185392863963
+mu_max_1p2,1.2,Nominal geometry,-1.77185392863963
+mu_max_0p8,0.8,Condition-specific optimum,-1.5292349522308
+mu_max_0p9,0.9,Condition-specific optimum,-1.67218553175188
+mu_max_1,1,Condition-specific optimum,-1.77185392863963
+mu_max_1p1,1.1,Condition-specific optimum,-1.93854403063776
+mu_max_1p2,1.2,Condition-specific optimum,-2.09385273352012

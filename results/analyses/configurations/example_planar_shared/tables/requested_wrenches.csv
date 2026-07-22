@@ -1,0 +1,5 @@
+Name,F_x,F_y,F_z,tau_x,tau_y,tau_z,Status,Feasible,ScaledError,SaturationMargin
+forward_force,0.12,0,-1,0,0,0,feasible_unique,1,1.28322644239085e-16,0.124973412753735
+lateral_force,0,0.12,-1,0,0,0,feasible_unique,1,7.72682523912663e-17,0.154466194006066
+yaw_moment,0,0,-1,0,0,0.03,feasible_unique,1,1.84762302064744e-16,0.18470812610325
+combined_wrench,0.08,-0.06,-1,0.02,0,0.015,feasible_unique,1,1.42247325030098e-16,0.147152812224244

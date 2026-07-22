@@ -1,0 +1,11 @@
+case_name,rho,design,minus_q
+task_rho_0,0,Nominal geometry,-2.22218134100936
+task_rho_0p159558,0.159558261211197,Nominal geometry,-1.95747911899159
+task_rho_0p319117,0.319116522422393,Nominal geometry,-1.77185392863963
+task_rho_0p659558,0.659558261211197,Nominal geometry,-1.67897296496768
+task_rho_1,1,Nominal geometry,-2.17500906931665
+task_rho_0,0,Condition-specific optimum,-2.39852707150297
+task_rho_0p159558,0.159558261211197,Condition-specific optimum,-2.04914479514109
+task_rho_0p319117,0.319116522422393,Condition-specific optimum,-1.77185392863963
+task_rho_0p659558,0.659558261211197,Condition-specific optimum,-1.77357820358214
+task_rho_1,1,Condition-specific optimum,-2.37058773299253

@@ -1,0 +1,57 @@
+
+Run opened: 2026-07-22 04:02:25
+Log: \\silver\home\mohssene\Fully Actuated\Codes\FA_multirotor_toolkit\results\preflight\run_log.txt
+Execution mode: parallel case execution with 10 workers.
+============================================================
+PREFLIGHT - REDUCED PRODUCTION-PATH RUN
+Cases: 8 total | 0 completed | 8 remaining
+============================================================
+Candidate selection, rotor-wise coordinate round trips, and P2/P3 nesting in P1 verified.
+Parallel case execution: 10 workers.
+[1/8] Started | Rotor-wise geometry | r_F0 | queue and checkpoint path
+Completed 1/8 | Rotor-wise geometry | r_F0 | queue and checkpoint path | r_F0 = 0.28309625 | feasible | 2.8 s | ETA 2.7 s
+
+[2/8] Planar shared geometry | q_star
+  Starting global optimization...
+  GA generation 1/5 | 0.9 s
+  Starting local refinement 1/1...
+  Local refinement 1 completed | q_star 1.1218216
+Completed 2/8 | q_star = 1.1218216 | feasible | 1.5 s | ETA 1.6 s
+
+[3/8] Spatial C3 geometry | sigma_min
+  Starting global optimization...
+  GA generation 1/5 | 0.2 s
+  Starting local refinement 1/1...
+  Local refinement 1 completed | sigma_min 1.3754603
+Completed 3/8 | sigma_min = 1.3754603 | feasible | 0.6 s | ETA 1.0 s
+
+[4/8] Rotor-wise geometry | authority-effort Pareto case
+  Starting global optimization...
+  GA generation 1/5 | 0.1 s
+  Starting local refinement 1/1...
+  Local refinement 1 completed | hover_effort 0.19444444
+Completed 4/8 | hover_effort = 0.19444444 | feasible | 0.5 s | ETA 0.6 s
+
+[5/8] Nominal geometry | characteristic-length sensitivity
+Completed 5/8 | completed | q_star 0.5380476 | r_F0 0.28309625 | 0.0 s | ETA 0.4 s
+
+[6/8] Rotor-wise geometry | sensitivity optimization
+  Starting global optimization...
+  GA generation 1/5 | 0.1 s
+  Starting local refinement 1/1...
+  Local refinement 1 completed | q_star 0.59530311
+Completed 6/8 | q_star = 0.59530311 | feasible | 0.4 s | ETA 0.2 s
+Parallel case execution: 10 workers.
+[7/8] Started | Robustness queue | three position perturbations
+Completed 7/8 | completed | Robustness queue | three position perturbations | 3 trials | valid 3 | task-feasible 0 | 0.0 s | ETA 0.1 s
+
+[8/8] Save, reload, table, figure, and restart verification
+Completed 8/8 | completed | all outputs reloaded and written | 5.5 s | ETA 0.0 s
+
+============================================================
+PREFLIGHT COMPLETED
+Completed: 8/8 | resumed: 0 | new valid: 8 | new invalid: 0
+Runtime: 15.3 s
+============================================================
+PREFLIGHT PASSED - targeted numerical commands are enabled.
+Run closed: 2026-07-22 04:03:01

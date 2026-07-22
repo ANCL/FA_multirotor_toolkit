@@ -1,0 +1,11 @@
+case_name,L,design,condition_number
+L_0p5,0.5,Nominal geometry,1.98722948488169
+L_0p707107,0.707106781186547,Nominal geometry,1.40518542273887
+L_1,1,Nominal geometry,1.00659790116273
+L_1p414214,1.4142135623731,Nominal geometry,1.42335735829601
+L_2,2,Nominal geometry,2.01292905163161
+L_0p5,0.5,Condition-specific optimum,1.10124523097496
+L_0p707107,0.707106781186547,Condition-specific optimum,1.04066817891939
+L_1,1,Condition-specific optimum,1.00659790116273
+L_1p414214,1.4142135623731,Condition-specific optimum,1.42334987971967
+L_2,2,Condition-specific optimum,2.01291901352892
