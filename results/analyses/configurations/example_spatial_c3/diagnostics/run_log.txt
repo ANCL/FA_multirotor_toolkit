@@ -1,5 +1,5 @@
 
-Run opened: 2026-07-22 04:28:07
+Run opened: 2026-07-23 16:16:47
 Log: \\silver\home\mohssene\Fully Actuated\Codes\FA_multirotor_toolkit\results\analyses\configurations\example_spatial_c3\diagnostics\run_log.txt
 ============================================================
 CONFIGURATION ANALYSIS - EXAMPLE_SPATIAL_C3
@@ -7,11 +7,11 @@ Cases: 1 total | 0 completed | 1 remaining
 ============================================================
 
 [1/1] Model, metrics, and feasible sets
-Completed 1/1 | completed | rank(A)=6, sigma_min=1.22712, hover=feasible_unique | 4.6 s | ETA 0.0 s
+Completed 1/1 | completed | rank(A)=6, sigma_min=1.22712, hover=feasible_unique | 4.7 s | ETA 0.0 s
 
 ============================================================
 CONFIGURATION ANALYSIS COMPLETED
 Completed: 1/1 | resumed: 0 | new valid: 1 | new invalid: 0
-Runtime: 4.9 s
+Runtime: 5.1 s
 ============================================================
-Run closed: 2026-07-22 04:28:12
+Run closed: 2026-07-23 16:16:52

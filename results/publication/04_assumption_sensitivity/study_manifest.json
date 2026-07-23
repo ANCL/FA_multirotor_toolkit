@@ -2,7 +2,7 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "sensitivity",
   "output_title": "Study 4: Assumption sensitivity",
-  "created_at": "2026-07-22T04:18:23***",
+  "created_at": "2026-07-23T16:14:07***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "8209ce1d90a481d7",
@@ -42,11 +42,11 @@
     },
     {
       "path": "inputs\\study_settings.m",
-      "hash": "927ce7f88457c674"
+      "hash": "ddcc957d09d66283"
     },
     {
       "path": "analyses\\analyze_configuration.m",
-      "hash": "f8b40ba76cb3780d"
+      "hash": "981fe666bbed3cd8"
     },
     {
       "path": "analyses\\analyze_feasible_sets.m",
@@ -166,7 +166,7 @@
     },
     {
       "path": "reporting\\private\\generate_sensitivity_outputs.m",
-      "hash": "0113fe65c70579e3"
+      "hash": "a0054f833124bcff"
     },
     {
       "path": "reporting\\private\\load_result_table.m",
@@ -226,7 +226,7 @@
     },
     {
       "path": "reporting\\private\\sensitivity_plot_table.m",
-      "hash": "222309eb7dcec619"
+      "hash": "5b5948ddf62395d5"
     },
     {
       "path": "reporting\\private\\sensitivity_summary_table.m",
@@ -482,7 +482,7 @@
     },
     {
       "path": "core\\plotting\\plot_sensitivity_comparison.m",
-      "hash": "578e5d97f8467bb7"
+      "hash": "8f75a03c4b4ea7d2"
     },
     {
       "path": "core\\plotting\\plot_trajectory_feasibility.m",
@@ -570,7 +570,7 @@
     },
     {
       "path": "internal\\check_study_settings.m",
-      "hash": "f3daaef63f289fd4"
+      "hash": "62a9e7f0bbfbb29c"
     },
     {
       "path": "internal\\compare_provenance.m",

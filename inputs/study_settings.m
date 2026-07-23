@@ -102,17 +102,20 @@ p.force_moment_length = 1;
 baseline_force_norm = norm(baseline_task(1:3),2);
 baseline_moment_norm = norm(baseline_task(4:6),2);
 rho_0 = baseline_moment_norm/(baseline_force_norm+baseline_moment_norm);
-p.sensitivity.task_emphasis_values = ...
-    [0, rho_0/2, rho_0, (1+rho_0)/2, 1];
 
-% Physical actuator-capacity and reaction-moment grids.
-p.sensitivity.actuator_capacity_values = [0.8, 0.9, 1.0, 1.1, 1.2];
-p.sensitivity.kappa_values = [0, 0.015, 0.03, 0.045, 0.06];
+% Twenty-five approximately uniform task-emphasis values. Replace the
+% nearest uniform value with rho_0 so the exact nominal task remains part
+% of the grid without increasing the number of points.
+rho_values = linspace(0,1,25);
+[~,nominal_rho_index] = min(abs(rho_values-rho_0));
+rho_values(nominal_rho_index) = rho_0;
+p.sensitivity.task_emphasis_values = sort(rho_values);
 
-% Physical characteristic lengths. The baseline L=1 is evaluated once for
-% each metric; every other length is optimized for weakest gain and isotropy.
+% High-resolution physical sensitivity grids.
+p.sensitivity.actuator_capacity_values = linspace(0.8,1.2,17);
+p.sensitivity.kappa_values = linspace(0,0.06,13);
 p.sensitivity.characteristic_length_values = ...
-    [0.5, 1/sqrt(2), 1, sqrt(2), 2];
+    2.^linspace(-1,1,17);
 
 % Secondary binary comparison; the baseline remains unidirectional.
 p.sensitivity.include_bidirectional = true;
@@ -196,5 +199,5 @@ s.constraint_tolerance = 1e-6;
 
 %% Pareto settings
 s.pareto_classification_tolerance = 1e-4;
-s.pareto_points = 11;
+s.pareto_points = 41;
 end

@@ -19,10 +19,21 @@ nominal = sortrows(source_data( ...
     string(source_data.design)=="Nominal geometry",:),x_variable);
 condition = sortrows(source_data( ...
     string(source_data.design)=="Condition-specific optimum",:),x_variable);
-if height(nominal) ~= 5 || height(condition) ~= 5 || ...
-        any(nominal.(x_variable) ~= condition.(x_variable))
+if isempty(nominal) || height(nominal) ~= height(condition)
     error('fa:SensitivityPlotRows', ...
-        'Expected five aligned nominal and condition-specific points.');
+        ['Expected equal nonempty nominal and condition-specific ' ...
+         'sensitivity series.']);
+end
+
+nominal_x = nominal.(x_variable);
+condition_x = condition.(x_variable);
+
+alignment_scale = max(1,max(abs([nominal_x;condition_x])));
+alignment_tolerance = 100*eps(alignment_scale);
+
+if any(abs(nominal_x-condition_x) > alignment_tolerance)
+    error('fa:SensitivityPlotRows', ...
+        'Nominal and condition-specific sensitivity points are not aligned.');
 end
 
 condition_line = plot(ax,condition.(x_variable),condition.(y_variable),'-s', ...

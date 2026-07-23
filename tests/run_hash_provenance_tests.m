@@ -21,8 +21,22 @@ checks(end+1) = "plotting_isolated";
 
 %% Adding a task-emphasis point affects sensitivity only.
 changed = parameters;
-changed.sensitivity.task_emphasis_values = sort(unique([ ...
-    changed.sensitivity.task_emphasis_values,0.25]));
+
+rho_values = sort(unique( ...
+    parameters.sensitivity.task_emphasis_values(:).'));
+
+% Insert a point midway across the largest existing gap. This guarantees
+% that the test changes the sensitivity grid even when the standard grid
+% already contains values such as 0.25.
+rho_gaps = diff(rho_values);
+[~,largest_gap_index] = max(rho_gaps);
+added_rho = 0.5*( ...
+    rho_values(largest_gap_index) + ...
+    rho_values(largest_gap_index+1));
+
+changed.sensitivity.task_emphasis_values = ...
+    sort([rho_values,added_rho]);
+
 base_design = study_provenance('design_comparison',parameters,solver);
 new_design = study_provenance('design_comparison',changed,solver);
 base_authority = study_provenance('authority_effort',parameters,solver);
