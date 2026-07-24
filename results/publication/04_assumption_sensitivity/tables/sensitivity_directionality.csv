@@ -1,3 +1,5 @@
-Case,ActuatorBounds,NominalGeometry,ConditionSpecificOptimum,Improvement,RelativeImprovementPct
-Unidirectional bounds,0 <= mu_i <= 1,1.77185392863963,1.77185392863963,0,0
-Bidirectional bounds,-1 <= mu_i <= 1,1.7752167439387,3.641212947357,1.86599620341831,105.113711313819
+Objective,Case,ActuatorBounds,NominalGeometry,ConditionSpecificOptimum,Improvement,RelativeImprovementPct
+Task-oriented design,Unidirectional bounds,0 <= mu_i <= 1,1.77185392863963,1.77185392863963,0,0
+Task-oriented design,Bidirectional bounds,-1 <= mu_i <= 1,1.7752167439387,3.641212947357,1.86599620341831,105.113711313819
+Force-authority design,Unidirectional bounds,0 <= mu_i <= 1,0.816487410015571,0.816487410015571,0,0
+Force-authority design,Bidirectional bounds,-1 <= mu_i <= 1,0.81648856442418,1.49705748189363,0.680568917469445,83.3531475054288

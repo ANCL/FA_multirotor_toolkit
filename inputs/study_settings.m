@@ -97,8 +97,8 @@ p.force_moment_length = 1;
 %
 %   rho = ||lambda_m||_2 / (||lambda_f||_2 + ||lambda_m||_2),
 %
-% where lambda = diag(Lambda). The five values include the pure-force and
-% pure-moment limiting cases while preserving ||lambda||_2.
+% where lambda = diag(Lambda). The sampled values include the pure-force
+% and pure-moment limiting cases while preserving ||lambda||_2.
 baseline_force_norm = norm(baseline_task(1:3),2);
 baseline_moment_norm = norm(baseline_task(4:6),2);
 rho_0 = baseline_moment_norm/(baseline_force_norm+baseline_moment_norm);
@@ -117,6 +117,11 @@ p.sensitivity.kappa_values = linspace(0,0.06,13);
 p.sensitivity.characteristic_length_values = ...
     2.^linspace(-1,1,17);
 
+% Normalized vertical hover-load factor. With fixed gravity and actuator
+% normalization, this represents relative vehicle or payload mass. The task
+% deviations remain fixed, so only the static weight component is varied.
+p.sensitivity.hover_load_factor_values = linspace(0.8,1.2,17);
+
 % Secondary binary comparison; the baseline remains unidirectional.
 p.sensitivity.include_bidirectional = true;
 
@@ -124,9 +129,11 @@ p.sensitivity.include_bidirectional = true;
 p.sensitivity.optimized_objectives.task_emphasis = {'q_star'};
 p.sensitivity.optimized_objectives.characteristic_length = ...
     {'sigma_min', 'condition_number'};
-p.sensitivity.optimized_objectives.reaction_moment = {'q_star'};
-p.sensitivity.optimized_objectives.actuator_capacity = {'q_star'};
-p.sensitivity.optimized_objectives.bidirectional = {'q_star'};
+p.sensitivity.optimized_objectives.reaction_moment = ...
+    {'q_star', 'sigma_min', 'condition_number'};
+p.sensitivity.optimized_objectives.actuator_capacity = {'q_star', 'r_F0'};
+p.sensitivity.optimized_objectives.bidirectional = {'q_star', 'r_F0'};
+p.sensitivity.optimized_objectives.hover_load = {'q_star', 'r_F0'};
 
 %% Robustness study
 % Apply every perturbation family to the five rotor-wise optima.

@@ -35,7 +35,7 @@ end
 
 function [nominal_objective,condition_objective,improvement] = ...
     objective_values(nominal_value,condition_value,metric)
-if any(string(metric)==["q_star","sigma_min"])
+if any(string(metric)==["q_star","r_F0","sigma_min"])
     nominal_objective = -nominal_value;
     condition_objective = -condition_value;
     improvement = condition_value-nominal_value;

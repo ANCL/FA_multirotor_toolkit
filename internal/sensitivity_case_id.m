@@ -10,6 +10,8 @@ switch family
         prefix = 'kappa_';
     case 'characteristic_length'
         prefix = 'L_';
+    case 'hover_load'
+        prefix = 'hover_load_';
     otherwise
         error('fa:UnknownSensitivityFamily', ...
             'Unknown physical sensitivity family: %s',family);

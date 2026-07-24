@@ -2,7 +2,7 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "sensitivity",
   "output_title": "Study 4: Assumption sensitivity",
-  "created_at": "2026-07-23T20:32:39***",
+  "created_at": "2026-07-24T00:27:07***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "8209ce1d90a481d7",
@@ -10,9 +10,14 @@
   "completed_outputs": [
     "sensitivity_task_emphasis",
     "sensitivity_actuator_capacity",
+    "sensitivity_capacity_force_authority",
     "sensitivity_reaction_moment",
+    "sensitivity_reaction_weakest_gain",
+    "sensitivity_reaction_isotropy",
     "sensitivity_length_weakest_gain",
     "sensitivity_length_isotropy",
+    "sensitivity_hover_load_task_scale",
+    "sensitivity_hover_load_force_authority",
     "sensitivity_curve_summary",
     "sensitivity_directionality",
     "sensitivity_all_cases",
@@ -23,7 +28,7 @@
   "source_files": [
     {
       "path": "run_cheap_tests.m",
-      "hash": "424afebc2fec6638"
+      "hash": "7769468cfe64f61a"
     },
     {
       "path": "run_full_study.m",
@@ -43,7 +48,7 @@
     },
     {
       "path": "inputs\\study_settings.m",
-      "hash": "bf1dd9609cb07aa6"
+      "hash": "2103fa604f237d56"
     },
     {
       "path": "analyses\\analyze_configuration.m",
@@ -83,7 +88,7 @@
     },
     {
       "path": "study\\run_sensitivity_analysis.m",
-      "hash": "919334d245e4c6b8"
+      "hash": "49a1ca00fcc53e60"
     },
     {
       "path": "study\\run_task_evaluation.m",
@@ -119,7 +124,7 @@
     },
     {
       "path": "reporting\\publication_table.m",
-      "hash": "c1685a398cce95fb"
+      "hash": "98072e0d08ad0f91"
     },
     {
       "path": "reporting\\private\\authority_effort_table.m",
@@ -167,7 +172,7 @@
     },
     {
       "path": "reporting\\private\\generate_sensitivity_outputs.m",
-      "hash": "4ea2632f55f0673f"
+      "hash": "898946fd4a5a906f"
     },
     {
       "path": "reporting\\private\\load_result_table.m",
@@ -223,11 +228,11 @@
     },
     {
       "path": "reporting\\private\\sensitivity_curve_summary_table.m",
-      "hash": "4706d4823ede63f2"
+      "hash": "90932ecbac795791"
     },
     {
       "path": "reporting\\private\\sensitivity_directionality_table.m",
-      "hash": "a773046ec7ed74f6"
+      "hash": "4f32385d8f52aced"
     },
     {
       "path": "reporting\\private\\sensitivity_plot_table.m",
@@ -235,11 +240,11 @@
     },
     {
       "path": "reporting\\private\\sensitivity_summary_table.m",
-      "hash": "c569fcb7b0a9ded9"
+      "hash": "752ce12e75d1b7c8"
     },
     {
       "path": "reporting\\private\\study_conditions_table.m",
-      "hash": "1729e5f1f0fba11d"
+      "hash": "1f98713a5bfb2ae2"
     },
     {
       "path": "reporting\\private\\study_output_paths.m",
@@ -271,7 +276,7 @@
     },
     {
       "path": "reporting\\private\\validate_sensitivity_outputs.m",
-      "hash": "5f5da110c8954266"
+      "hash": "2d47bf4ce9b56904"
     },
     {
       "path": "reporting\\private\\write_combined_manifest.m",
@@ -279,7 +284,7 @@
     },
     {
       "path": "reporting\\private\\write_output_guide.m",
-      "hash": "695544d0e9d35476"
+      "hash": "a061b0d6dee11702"
     },
     {
       "path": "core\\feasibility\\build_feasible_wrench_sets.m",
@@ -579,7 +584,7 @@
     },
     {
       "path": "internal\\check_study_settings.m",
-      "hash": "62a9e7f0bbfbb29c"
+      "hash": "1566415a94616520"
     },
     {
       "path": "internal\\compare_provenance.m",
@@ -703,15 +708,15 @@
     },
     {
       "path": "internal\\sensitivity_case_id.m",
-      "hash": "38d4eafdf755be9d"
+      "hash": "02725f36bd3d39b4"
     },
     {
       "path": "internal\\sensitivity_case_plan.m",
-      "hash": "69f58b707b156616"
+      "hash": "a103c854b7773f4c"
     },
     {
       "path": "internal\\sensitivity_study_plan.m",
-      "hash": "5fce17d270b4a5c0"
+      "hash": "9404b7e10d035ce9"
     },
     {
       "path": "internal\\settings_hash.m",
