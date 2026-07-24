@@ -139,19 +139,20 @@ fig = plot_sensitivity_comparison(data,'kappa','minus_q',options);
 end
 
 function [fig,data] = build_weakest_gain_figure(data)
-options = length_options('$-\sigma_{\min}(\bar A)$');
+options = length_options('$-\sigma_{\min}(\bar A)$', true);
 fig = plot_sensitivity_comparison(data,'L','minus_sigma_min',options);
 end
 
 function [fig,data] = build_isotropy_figure(data)
-options = length_options('$C(\bar A)$');
+options = length_options('$C(\bar A)$', false);
 fig = plot_sensitivity_comparison(data,'L','condition_number',options);
 end
 
-function options = length_options(y_label)
+function options = length_options(y_label, show_legend)
 options = struct('x_label','$L$', ...
     'y_label',y_label,'log_x',true, ...
     'x_ticks',[0.5,1/sqrt(2),1,sqrt(2),2], ...
+    'show_legend',show_legend,'legend_location','northwest', ...
     'x_tick_labels',{{'0.5','$1/\sqrt{2}$','1','$\sqrt{2}$','2'}});
 end
 
