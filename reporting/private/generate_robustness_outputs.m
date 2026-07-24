@@ -14,9 +14,9 @@ try
         context.parameters,context.solver);
     assert_compatible_result(context.files.robustness_raw, ...
         'robustness',context.parameters,context.solver,design_provenance);
-    validate_robustness_outputs(context.files.robustness_raw);
 
     robustness = load_result_table(context.files.robustness);
+    validate_robustness_outputs(robustness,context.parameters);
     context.paths = reset_study_output_paths(context.paths);
     [logger,completed] = run_output_table(logger,completed, ...
         'table: robustness full summary',robustness,context.paths.tables, ...

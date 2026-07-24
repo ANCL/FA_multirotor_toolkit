@@ -2,7 +2,7 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "robustness",
   "output_title": "Study 5: Implementation robustness",
-  "created_at": "2026-07-22T04:18:47***",
+  "created_at": "2026-07-23T20:11:01***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "8209ce1d90a481d7",
@@ -38,11 +38,11 @@
     },
     {
       "path": "inputs\\study_settings.m",
-      "hash": "927ce7f88457c674"
+      "hash": "bf1dd9609cb07aa6"
     },
     {
       "path": "analyses\\analyze_configuration.m",
-      "hash": "f8b40ba76cb3780d"
+      "hash": "981fe666bbed3cd8"
     },
     {
       "path": "analyses\\analyze_feasible_sets.m",
@@ -114,11 +114,11 @@
     },
     {
       "path": "reporting\\publication_table.m",
-      "hash": "51d9f1f5de07d7ef"
+      "hash": "c1685a398cce95fb"
     },
     {
       "path": "reporting\\private\\authority_effort_table.m",
-      "hash": "1fa325d1a68389cd"
+      "hash": "a49686fa5af3ba82"
     },
     {
       "path": "reporting\\private\\begin_output_log.m",
@@ -146,23 +146,23 @@
     },
     {
       "path": "reporting\\private\\generate_authority_effort_outputs.m",
-      "hash": "c55b1fc8fed511b2"
+      "hash": "e4091fc3f455fa9b"
     },
     {
       "path": "reporting\\private\\generate_objective_design_outputs.m",
-      "hash": "70c42efedf486038"
+      "hash": "6695eff69f8a6a58"
     },
     {
       "path": "reporting\\private\\generate_parameterization_outputs.m",
-      "hash": "bd2ba3e897cb0dfa"
+      "hash": "edf0ce9ae3c14dec"
     },
     {
       "path": "reporting\\private\\generate_robustness_outputs.m",
-      "hash": "cd84a26c31bb2e44"
+      "hash": "92c6627e7cdb3cba"
     },
     {
       "path": "reporting\\private\\generate_sensitivity_outputs.m",
-      "hash": "0113fe65c70579e3"
+      "hash": "c222de02ca186900"
     },
     {
       "path": "reporting\\private\\load_result_table.m",
@@ -178,7 +178,7 @@
     },
     {
       "path": "reporting\\private\\parameterization_summary_table.m",
-      "hash": "7c9445dedf764888"
+      "hash": "690d0a2d5d42f86b"
     },
     {
       "path": "reporting\\private\\reporting_result_files.m",
@@ -217,16 +217,20 @@
       "hash": "5865f2f43962b356"
     },
     {
+      "path": "reporting\\private\\sensitivity_curve_summary_table.m",
+      "hash": "4706d4823ede63f2"
+    },
+    {
       "path": "reporting\\private\\sensitivity_directionality_table.m",
-      "hash": "14badf99fa6cfaf3"
+      "hash": "a773046ec7ed74f6"
     },
     {
       "path": "reporting\\private\\sensitivity_plot_table.m",
-      "hash": "222309eb7dcec619"
+      "hash": "5b5948ddf62395d5"
     },
     {
       "path": "reporting\\private\\sensitivity_summary_table.m",
-      "hash": "9f76bafcb59f251c"
+      "hash": "c569fcb7b0a9ded9"
     },
     {
       "path": "reporting\\private\\study_conditions_table.m",
@@ -242,7 +246,7 @@
     },
     {
       "path": "reporting\\private\\validate_all_reporting_results.m",
-      "hash": "a9f36470732287ba"
+      "hash": "8986be51d02324e9"
     },
     {
       "path": "reporting\\private\\validate_objective_outputs.m",
@@ -254,11 +258,15 @@
     },
     {
       "path": "reporting\\private\\validate_pareto_outputs.m",
-      "hash": "a85a1f44a869c626"
+      "hash": "053ef6a825fe31d2"
     },
     {
       "path": "reporting\\private\\validate_robustness_outputs.m",
-      "hash": "463e54a3f3f0be6d"
+      "hash": "a83e1f26b38b859c"
+    },
+    {
+      "path": "reporting\\private\\validate_sensitivity_outputs.m",
+      "hash": "5f5da110c8954266"
     },
     {
       "path": "reporting\\private\\write_combined_manifest.m",
@@ -266,7 +274,7 @@
     },
     {
       "path": "reporting\\private\\write_output_guide.m",
-      "hash": "a34e7069e980fc07"
+      "hash": "695544d0e9d35476"
     },
     {
       "path": "core\\feasibility\\build_feasible_wrench_sets.m",
@@ -462,7 +470,7 @@
     },
     {
       "path": "core\\plotting\\plot_pareto_runs.m",
-      "hash": "ad00185618fbe9ca"
+      "hash": "3942831effe8ace6"
     },
     {
       "path": "core\\plotting\\plot_robustness_qstar.m",
@@ -478,7 +486,7 @@
     },
     {
       "path": "core\\plotting\\plot_sensitivity_comparison.m",
-      "hash": "578e5d97f8467bb7"
+      "hash": "f3041cdc0e271794"
     },
     {
       "path": "core\\plotting\\plot_trajectory_feasibility.m",
@@ -566,7 +574,7 @@
     },
     {
       "path": "internal\\check_study_settings.m",
-      "hash": "f3daaef63f289fd4"
+      "hash": "62a9e7f0bbfbb29c"
     },
     {
       "path": "internal\\compare_provenance.m",

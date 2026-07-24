@@ -24,9 +24,13 @@ fprintf(fid,'- `02_parameterization_comparison`: P1/P2/P3 comparisons.\n');
 fprintf(fid,'- `03_authority_effort_tradeoff`: the authority-effort trade-off.\n');
 fprintf(fid,'- `04_assumption_sensitivity`: task emphasis, actuator capacity, reaction-moment ratio, directionality, and characteristic length.\n');
 fprintf(fid,'- `05_implementation_robustness`: perturbation summaries and trends.\n\n');
+fprintf(fid,'## Derived values\n\n');
+fprintf(fid,'The parameterization comparison table includes the percentage loss relative to P1 for P2 and P3. Positive values indicate lower performance.\n\n');
+fprintf(fid,'The authority-effort table includes changes between adjacent front points and the corresponding hover-effort increase per unit force authority.\n\n');
 fprintf(fid,'## Sensitivity outputs\n\n');
 fprintf(fid,'The five independent figures are `sensitivity_task_emphasis`, `sensitivity_actuator_capacity`, `sensitivity_reaction_moment`, `sensitivity_length_weakest_gain`, and `sensitivity_length_isotropy`. Each has PDF, FIG, CSV, and MAT files.\n\n');
-fprintf(fid,'Task emphasis uses the numerical moment-emphasis fraction `rho`. The endpoint `rho=0` is the pure-force limiting task with zero moment deviations; `rho=1` is the pure-moment limiting task with zero force deviations. The baseline task is retained exactly at its resolved `rho_0`.\n\n');
-fprintf(fid,'For task emphasis, actuator capacity, reaction moment, and directionality, `Nominal optimum` means the baseline task-oriented P1 optimum held unchanged. `Condition-specific optimum` means the optimum is recomputed under the modified physical condition.\n\n');
-fprintf(fid,'The three task-capability figures report the minimization-form ordinate `-q-star`, and their feasibility boundary is `-q-star=-1`. For characteristic length, the weakest-gain figure reports `-sigma_min(Abar)` and holds the baseline weakest-gain P1 optimum, while the isotropy figure reports `C(Abar)` and holds the baseline isotropy P1 optimum. The condition-specific optimum is solved separately at every nonbaseline length. All figure CSV and MAT files store the same signed ordinates that are plotted.\n');
+fprintf(fid,'Task emphasis uses the numerical moment-emphasis fraction `rho`. The endpoint `rho=0` is the pure-force limiting task with zero moment deviations; `rho=1` is the pure-moment limiting task with zero force deviations. The baseline task is included exactly at its resolved `rho_0`.\n\n');
+fprintf(fid,'`Nominal geometry` means the corresponding baseline P1 optimum is evaluated without changing its geometry. `Condition-specific optimum` means the geometry is optimized under the modified condition.\n\n');
+fprintf(fid,'The table `sensitivity_curve_summary` reports the sampled minima, maxima, baseline values, and largest condition-specific improvement for the five continuous curves. `sensitivity_all_cases` retains every evaluated case with both natural metrics and minimization-form objective values.\n\n');
+fprintf(fid,'The task-capability figure files store both `q_star` and the plotted ordinate `minus_q`. The weakest-gain files store both `sigma_min` and `minus_sigma_min`. The isotropy files store `condition_number`, which is also the plotted objective.\n');
 end
