@@ -1,5 +1,5 @@
 function [fig, source_data] = plot_robustness_qstar(summary,perturbation)
-%PLOT_ROBUSTNESS_QSTAR Median task scale with 5--95 percentile error bars.
+%PLOT_ROBUSTNESS_QSTAR Median task scale with configured percentile bounds.
 style = publication_style();
 [D1,D2,x,x_label] = select_data(summary,perturbation);
 fig = figure('Units','centimeters','Position',style.dimensions.column, ...

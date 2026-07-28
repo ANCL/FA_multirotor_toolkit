@@ -7,10 +7,20 @@ try
     stage_folder = ensure_folder(folders.task);
     source_file = fullfile(folders.designs,'rotorwise_selected_designs.mat');
     if ~isfile(source_file), error('fa:MissingStage01','Run Stage 01 first.'); end
-    design_provenance = assert_compatible_result( ...
-        source_file,'design_comparison',parameters,solver);
+    design_provenance = assert_completed_stage( ...
+        fullfile(folders.designs,'stage_manifest.mat'), ...
+        'design_comparison',parameters,solver);
+    [complete,completed_provenance] = stage_is_complete( ...
+        stage_folder,'task_evaluation',parameters,solver,design_provenance);
+    if complete
+        study_log('line','Stage 02 already complete and compatible. No work required.');
+        output = struct('status','complete','reused',true, ...
+            'provenance',completed_provenance,'folder',stage_folder);
+        return;
+    end
     source = load(source_file,'selected');
     selected = source.selected;
+    invalidate_stage_manifest(stage_folder);
 
     n = numel(selected);
     logger = study_log('stage_start','Stage 02','Selected-design verification',n,0);
@@ -68,8 +78,8 @@ try
     provenance = study_provenance('task_evaluation',parameters,solver, ...
         study_plan,design_provenance);
     save(fullfile(stage_folder,'task_verification.mat'), ...
-        'verification','parameters','solver','provenance','-v7.3');
-    write_table_bundle(summary,stage_folder,'task_capability');
+        'verification','parameters','solver','provenance','-v7');
+    write_table_bundle(summary,stage_folder,'task_capability',provenance);
     if any(~summary.force_authority_verified)
         error('fa:ForceAuthorityVerificationFailed', ...
             'One or more selected designs failed independent F0-radius verification.');
@@ -78,6 +88,10 @@ try
         error('fa:TaskVerificationFailed', ...
             'One or more selected designs failed q-star verification.');
     end
+    artifacts = ["task_verification.mat";"task_capability.mat"];
+    counts = struct('verified_designs',numel(verification), ...
+        'summary_rows',height(summary));
+    write_stage_manifest(stage_folder,provenance,artifacts,counts);
     output = struct('summary',summary,'verification',verification,'folder',stage_folder);
     study_log('stage_finish',logger);
 catch ME

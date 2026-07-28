@@ -1,0 +1,5 @@
+case_name,mu_min,design,condition_number,metric_available,valid,source
+bidirectional,-1,Nominal geometry,1.00659790116273,1,1,fixed_nominal_geometry
+unidirectional,0,Nominal geometry,1.00659790116273,1,1,fixed_nominal_geometry
+bidirectional,-1,Condition-specific optimum,1.00659469941259,1,1,checkpoint
+unidirectional,0,Condition-specific optimum,1.00659790116273,1,1,baseline

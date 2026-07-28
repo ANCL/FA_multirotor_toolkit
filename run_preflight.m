@@ -41,7 +41,10 @@ try
     specification = finalize_optimization_cases(specification,solver);
     [queued,logger,runtime] = run_optimization_cases( ...
         specification,store,logger,solver,runtime);
-    rotorwise_result = queued(1);
+    % The production queue returns the permanent compact checkpoint twin.
+    % Preflight intentionally inspects the one full result for deeper checks.
+    checkpoint_data = load(case_store_path(store,specification.case_name),'case_result');
+    rotorwise_result = checkpoint_data.case_result;
     require_valid_optimization(rotorwise_result);
     verify_initial_incumbent_retained(rotorwise_result,seeds{1},problem,parameters,solver);
     verify_fast_force_authority(rotorwise_result.metrics,parameters,solver);

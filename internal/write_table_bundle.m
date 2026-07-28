@@ -1,10 +1,23 @@
-function paths = write_table_bundle(table_data,folder,base_name)
+function paths = write_table_bundle(table_data,folder,base_name,provenance)
 %WRITE_TABLE_BUNDLE Save MAT, sanitized CSV, and booktabs TeX.
+% Numerical-stage callers may provide study provenance. The MAT file then
+% becomes a self-describing canonical scientific dataset, while CSV/TeX are
+% derived human-readable representations of the same table.
+if nargin < 4, provenance = struct(); end
 ensure_folder(folder);
 paths.mat = fullfile(folder,[base_name '.mat']);
 paths.csv = fullfile(folder,[base_name '.csv']);
 paths.tex = fullfile(folder,[base_name '.tex']);
-save(paths.mat,'table_data');
+dataset_metadata = struct('schema_version',1, ...
+    'name',char(string(base_name)), ...
+    'row_count',height(table_data), ...
+    'variable_names',{table_data.Properties.VariableNames}, ...
+    'generated_at',datetime('now'));
+if isempty(provenance) || (isstruct(provenance) && isempty(fieldnames(provenance)))
+    save(paths.mat,'table_data','dataset_metadata','-v7');
+else
+    save(paths.mat,'table_data','dataset_metadata','provenance','-v7');
+end
 csv_table = sanitize_table_text(table_data);
 writetable(csv_table,paths.csv);
 write_tex_table(table_data,paths.tex);

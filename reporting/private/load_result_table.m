@@ -1,8 +1,25 @@
 function T = load_result_table(path_in)
-%LOAD_RESULT_TABLE Load the standard table_data variable.
-data = load(path_in,'table_data');
+%LOAD_RESULT_TABLE Load and validate one canonical table bundle MAT file.
+data = load(path_in,'table_data','dataset_metadata');
 if ~isfield(data,'table_data') || ~istable(data.table_data)
     error('fa:ReportingTable','Expected table_data in %s.',path_in);
 end
+if ~isfield(data,'dataset_metadata') || ~isstruct(data.dataset_metadata) || ...
+        ~isfield(data.dataset_metadata,'schema_version') || ...
+        data.dataset_metadata.schema_version ~= 1
+    error('fa:ReportingTableMetadata', ...
+        'Expected dataset_metadata schema 1 in %s.',path_in);
+end
 T = data.table_data;
+if ~isfield(data.dataset_metadata,'row_count') || ...
+        data.dataset_metadata.row_count ~= height(T)
+    error('fa:ReportingTableRowCount', ...
+        'Stored table row count is inconsistent in %s.',path_in);
+end
+if ~isfield(data.dataset_metadata,'variable_names') || ...
+        ~isequal(cellstr(string(data.dataset_metadata.variable_names)), ...
+            cellstr(string(T.Properties.VariableNames)))
+    error('fa:ReportingTableVariables', ...
+        'Stored table variable names are inconsistent in %s.',path_in);
+end
 end

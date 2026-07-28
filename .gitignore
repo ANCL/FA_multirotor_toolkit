@@ -1,61 +1,35 @@
-
 # MATLAB temporary and autosave files
-
 *.asv
-
 *.m~
-
 *.autosave
-
 *.slxc
 
-
-
 # MATLAB generated folders
-
 slprj/
-
 codegen/
 
-
-
 # Compiled MATLAB files
-
 *.mexw64
 
-
-
 # Operating-system files
-
 .DS_Store
-
 Thumbs.db
-
 desktop.ini
 
-
-
 # Editor settings
-
 .vscode/
-
 .idea/
 
-
-
 # Temporary files
-
 *.tmp
-
 *.temp
-
 ~$*
 
-
-
-# Large generated numerical datasets
-
-/results/current/
+# Numerical checkpoints
+# Full checkpoints and compact checkpoint twins are execution state and
+# can be regenerated or reconstructed by the study runners.
 **/checkpoints/
 
-
+# Runtime logs
+/results/current/run_log.txt
+/results/preflight/run_log.txt

@@ -12,7 +12,7 @@ if ~isfield(data,'provenance')
          'Regenerate only the affected study.'],path_in);
 end
 expected = study_provenance(study_name,parameters,solver,struct(),upstream);
-fields = {'core_hash','source_hash','settings_hash'};
+fields = {'core_hash','source_hash','settings_hash','data_contract_hash'};
 if ~(isstruct(upstream) && isempty(fieldnames(upstream)))
     fields{end+1} = 'upstream_hash';
 end

@@ -1,0 +1,58 @@
+function T = sensitivity_relative_plot_table(matrix,analysis,objective, ...
+    parameter_source,parameter_name)
+%SENSITIVITY_RELATIVE_PLOT_TABLE Build baseline-relative figure source data.
+selected = matrix( ...
+    string(matrix.analysis)==string(analysis) & ...
+    string(matrix.objective)==string(objective),:);
+
+if isempty(selected)
+    error('fa:IncompleteSensitivityFamily', ...
+        'No sensitivity rows were found for %s/%s.', ...
+        analysis,objective);
+end
+
+parameter = resolved_parameter(selected,parameter_source);
+[parameter,order] = sort(parameter);
+selected = selected(order,:);
+
+n_points = height(selected);
+case_name = [string(selected.case_name);string(selected.case_name)];
+parameter_value = [parameter;parameter];
+design = [ ...
+    repmat("Nominal geometry",n_points,1); ...
+    repmat("Condition-specific optimum",n_points,1)];
+metric_value = [selected.nominal_geometry;selected.condition_specific_optimum];
+baseline_metric_value = [ ...
+    selected.baseline_metric_value;selected.baseline_metric_value];
+relative_change_pct = [ ...
+    selected.nominal_change_pct;selected.condition_specific_change_pct];
+metric_available = [selected.nominal_metric_available; ...
+    selected.condition_specific_metric_available];
+valid = [selected.nominal_valid;selected.condition_specific_valid];
+source = [ ...
+    repmat("fixed_nominal_geometry",n_points,1); ...
+    string(selected.condition_specific_source)];
+
+T = table(case_name,parameter_value,design,metric_value, ...
+    baseline_metric_value,relative_change_pct,metric_available,valid,source, ...
+    'VariableNames',{'case_name',parameter_name,'design',char(string(objective)), ...
+    'baseline_metric_value','relative_change_pct','metric_available','valid','source'});
+end
+
+function values = resolved_parameter(T,parameter_source)
+parameter_source = char(string(parameter_source));
+switch parameter_source
+    case 'rho'
+        values = T.rho;
+    case {'mu_min','parameter_value'}
+        values = T.parameter_value;
+    otherwise
+        error('fa:SensitivityPlotParameter', ...
+            'Unknown sensitivity parameter source: %s.',parameter_source);
+end
+values = values(:);
+if any(~isfinite(values))
+    error('fa:SensitivityPlotParameter', ...
+        'Sensitivity parameter values must be finite for plotting.');
+end
+end

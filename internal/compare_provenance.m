@@ -1,7 +1,8 @@
 function compare_provenance(actual,expected,label,path_in,fields)
 %COMPARE_PROVENANCE Raise a precise component mismatch error.
 if nargin < 5 || isempty(fields)
-    fields = {'core_hash','source_hash','settings_hash','plan_hash','upstream_hash'};
+    fields = {'core_hash','source_hash','settings_hash','data_contract_hash', ...
+        'plan_hash','upstream_hash'};
 end
 if ~isstruct(actual) || ~isfield(actual,'schema_version') || actual.schema_version ~= 2
     error('fa:UnsupportedProvenance', ...

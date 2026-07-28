@@ -26,8 +26,8 @@ rho_values = sort(unique( ...
     parameters.sensitivity.task_emphasis_values(:).'));
 
 % Insert a point midway across the largest existing gap. This guarantees
-% that the test changes the sensitivity grid even when the standard grid
-% already contains values such as 0.25.
+% that the test changes the sensitivity grid without depending on any
+% particular configured sample value.
 rho_gaps = diff(rho_values);
 [~,largest_gap_index] = max(rho_gaps);
 added_rho = 0.5*( ...

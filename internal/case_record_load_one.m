@@ -1,0 +1,26 @@
+function record = case_record_load_one(store,specification)
+%CASE_RECORD_LOAD_ONE Load and validate one compact checkpoint twin.
+path_in = case_record_path(store,specification.case_name);
+if ~isfile(path_in)
+    error('fa:MissingCaseRecord', ...
+        'Missing compact checkpoint record: %s',path_in);
+end
+try
+    data = load(path_in,'case_record','saved_case_name','case_provenance', ...
+        'record_schema_version');
+catch ME
+    error('fa:UnreadableCaseRecord', ...
+        'Cannot read compact checkpoint record %s: %s',path_in,ME.message);
+end
+if ~isfield(data,'record_schema_version') || data.record_schema_version ~= 1 || ...
+        ~isfield(data,'saved_case_name') || ...
+        ~strcmp(data.saved_case_name,char(string(specification.case_name))) || ...
+        ~isfield(data,'case_provenance') || ~isfield(data,'case_record')
+    error('fa:UnsupportedCaseRecord', ...
+        'Compact checkpoint record is incomplete or unsupported: %s',path_in);
+end
+assert_case_provenance_compatible( ...
+    data.case_provenance,specification.provenance,path_in);
+validate_case_result_identity(data.case_record,specification,path_in);
+record = data.case_record;
+end

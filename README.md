@@ -196,7 +196,7 @@ publication_output = make_all_outputs();
 
 `run_full_study` executes the stages in dependency order:
 
-1. `run_design_comparison` — P1/P2/P3 optimization for all five objectives.
+1. `run_design_comparison` — P1/P2/P3 optimization for the configured objectives.
 2. `run_task_evaluation` — independent force-authority and task-boundary verification.
 3. `run_pareto_analysis` — force-authority versus hover-effort trade-off.
 4. `run_sensitivity_analysis` — physical-assumption sensitivity.
@@ -222,6 +222,19 @@ Use `auto` to use a process pool when available, or `parallel` to require one. R
 | `results/publication/` | Regenerated figures, tables, source data, and manifests |
 
 Tables are generally written as CSV, MAT, and LaTeX. Publication figures are written as PDF and editable FIG, with matching CSV and MAT source data. Use `results/publication/OUTPUT_GUIDE.md` after `make_all_outputs` for the generated report-specific file map.
+
+### Checkpoints and canonical stage data
+
+Checkpointed numerical stages keep two representations of each completed case under the stage checkpoint folder:
+
+- `cases/<case>.mat` stores the complete computational result used for restart and detailed audit.
+- `records/<case>.mat` stores a compact record containing the case identity, geometry, metrics, validity, solver diagnostics, and study context needed for aggregation.
+
+When a full checkpoint exists without its compact record, the normal stage runner recreates only the missing record. Missing numerical cases are computed normally and write both files. Canonical stage datasets under `results/current/0X_*` are built from compact records, and `stage_manifest.mat` is written after those datasets are complete. A compatible completed stage returns without bulk-loading checkpoint payloads.
+
+Publication reporting reads only canonical stage datasets. Full checkpoints remain the authoritative restart and detailed-audit data and are not duplicated into aggregate solver archives.
+
+Sensitivity publication tables distinguish overall design validity from metric availability. A finite metric that was computed before a later feasibility failure is retained with its validity flag; an unavailable metric is exported as `NaN` and appears as a gap in the corresponding figure.
 
 ## Model conventions
 

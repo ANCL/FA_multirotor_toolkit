@@ -2,25 +2,77 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "sensitivity",
   "output_title": "Study 4: Assumption sensitivity",
-  "created_at": "2026-07-24T00:27:07***",
+  "created_at": "2026-07-27T20:03:43***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "8209ce1d90a481d7",
   "provenance_schema": 2,
   "completed_outputs": [
-    "sensitivity_task_emphasis",
-    "sensitivity_actuator_capacity",
-    "sensitivity_capacity_force_authority",
-    "sensitivity_reaction_moment",
-    "sensitivity_reaction_weakest_gain",
-    "sensitivity_reaction_isotropy",
-    "sensitivity_length_weakest_gain",
-    "sensitivity_length_isotropy",
-    "sensitivity_hover_load_task_scale",
-    "sensitivity_hover_load_force_authority",
+    "sensitivity_task_emphasis_q_star",
+    "sensitivity_task_emphasis_r_F0",
+    "sensitivity_task_emphasis_sigma_min",
+    "sensitivity_task_emphasis_condition_number",
+    "sensitivity_task_emphasis_hover_effort",
+    "sensitivity_actuator_capacity_q_star",
+    "sensitivity_actuator_capacity_r_F0",
+    "sensitivity_actuator_capacity_sigma_min",
+    "sensitivity_actuator_capacity_condition_number",
+    "sensitivity_actuator_capacity_hover_effort",
+    "sensitivity_hover_load_q_star",
+    "sensitivity_hover_load_r_F0",
+    "sensitivity_hover_load_sigma_min",
+    "sensitivity_hover_load_condition_number",
+    "sensitivity_hover_load_hover_effort",
+    "sensitivity_reaction_moment_q_star",
+    "sensitivity_reaction_moment_r_F0",
+    "sensitivity_reaction_moment_sigma_min",
+    "sensitivity_reaction_moment_condition_number",
+    "sensitivity_reaction_moment_hover_effort",
+    "sensitivity_directionality_q_star",
+    "sensitivity_directionality_r_F0",
+    "sensitivity_directionality_sigma_min",
+    "sensitivity_directionality_condition_number",
+    "sensitivity_directionality_hover_effort",
+    "sensitivity_characteristic_length_q_star",
+    "sensitivity_characteristic_length_r_F0",
+    "sensitivity_characteristic_length_sigma_min",
+    "sensitivity_characteristic_length_condition_number",
+    "sensitivity_characteristic_length_hover_effort",
+    "sensitivity_task_emphasis_q_star_relative",
+    "sensitivity_task_emphasis_r_F0_relative",
+    "sensitivity_task_emphasis_sigma_min_relative",
+    "sensitivity_task_emphasis_condition_number_relative",
+    "sensitivity_task_emphasis_hover_effort_relative",
+    "sensitivity_actuator_capacity_q_star_relative",
+    "sensitivity_actuator_capacity_r_F0_relative",
+    "sensitivity_actuator_capacity_sigma_min_relative",
+    "sensitivity_actuator_capacity_condition_number_relative",
+    "sensitivity_actuator_capacity_hover_effort_relative",
+    "sensitivity_hover_load_q_star_relative",
+    "sensitivity_hover_load_r_F0_relative",
+    "sensitivity_hover_load_sigma_min_relative",
+    "sensitivity_hover_load_condition_number_relative",
+    "sensitivity_hover_load_hover_effort_relative",
+    "sensitivity_reaction_moment_q_star_relative",
+    "sensitivity_reaction_moment_r_F0_relative",
+    "sensitivity_reaction_moment_sigma_min_relative",
+    "sensitivity_reaction_moment_condition_number_relative",
+    "sensitivity_reaction_moment_hover_effort_relative",
+    "sensitivity_directionality_q_star_relative",
+    "sensitivity_directionality_r_F0_relative",
+    "sensitivity_directionality_sigma_min_relative",
+    "sensitivity_directionality_condition_number_relative",
+    "sensitivity_directionality_hover_effort_relative",
+    "sensitivity_characteristic_length_q_star_relative",
+    "sensitivity_characteristic_length_r_F0_relative",
+    "sensitivity_characteristic_length_sigma_min_relative",
+    "sensitivity_characteristic_length_condition_number_relative",
+    "sensitivity_characteristic_length_hover_effort_relative",
+    "sensitivity_matrix",
+    "sensitivity_matrix_relative",
     "sensitivity_curve_summary",
+    "sensitivity_curve_summary_relative",
     "sensitivity_directionality",
-    "sensitivity_all_cases",
     "condition_specific_repeatability",
     "condition_specific_design_runs"
   ],
@@ -28,7 +80,7 @@
   "source_files": [
     {
       "path": "run_cheap_tests.m",
-      "hash": "7769468cfe64f61a"
+      "hash": "00bcfc430921b33d"
     },
     {
       "path": "run_full_study.m",
@@ -36,7 +88,7 @@
     },
     {
       "path": "run_preflight.m",
-      "hash": "39cb78170baf979f"
+      "hash": "5d3a7af6ab4f179e"
     },
     {
       "path": "setup_project.m",
@@ -48,7 +100,7 @@
     },
     {
       "path": "inputs\\study_settings.m",
-      "hash": "2103fa604f237d56"
+      "hash": "78cf56074501be7f"
     },
     {
       "path": "analyses\\analyze_configuration.m",
@@ -76,27 +128,27 @@
     },
     {
       "path": "study\\run_design_comparison.m",
-      "hash": "48248d617de7ca73"
+      "hash": "714aac8eeb242a46"
     },
     {
       "path": "study\\run_pareto_analysis.m",
-      "hash": "32fdc0db97ab0f41"
+      "hash": "2b7c9f493726aa1b"
     },
     {
       "path": "study\\run_robustness_analysis.m",
-      "hash": "417bb90b4cf259ef"
+      "hash": "8edf20155ac01061"
     },
     {
       "path": "study\\run_sensitivity_analysis.m",
-      "hash": "49a1ca00fcc53e60"
+      "hash": "0dab8644b3d0986e"
     },
     {
       "path": "study\\run_task_evaluation.m",
-      "hash": "a44a0e4263734534"
+      "hash": "431de8e8125fe526"
     },
     {
       "path": "reporting\\make_all_outputs.m",
-      "hash": "72952a6070b9fc2c"
+      "hash": "b87a86ae6972fe8c"
     },
     {
       "path": "reporting\\make_authority_effort_outputs.m",
@@ -124,7 +176,7 @@
     },
     {
       "path": "reporting\\publication_table.m",
-      "hash": "98072e0d08ad0f91"
+      "hash": "83245e13968bbb81"
     },
     {
       "path": "reporting\\private\\authority_effort_table.m",
@@ -136,7 +188,7 @@
     },
     {
       "path": "reporting\\private\\condition_specific_sensitivity_value.m",
-      "hash": "216ffd58bda1490a"
+      "hash": "95c3960401c9099a"
     },
     {
       "path": "reporting\\private\\create_output_context.m",
@@ -156,31 +208,27 @@
     },
     {
       "path": "reporting\\private\\generate_authority_effort_outputs.m",
-      "hash": "e4091fc3f455fa9b"
+      "hash": "499d4bff8f088dc1"
     },
     {
       "path": "reporting\\private\\generate_objective_design_outputs.m",
-      "hash": "6695eff69f8a6a58"
+      "hash": "e667914bd029da2b"
     },
     {
       "path": "reporting\\private\\generate_parameterization_outputs.m",
-      "hash": "edf0ce9ae3c14dec"
+      "hash": "46e7797a6b2bb9fc"
     },
     {
       "path": "reporting\\private\\generate_robustness_outputs.m",
-      "hash": "92c6627e7cdb3cba"
+      "hash": "c8080b1ee067de14"
     },
     {
       "path": "reporting\\private\\generate_sensitivity_outputs.m",
-      "hash": "898946fd4a5a906f"
+      "hash": "3e21dcc1bdaf4843"
     },
     {
       "path": "reporting\\private\\load_result_table.m",
-      "hash": "600b91c5840882dd"
-    },
-    {
-      "path": "reporting\\private\\nominal_sensitivity_value.m",
-      "hash": "7cc8882f55fa86cb"
+      "hash": "ffee0123aa1832df"
     },
     {
       "path": "reporting\\private\\objective_comparison_table.m",
@@ -192,7 +240,7 @@
     },
     {
       "path": "reporting\\private\\reporting_result_files.m",
-      "hash": "cafba9e72d45414f"
+      "hash": "f4d1e1b34e62e097"
     },
     {
       "path": "reporting\\private\\reporting_source_manifest.m",
@@ -208,7 +256,7 @@
     },
     {
       "path": "reporting\\private\\reset_study_output_paths.m",
-      "hash": "283ad933154f58eb"
+      "hash": "c7faa07cf6303722"
     },
     {
       "path": "reporting\\private\\run_output_figure.m",
@@ -228,19 +276,31 @@
     },
     {
       "path": "reporting\\private\\sensitivity_curve_summary_table.m",
-      "hash": "90932ecbac795791"
+      "hash": "20cbe4971e3b9d59"
     },
     {
       "path": "reporting\\private\\sensitivity_directionality_table.m",
-      "hash": "4f32385d8f52aced"
+      "hash": "19bc5d3b084eac0f"
     },
     {
       "path": "reporting\\private\\sensitivity_plot_table.m",
-      "hash": "5b5948ddf62395d5"
+      "hash": "a3ead44561c22943"
+    },
+    {
+      "path": "reporting\\private\\sensitivity_relative_matrix_table.m",
+      "hash": "268214a0e70a4e5e"
+    },
+    {
+      "path": "reporting\\private\\sensitivity_relative_plot_table.m",
+      "hash": "5067be42054298aa"
+    },
+    {
+      "path": "reporting\\private\\sensitivity_relative_summary_table.m",
+      "hash": "3dc50bacecf532b8"
     },
     {
       "path": "reporting\\private\\sensitivity_summary_table.m",
-      "hash": "752ce12e75d1b7c8"
+      "hash": "bc575f6790a51b1f"
     },
     {
       "path": "reporting\\private\\study_conditions_table.m",
@@ -256,7 +316,7 @@
     },
     {
       "path": "reporting\\private\\validate_all_reporting_results.m",
-      "hash": "8986be51d02324e9"
+      "hash": "60816d218e482ffb"
     },
     {
       "path": "reporting\\private\\validate_objective_outputs.m",
@@ -276,7 +336,7 @@
     },
     {
       "path": "reporting\\private\\validate_sensitivity_outputs.m",
-      "hash": "2d47bf4ce9b56904"
+      "hash": "b62cdc5f6ce8863d"
     },
     {
       "path": "reporting\\private\\write_combined_manifest.m",
@@ -284,7 +344,7 @@
     },
     {
       "path": "reporting\\private\\write_output_guide.m",
-      "hash": "a061b0d6dee11702"
+      "hash": "6d9ed1046bd595f2"
     },
     {
       "path": "core\\feasibility\\build_feasible_wrench_sets.m",
@@ -480,15 +540,15 @@
     },
     {
       "path": "core\\plotting\\plot_pareto_runs.m",
-      "hash": "3942831effe8ace6"
+      "hash": "06edd9e0cabd7b70"
     },
     {
       "path": "core\\plotting\\plot_robustness_qstar.m",
-      "hash": "4e5bd6986543775e"
+      "hash": "596c6c6cb611c0c0"
     },
     {
       "path": "core\\plotting\\plot_robustness_summary.m",
-      "hash": "5cce7f3bbbcfb833"
+      "hash": "b859fcf7b8e2e243"
     },
     {
       "path": "core\\plotting\\plot_robustness_task_rate.m",
@@ -496,7 +556,7 @@
     },
     {
       "path": "core\\plotting\\plot_sensitivity_comparison.m",
-      "hash": "f3041cdc0e271794"
+      "hash": "05d7f6292f380fbb"
     },
     {
       "path": "core\\plotting\\plot_trajectory_feasibility.m",
@@ -508,7 +568,7 @@
     },
     {
       "path": "core\\plotting\\publication_style.m",
-      "hash": "ec8b92a282a8b73a"
+      "hash": "92cff8ba8a0def44"
     },
     {
       "path": "core\\sensitivity\\evaluate_robustness_trial.m",
@@ -547,8 +607,16 @@
       "hash": "6a1d13e74fe71403"
     },
     {
+      "path": "internal\\assert_case_provenance_compatible.m",
+      "hash": "5975d1a385ed69bf"
+    },
+    {
       "path": "internal\\assert_compatible_result.m",
-      "hash": "440b2f759e60f14b"
+      "hash": "e0f6e07d739c901f"
+    },
+    {
+      "path": "internal\\assert_completed_stage.m",
+      "hash": "2f4c47fea0807564"
     },
     {
       "path": "internal\\authority_effort_case_names.m",
@@ -563,8 +631,40 @@
       "hash": "85401ca64aba4468"
     },
     {
+      "path": "internal\\build_case_record_from_checkpoint.m",
+      "hash": "02f41f18c9b56bbe"
+    },
+    {
+      "path": "internal\\case_record_from_result.m",
+      "hash": "b650bf1ce872a370"
+    },
+    {
+      "path": "internal\\case_record_load.m",
+      "hash": "d4d49effee210ee1"
+    },
+    {
+      "path": "internal\\case_record_load_one.m",
+      "hash": "57704a42a4b4e0f0"
+    },
+    {
+      "path": "internal\\case_record_path.m",
+      "hash": "532f6eac99045a64"
+    },
+    {
+      "path": "internal\\case_record_save.m",
+      "hash": "62a9bea059aecb06"
+    },
+    {
+      "path": "internal\\case_store_counts.m",
+      "hash": "1a727af7ed45cc15"
+    },
+    {
       "path": "internal\\case_store_has.m",
-      "hash": "f4221e66162e7ad2"
+      "hash": "0ef84a1be98b8899"
+    },
+    {
+      "path": "internal\\case_store_inventory.m",
+      "hash": "6e000c1289125340"
     },
     {
       "path": "internal\\case_store_load.m",
@@ -576,7 +676,7 @@
     },
     {
       "path": "internal\\case_store_save.m",
-      "hash": "b071b3cf11697aad"
+      "hash": "973999e8aaa742d6"
     },
     {
       "path": "internal\\check_runtime_settings.m",
@@ -584,15 +684,23 @@
     },
     {
       "path": "internal\\check_study_settings.m",
-      "hash": "1566415a94616520"
+      "hash": "97531d934af57087"
+    },
+    {
+      "path": "internal\\compact_optimization_result.m",
+      "hash": "9a5a5a0055349112"
     },
     {
       "path": "internal\\compare_provenance.m",
-      "hash": "bb5cf8abb3237f7d"
+      "hash": "5b7fdf3df2421e65"
     },
     {
       "path": "internal\\design_comparison_case_plan.m",
       "hash": "34a74949ab993845"
+    },
+    {
+      "path": "internal\\ensure_case_record_twins.m",
+      "hash": "e0d044cd58c1941d"
     },
     {
       "path": "internal\\ensure_folder.m",
@@ -619,6 +727,10 @@
       "hash": "0b0d7e6bde96c0e9"
     },
     {
+      "path": "internal\\invalidate_stage_manifest.m",
+      "hash": "9ecf7b910349c27d"
+    },
+    {
       "path": "internal\\make_optimization_case.m",
       "hash": "f9edabd6eefe7d6c"
     },
@@ -632,7 +744,7 @@
     },
     {
       "path": "internal\\open_case_store.m",
-      "hash": "0b464bddeda6ebe9"
+      "hash": "4d91558cb7bc6156"
     },
     {
       "path": "internal\\optimization_case_provenance.m",
@@ -644,7 +756,7 @@
     },
     {
       "path": "internal\\optimization_run_table.m",
-      "hash": "215eca54019c010a"
+      "hash": "8e942173e5e3f5e3"
     },
     {
       "path": "internal\\output_folders.m",
@@ -661,6 +773,10 @@
     {
       "path": "internal\\provenance_plan.m",
       "hash": "dc41954ae251664a"
+    },
+    {
+      "path": "internal\\reconcile_case_records.m",
+      "hash": "6b4721c11c156235"
     },
     {
       "path": "internal\\require_numerical_preflight.m",
@@ -700,11 +816,11 @@
     },
     {
       "path": "internal\\run_optimization_cases.m",
-      "hash": "06b767dd7d7b8821"
+      "hash": "7d033ce9e4d24693"
     },
     {
       "path": "internal\\run_robustness_cases.m",
-      "hash": "20735e9ad1b5478e"
+      "hash": "6fd72056e5df361c"
     },
     {
       "path": "internal\\sensitivity_case_id.m",
@@ -712,11 +828,11 @@
     },
     {
       "path": "internal\\sensitivity_case_plan.m",
-      "hash": "a103c854b7773f4c"
+      "hash": "8526fb5ac4c9b3e2"
     },
     {
       "path": "internal\\sensitivity_study_plan.m",
-      "hash": "9404b7e10d035ce9"
+      "hash": "633f46f5a6b68ed5"
     },
     {
       "path": "internal\\settings_hash.m",
@@ -727,12 +843,20 @@
       "hash": "145e02aa91806f64"
     },
     {
+      "path": "internal\\stage_data_contract_hash.m",
+      "hash": "757c93d53e6116ff"
+    },
+    {
+      "path": "internal\\stage_is_complete.m",
+      "hash": "57f1c74d8fc88813"
+    },
+    {
       "path": "internal\\study_log.m",
       "hash": "35500f40b741dea8"
     },
     {
       "path": "internal\\study_provenance.m",
-      "hash": "87b76c523ab4c748"
+      "hash": "8c9aa4f950e67d5b"
     },
     {
       "path": "internal\\study_source_hash.m",
@@ -743,8 +867,16 @@
       "hash": "bc0e2a3990e3ac93"
     },
     {
+      "path": "internal\\validate_case_result_identity.m",
+      "hash": "dad4ce152b1b0391"
+    },
+    {
       "path": "internal\\validate_optimization_result_set.m",
       "hash": "a38ac96cf7feac28"
+    },
+    {
+      "path": "internal\\validate_optimization_results.m",
+      "hash": "b6da139a38b77e78"
     },
     {
       "path": "internal\\verify_parallel_runtime.m",
@@ -755,8 +887,12 @@
       "hash": "edede8cc9fe5cb9a"
     },
     {
+      "path": "internal\\write_stage_manifest.m",
+      "hash": "bac9934b496991c9"
+    },
+    {
       "path": "internal\\write_table_bundle.m",
-      "hash": "dee814671b92394f"
+      "hash": "bb1462573c3e91f5"
     }
   ]
 }

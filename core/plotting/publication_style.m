@@ -1,6 +1,6 @@
 function [style,cleanup] = publication_style(action)
 %PUBLICATION_STYLE Central visual standard for publication outputs.
-% The activated defaults are temporary and are restored automatically.
+% Activated graphics defaults are scoped to the caller and restored automatically.
 
 if nargin < 1
     action = 'settings';

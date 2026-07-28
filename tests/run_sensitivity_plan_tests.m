@@ -1,44 +1,62 @@
 function results = run_sensitivity_plan_tests()
-%RUN_SENSITIVITY_PLAN_TESTS Check expanded scope and legacy case reuse.
+%RUN_SENSITIVITY_PLAN_TESTS Check matrix completeness and plan consistency.
 setup_project();
 [parameters,solver] = study_settings();
 selected = mock_selected_designs(parameters,solver);
 checks = strings(0,1);
 
-expanded = sensitivity_case_plan(parameters,solver,selected);
-assert(expanded.fixed_evaluation_count == 170);
-assert(expanded.baseline_result_count == 12);
-assert(expanded.optimization_group_count == 158);
-assert(expanded.optimization_case_count == 4740);
-checks(end+1) = "expanded_plan_counts";
+plan = sensitivity_case_plan(parameters,solver,selected);
+metrics = parameters.sensitivity.matrix_metrics;
+metric_count = numel(metrics);
+point_counts = [ ...
+    numel(parameters.sensitivity.task_emphasis_values), ...
+    numel(parameters.sensitivity.actuator_capacity_values), ...
+    numel(parameters.sensitivity.kappa_values), ...
+    numel(parameters.sensitivity.characteristic_length_values), ...
+    1+double(parameters.sensitivity.include_bidirectional), ...
+    numel(parameters.sensitivity.hover_load_factor_values)];
+expected_fixed = metric_count*sum(point_counts);
+expected_baselines = metric_count*numel(point_counts);
+assert(plan.fixed_evaluation_count == expected_fixed);
+assert(plan.baseline_result_count == expected_baselines);
+checks(end+1) = "complete_matrix_plan_counts";
 
-legacy_parameters = legacy_sensitivity_parameters(parameters);
-legacy = sensitivity_case_plan(legacy_parameters,solver,selected);
-assert(legacy.fixed_evaluation_count == 91);
-assert(legacy.baseline_result_count == 6);
-assert(legacy.optimization_group_count == 85);
-assert(legacy.optimization_case_count == 2550);
-checks(end+1) = "legacy_plan_counts";
+assert(all(arrayfun(@(x) numel(x.objectives)==metric_count,plan.fixed_cases)));
+assert(all(arrayfun(@(x) numel(x.objectives)==metric_count,plan.baseline_cases)));
+checks(end+1) = "all_fixed_metrics_present";
 
-expanded_names = string({expanded.specifications.case_name});
-legacy_names = string({legacy.specifications.case_name});
-[found,locations] = ismember(legacy_names,expanded_names);
-assert(all(found),'An existing sensitivity case disappeared from the expanded plan.');
-for index = 1:numel(legacy.specifications)
-    current = expanded.specifications(locations(index));
-    previous = legacy.specifications(index);
-    assert(strcmp(previous.provenance.case_hash,current.provenance.case_hash), ...
-        'Expanded settings changed existing case %s.',previous.case_name);
-end
-checks(end+1) = "legacy_case_hashes_preserved";
+expected_groups = ...
+    changed_count(parameters.sensitivity.task_emphasis_values,baseline_rho(parameters))* ...
+        numel(parameters.sensitivity.optimized_objectives.task_emphasis) + ...
+    changed_count(parameters.sensitivity.actuator_capacity_values,1)* ...
+        numel(parameters.sensitivity.optimized_objectives.actuator_capacity) + ...
+    changed_count(parameters.sensitivity.kappa_values,parameters.kappa)* ...
+        numel(parameters.sensitivity.optimized_objectives.reaction_moment) + ...
+    changed_count(parameters.sensitivity.characteristic_length_values, ...
+        parameters.force_moment_length)* ...
+        numel(parameters.sensitivity.optimized_objectives.characteristic_length) + ...
+    double(parameters.sensitivity.include_bidirectional)* ...
+        numel(parameters.sensitivity.optimized_objectives.bidirectional) + ...
+    changed_count(parameters.sensitivity.hover_load_factor_values,1)* ...
+        numel(parameters.sensitivity.optimized_objectives.hover_load);
+assert(plan.optimization_group_count == expected_groups);
+normalization_count = numel(initial_rotorwise_seeds(parameters,solver));
+expected_cases = expected_groups*normalization_count*solver.independent_runs;
+assert(plan.optimization_case_count == expected_cases);
+checks(end+1) = "optimization_plan_counts";
 
-new_names = expanded_names(~ismember(expanded_names,legacy_names));
-assert(numel(new_names) == 2190);
-checks(end+1) = "new_case_count";
+rho_groups = plan.optimization_groups( ...
+    string({plan.optimization_groups.analysis})=="task_emphasis");
+assert(numel(rho_groups) == ...
+    changed_count(parameters.sensitivity.task_emphasis_values,baseline_rho(parameters)));
+assert(all(arrayfun(@(x) ...
+    isequal(x.objectives,parameters.sensitivity.optimized_objectives.task_emphasis), ...
+    rho_groups)));
+checks(end+1) = "task_emphasis_objectives";
 
-hover_fixed = expanded.fixed_cases( ...
-    string({expanded.fixed_cases.analysis})=="hover_load");
-assert(numel(hover_fixed) == 17);
+hover_fixed = plan.fixed_cases( ...
+    string({plan.fixed_cases.analysis})=="hover_load");
+assert(numel(hover_fixed) == numel(parameters.sensitivity.hover_load_factor_values));
 for index = 1:numel(hover_fixed)
     factor = hover_fixed(index).physical_value;
     expected_wrench = factor*parameters.hover_wrench;
@@ -49,17 +67,29 @@ for index = 1:numel(hover_fixed)
 end
 checks(end+1) = "hover_load_scaling";
 
-hover_groups = expanded.optimization_groups( ...
-    string({expanded.optimization_groups.analysis})=="hover_load");
-assert(numel(hover_groups) == 16);
-assert(all(arrayfun(@(x) numel(x.objectives)==2,hover_groups)));
-checks(end+1) = "hover_load_optimization_groups";
+for family = ["actuator_capacity","reaction_moment", ...
+        "characteristic_length","directionality","hover_load"]
+    groups = plan.optimization_groups( ...
+        string({plan.optimization_groups.analysis})==family);
+    assert(all(arrayfun(@(x) numel(x.objectives)==metric_count,groups)));
+end
+checks(end+1) = "changed_conditions_cover_configured_metrics";
 
 checks = checks(:);
 results = table(checks,true(numel(checks),1), ...
     'VariableNames',{'test','passed'});
 disp(results);
 fprintf('SENSITIVITY PLAN TESTS PASSED: %d/%d\n',height(results),height(results));
+end
+
+function count = changed_count(values,baseline)
+tolerance = 100*eps(max(1,abs(baseline)));
+count = sum(abs(values(:)-baseline) > tolerance);
+end
+
+function rho = baseline_rho(parameters)
+diagonal = diag(parameters.task.Lambda);
+rho = norm(diagonal(4:6),2)/(norm(diagonal(1:3),2)+norm(diagonal(4:6),2));
 end
 
 function selected = mock_selected_designs(parameters,solver)
@@ -74,16 +104,4 @@ for index = 1:numel(objectives)
         'normalization_case',1, ...
         'design_variables',design_variables);
 end
-end
-
-function legacy = legacy_sensitivity_parameters(parameters)
-legacy = parameters;
-legacy.sensitivity.hover_load_factor_values = zeros(1,0);
-legacy.sensitivity.optimized_objectives.task_emphasis = {'q_star'};
-legacy.sensitivity.optimized_objectives.characteristic_length = ...
-    {'sigma_min','condition_number'};
-legacy.sensitivity.optimized_objectives.reaction_moment = {'q_star'};
-legacy.sensitivity.optimized_objectives.actuator_capacity = {'q_star'};
-legacy.sensitivity.optimized_objectives.bidirectional = {'q_star'};
-legacy.sensitivity.optimized_objectives.hover_load = {};
 end

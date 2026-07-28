@@ -1,16 +1,36 @@
-\begin{tabular}{@{}llllllllllllllll@{}}
+\begin{tabular}{@{}lllllllllllllllllllll@{}}
 \toprule
-Analysis & Objective & PhysicalParameter & NumberOfPoints & BaselineParameterValue & BaselineNominalValue & NominalMinimum & ParameterAtNominalMinimum & NominalMaximum & ParameterAtNominalMaximum & ConditionSpecificMinimum & ParameterAtConditionSpecificMinimum & ConditionSpecificMaximum & ParameterAtConditionSpecificMaximum & MaximumImprovement & ParameterAtMaximumImprovement \\
+Analysis & Objective & PhysicalParameter & NumberOfPoints & NominalAvailablePoints & NominalValidPoints & ConditionSpecificAvailablePoints & ConditionSpecificValidPoints & ComparablePoints & BaselineParameterValue & BaselineNominalValue & NominalMinimum & ParameterAtNominalMinimum & NominalMaximum & ParameterAtNominalMaximum & ConditionSpecificMinimum & ParameterAtConditionSpecificMinimum & ConditionSpecificMaximum & ParameterAtConditionSpecificMaximum & MaximumImprovement & ParameterAtMaximumImprovement \\
 \midrule
-Task emphasis & Task-oriented design & rho & 25 & 0.3191165224 & 1.771853929 & 1.627601201 & 0.5416666667 & 2.222181341 & 0 & 1.700259852 & 0.5416666667 & 2.398527072 & 0 & 0.1971446178 & 0.9583333333 \\
-Actuator capacity & Task-oriented design & mu\_max & 17 & 1 & 1.771853929 & 1.065679809 & 0.8 & 1.771853929 & 1 & 1.529234952 & 0.8 & 2.093852734 & 1.2 & 0.4635551436 & 0.8 \\
-Actuator capacity & Force-authority design & mu\_max & 17 & 1 & 0.81648741 & 0.4898913622 & 0.8 & 0.81648741 & 1 & 0.7299742392 & 0.8 & 0.8584113101 & 1.2 & 0.240082877 & 0.8 \\
-Reaction-moment ratio & Task-oriented design & kappa & 13 & 0.03 & 1.771853929 & 1.756871041 & 0 & 1.771853929 & 0.03 & 1.771853929 & 0.03 & 1.814017867 & 0.06 & 0.04309109131 & 0.06 \\
-Reaction-moment ratio & Weakest-gain design & kappa & 13 & 0.03 & 1.409005298 & 1.366388825 & 0.06 & 1.409005298 & 0.03 & 1.403615107 & 0 & 1.410083697 & 0.05 & 0.04365171225 & 0.06 \\
-Reaction-moment ratio & Isotropy design & kappa & 13 & 0.03 & 1.006597901 & 1.006597901 & 0.03 & 1.047681693 & 0.06 & 1.006388164 & 0.015 & 1.008878979 & 0.06 & 0.03880271395 & 0.06 \\
-Characteristic length & Weakest-gain design & L & 17 & 1 & 1.409005298 & 0.7045036555 & 2 & 1.409081454 & 0.5 & 0.7071446869 & 2 & 1.414178664 & 0.5452538663 & 0.005097210677 & 0.5452538663 \\
-Characteristic length & Isotropy design & L & 17 & 1 & 1.006597901 & 1.006597901 & 1 & 2.012929052 & 2 & 1.006597901 & 1 & 2.012919014 & 2 & 0.8859842539 & 0.5 \\
-Normalized hover load & Task-oriented design & hover\_load\_factor & 17 & 1 & 1.771853929 & 1.417483143 & 0.8 & 1.771853929 & 1 & 1.691869305 & 0.8 & 1.884890419 & 1.15 & 0.4530246769 & 1.2 \\
-Normalized hover load & Force-authority design & hover\_load\_factor & 17 & 1 & 0.81648741 & 0.6531894407 & 1.2 & 0.81648741 & 1 & 0.693892937 & 0.8 & 0.8874563353 & 1.2 & 0.2342668946 & 1.2 \\
+Task emphasis & Task-oriented design & rho & 25 & 25 & 25 & 25 & 25 & 25 & 0.3191165224 & 1.771853929 & 1.627601201 & 0.5416666667 & 2.222181341 & 0 & 1.700259852 & 0.5416666667 & 2.398527072 & 0 & 0.1971446178 & 0.9583333333 \\
+Task emphasis & Force-authority design & rho & 25 & 25 & 25 & 25 & 25 & 25 & 0.3191165224 & 0.81648741 & 0.81648741 & 0 & 0.81648741 & 0 & 0.81648741 & 0 & 0.81648741 & 0 & 0 & 0 \\
+Task emphasis & Weakest-gain design & rho & 25 & 25 & 25 & 25 & 25 & 25 & 0.3191165224 & 1.409005298 & 1.409005298 & 0 & 1.409005298 & 0 & 1.409005298 & 0 & 1.409005298 & 0 & 0 & 0 \\
+Task emphasis & Isotropy design & rho & 25 & 25 & 25 & 25 & 25 & 25 & 0.3191165224 & 1.006597901 & 1.006597901 & 0 & 1.006597901 & 0 & 1.006597901 & 0 & 1.006597901 & 0 & 0 & 0 \\
+Task emphasis & Hover-effort design & rho & 25 & 25 & 25 & 25 & 25 & 25 & 0.3191165224 & 0.1666666673 & 0.1666666673 & 0 & 0.1666666673 & 0 & 0.1666666673 & 0 & 0.1666666673 & 0 & 0 & 0 \\
+Actuator capacity & Task-oriented design & mu\_max & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.771853929 & 1.065679809 & 0.8 & 1.771853929 & 1 & 1.529234952 & 0.8 & 2.093852734 & 1.2 & 0.4635551436 & 0.8 \\
+Actuator capacity & Force-authority design & mu\_max & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 0.81648741 & 0.4898913622 & 0.8 & 0.81648741 & 1 & 0.7299742392 & 0.8 & 0.8584113101 & 1.2 & 0.240082877 & 0.8 \\
+Actuator capacity & Weakest-gain design & mu\_max & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.409005298 & 1.409005298 & 0.8 & 1.409005298 & 0.8 & 1.409005298 & 1 & 1.409009964 & 0.875 & 4.665948191e-06 & 0.875 \\
+Actuator capacity & Isotropy design & mu\_max & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.006597901 & 1.006597901 & 0.8 & 1.006597901 & 0.8 & 1.006594609 & 1.075 & 1.006597901 & 0.825 & 3.292483038e-06 & 1.075 \\
+Actuator capacity & Hover-effort design & mu\_max & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 0.1666666673 & 0.1666666673 & 0.8 & 0.1666666673 & 0.8 & 0.1666666673 & 1.1 & 0.1666666673 & 0.8 & 2.775557562e-17 & 1.1 \\
+Normalized hover load & Task-oriented design & hover\_load\_factor & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.771853929 & 1.417483143 & 0.8 & 1.771853929 & 1 & 1.691869305 & 0.8 & 1.884890419 & 1.15 & 0.4530246769 & 1.2 \\
+Normalized hover load & Force-authority design & hover\_load\_factor & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 0.81648741 & 0.6531894407 & 1.2 & 0.81648741 & 1 & 0.693892937 & 0.8 & 0.8874563353 & 1.2 & 0.2342668946 & 1.2 \\
+Normalized hover load & Weakest-gain design & hover\_load\_factor & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.409005298 & 1.409005298 & 0.8 & 1.409005298 & 0.8 & 1.409005298 & 1 & 1.409010845 & 0.95 & 5.547269599e-06 & 0.95 \\
+Normalized hover load & Isotropy design & hover\_load\_factor & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.006597901 & 1.006597901 & 0.8 & 1.006597901 & 0.8 & 1.006594708 & 0.85 & 1.006597901 & 0.875 & 3.193077894e-06 & 0.85 \\
+Normalized hover load & Hover-effort design & hover\_load\_factor & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 0.1666666673 & 0.1066666671 & 0.8 & 0.2400000009 & 1.2 & 0.1066666671 & 0.8 & 0.2400000009 & 1.2 & 5.551115123e-17 & 0.925 \\
+Reaction-moment ratio & Task-oriented design & kappa & 13 & 13 & 13 & 13 & 13 & 13 & 0.03 & 1.771853929 & 1.756871041 & 0 & 1.771853929 & 0.03 & 1.771853929 & 0.03 & 1.814017867 & 0.06 & 0.04309109131 & 0.06 \\
+Reaction-moment ratio & Force-authority design & kappa & 13 & 13 & 13 & 13 & 13 & 13 & 0.03 & 0.81648741 & 0.8164872045 & 0 & 0.8164876468 & 0.055 & 0.8164872334 & 0.005 & 0.8164876482 & 0.055 & 9.573660276e-08 & 0.015 \\
+Reaction-moment ratio & Weakest-gain design & kappa & 13 & 13 & 13 & 13 & 13 & 13 & 0.03 & 1.409005298 & 1.366388825 & 0.06 & 1.409005298 & 0.03 & 1.403615107 & 0 & 1.410083697 & 0.05 & 0.04365171225 & 0.06 \\
+Reaction-moment ratio & Isotropy design & kappa & 13 & 13 & 13 & 13 & 13 & 13 & 0.03 & 1.006597901 & 1.006597901 & 0.03 & 1.047681693 & 0.06 & 1.006388164 & 0.015 & 1.008878979 & 0.06 & 0.03880271395 & 0.06 \\
+Reaction-moment ratio & Hover-effort design & kappa & 13 & 12 & 12 & 13 & 13 & 12 & 0.03 & 0.1666666673 & 0.1666666673 & 0.01 & 0.1666666673 & 0.04 & 0.1666666673 & 0.01 & 0.1747155371 & 0 & 5.551115123e-17 & 0.04 \\
+Actuator directionality & Task-oriented design & mu\_min & 2 & 2 & 2 & 2 & 2 & 2 & 0 & 1.771853929 & 1.771853929 & 0 & 1.775216744 & -1 & 1.771853929 & 0 & 3.641212947 & -1 & 1.865996203 & -1 \\
+Actuator directionality & Force-authority design & mu\_min & 2 & 2 & 2 & 2 & 2 & 2 & 0 & 0.81648741 & 0.81648741 & 0 & 0.8164885644 & -1 & 0.81648741 & 0 & 1.497057482 & -1 & 0.6805689175 & -1 \\
+Actuator directionality & Weakest-gain design & mu\_min & 2 & 2 & 2 & 2 & 2 & 2 & 0 & 1.409005298 & 1.409005298 & 0 & 1.409005298 & 0 & 1.409005298 & 0 & 1.409006692 & -1 & 1.394510866e-06 & -1 \\
+Actuator directionality & Isotropy design & mu\_min & 2 & 2 & 2 & 2 & 2 & 2 & 0 & 1.006597901 & 1.006597901 & 0 & 1.006597901 & 0 & 1.006594699 & -1 & 1.006597901 & 0 & 3.201750135e-06 & -1 \\
+Actuator directionality & Hover-effort design & mu\_min & 2 & 2 & 2 & 2 & 2 & 2 & 0 & 0.1666666673 & 0.1666666673 & 0 & 0.1666666673 & 0 & 0.1666666673 & 0 & 0.1666666673 & 0 & 0 & 0 \\
+Characteristic length & Task-oriented design & L & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.771853929 & 1.771853929 & 0.5 & 1.771853929 & 0.5 & 1.771853929 & 1 & 1.800686367 & 0.7071067812 & 0.02883243855 & 0.7071067812 \\
+Characteristic length & Force-authority design & L & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 0.81648741 & 0.81648741 & 0.5 & 0.81648741 & 0.5 & 0.81648741 & 0.5452538663 & 0.8164874406 & 1.296839555 & 3.057249709e-08 & 1.296839555 \\
+Characteristic length & Weakest-gain design & L & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.409005298 & 0.7045036555 & 2 & 1.409081454 & 0.5 & 0.7071446869 & 2 & 1.414178664 & 0.5452538663 & 0.005097210677 & 0.5452538663 \\
+Characteristic length & Isotropy design & L & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 1.006597901 & 1.006597901 & 1 & 2.012929052 & 2 & 1.006597901 & 1 & 2.012919014 & 2 & 0.8859842539 & 0.5 \\
+Characteristic length & Hover-effort design & L & 17 & 17 & 17 & 17 & 17 & 17 & 1 & 0.1666666673 & 0.1666666673 & 0.5 & 0.1666666673 & 0.5 & 0.1666666673 & 0.5 & 0.1666666673 & 0.5 & 0 & 0.5 \\
 \bottomrule
 \end{tabular}

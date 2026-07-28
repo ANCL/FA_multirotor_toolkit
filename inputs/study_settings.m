@@ -2,9 +2,8 @@ function [p,s] = study_settings()
 %STUDY_SETTINGS Scientific assumptions and numerical budgets for the study.
 % Runtime-only controls are defined separately in runtime_settings.m.
 
-% Scientific assumptions used by the comparative study.
-% All quantities are normalized according to the definitions documented in
-% MATH_TO_CODE.md.
+% Scientific assumptions used by the comparative study. Quantities are
+% normalized consistently with the allocation, feasibility, and metric code.
 
 %% Study identity
 p.study_id = 'fa_multirotor_comparative_design';
@@ -24,32 +23,21 @@ p.reaction_signs = [1; 1; 1; -1; -1; -1];
 p.actuator_bounds = [zeros(6,1), ones(6,1)];
 
 %% Geometry admissibility
-% Rotor distances are normalized by max_i ||p_i|| = 1.
-%
-% ell_min = 0.30 reserves a central region whose radius is 30% of the
-% maximum rotor distance.
-%
-% exclusion_radius = 0.15 requires rotor centres to remain at least
-% 2r = 0.30 apart.
+% Rotor distances are normalized by the maximum rotor radius. The minimum
+% arm length reserves a central region, and the exclusion radius enforces
+% pairwise rotor separation.
 p.geometry.ell_min = 0.30;
 p.geometry.exclusion_radius = 0.15;
 
-% The rotor-wise P1 baseline uses local installation coordinates while
-% retaining the complete physical sphere for every thrust direction.
-% alpha spans a full revolution and beta spans +/-90 deg, so the mapping
-% Rz(gamma)Ry(eta)Rx(alpha)Ry(beta)(-e3) can represent any unit u_i.
+% The rotor-wise P1 parameterization uses local installation coordinates
+% whose configured bounds cover the admissible thrust-direction sphere.
 p.geometry.rotorwise.gamma = [-pi, pi];
 p.geometry.rotorwise.eta = [-pi/2, pi/2];
 p.geometry.rotorwise.alpha = [-pi, pi];
 p.geometry.rotorwise.beta = [-pi/2, pi/2];
 
-% Spatial C3 family.
-% Rows are [lower upper] for:
+% Spatial C3 family. Rows are [lower upper] for
 % [delta, eta_s, alpha_+, beta_+, alpha_-, beta_-].
-%
-% delta spans aligned to fully interleaved triplets.
-% Arm elevation is limited to +/-30 deg.
-% Rotor installation angles are limited to +/-60 deg.
 p.geometry.spatial_ranges = [
      0,       pi/3
     -pi/6,    pi/6
@@ -67,8 +55,8 @@ p.geometry.planar_ranges = [
 ];
 
 %% Hover condition
-% Body z is downward. A normalized vehicle weight of one therefore
-% requires an upward body-frame hover force of -1 along z_B.
+% Body z is downward; the nominal hover wrench applies the opposing
+% body-frame force with zero commanded moment.
 p.hover_wrench = [0; 0; -1; 0; 0; 0];
 
 %% Prescribed anisotropic task-wrench set
@@ -103,15 +91,14 @@ baseline_force_norm = norm(baseline_task(1:3),2);
 baseline_moment_norm = norm(baseline_task(4:6),2);
 rho_0 = baseline_moment_norm/(baseline_force_norm+baseline_moment_norm);
 
-% Twenty-five approximately uniform task-emphasis values. Replace the
-% nearest uniform value with rho_0 so the exact nominal task remains part
-% of the grid without increasing the number of points.
+% Build an approximately uniform task-emphasis grid and replace the nearest
+% sample with rho_0 so the exact nominal task remains represented.
 rho_values = linspace(0,1,25);
 [~,nominal_rho_index] = min(abs(rho_values-rho_0));
 rho_values(nominal_rho_index) = rho_0;
 p.sensitivity.task_emphasis_values = sort(rho_values);
 
-% High-resolution physical sensitivity grids.
+% Physical sensitivity grids.
 p.sensitivity.actuator_capacity_values = linspace(0.8,1.2,17);
 p.sensitivity.kappa_values = linspace(0,0.06,13);
 p.sensitivity.characteristic_length_values = ...
@@ -125,18 +112,33 @@ p.sensitivity.hover_load_factor_values = linspace(0.8,1.2,17);
 % Secondary binary comparison; the baseline remains unidirectional.
 p.sensitivity.include_bidirectional = true;
 
-% Objectives optimized under each changed assumption.
+% Metrics reported for every physical sensitivity condition. Each metric is
+% evaluated on its corresponding baseline P1 optimum.
+p.sensitivity.matrix_metrics = { ...
+    'q_star', ...
+    'r_F0', ...
+    'sigma_min', ...
+    'condition_number', ...
+    'hover_effort'};
+
+% Objectives re-optimized under each changed assumption. Task emphasis changes
+% only the prescribed task definition, so the four non-task P1 problems reuse
+% their nominal optima. All other changed conditions are solved for every P1
+% objective so the complete parameter-metric matrix is available.
 p.sensitivity.optimized_objectives.task_emphasis = {'q_star'};
 p.sensitivity.optimized_objectives.characteristic_length = ...
-    {'sigma_min', 'condition_number'};
+    p.sensitivity.matrix_metrics;
 p.sensitivity.optimized_objectives.reaction_moment = ...
-    {'q_star', 'sigma_min', 'condition_number'};
-p.sensitivity.optimized_objectives.actuator_capacity = {'q_star', 'r_F0'};
-p.sensitivity.optimized_objectives.bidirectional = {'q_star', 'r_F0'};
-p.sensitivity.optimized_objectives.hover_load = {'q_star', 'r_F0'};
+    p.sensitivity.matrix_metrics;
+p.sensitivity.optimized_objectives.actuator_capacity = ...
+    p.sensitivity.matrix_metrics;
+p.sensitivity.optimized_objectives.bidirectional = ...
+    p.sensitivity.matrix_metrics;
+p.sensitivity.optimized_objectives.hover_load = ...
+    p.sensitivity.matrix_metrics;
 
 %% Robustness study
-% Apply every perturbation family to the five rotor-wise optima.
+% Apply every perturbation family to the configured rotor-wise optima.
 p.robustness.design_objectives = {
     'r_F0'
     'sigma_min'
@@ -145,25 +147,23 @@ p.robustness.design_objectives = {
     'q_star'
 };
 
-% Independent Gaussian position-component errors, normalized by the unit
-% maximum rotor radius: 0.5%, 1%, and 2%.
+% Independent Gaussian position-component errors normalized by the maximum
+% rotor radius.
 p.robustness.position_sigma = [0.005, 0.010, 0.020];
 
-% Gaussian thrust-direction installation errors: 0.5, 1, and 2 degrees.
+% Gaussian thrust-direction installation errors.
 p.robustness.direction_sigma_rad = deg2rad([0.5, 1.0, 2.0]);
 
-% Independent multiplicative actuator-capacity standard deviations:
-% 2%, 5%, and 10%.
+% Independent multiplicative actuator-capacity standard deviations.
 p.robustness.capacity_sigma = [0.02, 0.05, 0.10];
 
-% Independent multiplicative kappa standard deviations:
-% 5%, 10%, and 20%.
+% Independent multiplicative reaction-moment-ratio standard deviations.
 p.robustness.kappa_sigma = [0.05, 0.10, 0.20];
 
 % Number of perturbation trials retained for each uncertainty level.
 p.robustness.trials_per_level = 500;
 
-% Truncate Gaussian samples at +/-3 standard deviations.
+% Truncate Gaussian samples at the configured multiple of standard deviation.
 p.robustness.truncation_sigma = 3;
 
 % Numerical settings used by the comparative study.

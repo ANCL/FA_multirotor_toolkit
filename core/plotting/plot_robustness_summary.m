@@ -1,6 +1,6 @@
 function [fig, source_data] = plot_robustness_summary(summary)
 %PLOT_ROBUSTNESS_SUMMARY Severe-case task-scale robustness comparison.
-% Shows the median and 5th--95th percentile interval at the largest tested
+% Shows the median and reported percentile interval at the largest tested
 % uncertainty level for the task-oriented and force-authority designs.
 
 style = publication_style();

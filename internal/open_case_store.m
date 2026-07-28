@@ -1,7 +1,8 @@
 function store = open_case_store(folder,study_name)
-%OPEN_CASE_STORE Open one study-local atomic per-case checkpoint directory.
+%OPEN_CASE_STORE Open one study-local checkpoint and compact-record store.
 store.folder = ensure_folder(folder);
 store.case_folder = ensure_folder(fullfile(store.folder,'cases'));
+store.record_folder = ensure_folder(fullfile(store.folder,'records'));
 store.metadata_path = fullfile(store.folder,'metadata.mat');
 store.study_name = char(string(study_name));
 store.core_hash = numerical_core_hash();

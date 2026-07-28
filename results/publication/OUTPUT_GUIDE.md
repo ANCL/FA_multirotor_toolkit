@@ -1,6 +1,6 @@
-# Study-organized output guide
+# Publication output guide
 
-Publication outputs are grouped by scientific study. Every figure contains one axes and is saved as PDF and editable FIG.
+Outputs are grouped by scientific study. Figures are exported as PDF and editable FIG files, with matching source-data CSV and MAT files where applicable.
 
 ## Commands
 
@@ -13,33 +13,27 @@ make_robustness_outputs
 make_all_outputs
 ```
 
-Reporting reads completed files under `results/current` and never starts optimization.
+Reporting uses completed canonical datasets under `results/current` and does not execute optimization. Numerical stages are accepted only when their completion manifests and dataset provenance are compatible with the active study settings.
 
 ## Folders
 
-- `shared/tables`: conditions common to all studies.
-- `01_objective_dependent_designs`: five P1 designs and force sets.
-- `02_parameterization_comparison`: P1/P2/P3 comparisons.
-- `03_authority_effort_tradeoff`: the authority-effort trade-off.
-- `04_assumption_sensitivity`: task emphasis, actuator capacity, reaction-moment ratio, directionality, characteristic length, and normalized hover load.
+- `shared/tables`: conditions common to the comparative study.
+- `01_objective_dependent_designs`: selected P1 designs and feasible-set outputs.
+- `02_parameterization_comparison`: P1/P2/P3 comparison outputs.
+- `03_authority_effort_tradeoff`: authority-effort trade-off outputs.
+- `04_assumption_sensitivity`: parameter-metric sensitivity outputs.
 - `05_implementation_robustness`: perturbation summaries and trends.
-
-## Derived values
-
-The parameterization comparison table includes the percentage loss relative to P1 for P2 and P3. Positive values indicate lower performance.
-
-The authority-effort table includes changes between adjacent front points and the corresponding hover-effort increase per unit force authority.
 
 ## Sensitivity outputs
 
-The ten independent figures are `sensitivity_task_emphasis`, `sensitivity_actuator_capacity`, `sensitivity_capacity_force_authority`, `sensitivity_reaction_moment`, `sensitivity_reaction_weakest_gain`, `sensitivity_reaction_isotropy`, `sensitivity_length_weakest_gain`, `sensitivity_length_isotropy`, `sensitivity_hover_load_task_scale`, and `sensitivity_hover_load_force_authority`. Each has PDF, FIG, CSV, and MAT files.
+The sensitivity study exports one raw-value figure and one baseline-relative percentage figure for each configured parameter-metric combination. Raw figure names follow `sensitivity_<analysis>_<metric>`; percentage figure names append `_relative`.
 
-Task emphasis uses the numerical moment-emphasis fraction `rho`. The endpoint `rho=0` is the pure-force limiting task with zero moment deviations; `rho=1` is the pure-moment limiting task with zero force deviations. The baseline task is included exactly at its resolved `rho_0`.
+The configured metrics are: `q_star`, `r_F0`, `sigma_min`, `condition_number`, `hover_effort`.
 
-`Nominal geometry` means the corresponding baseline P1 optimum is evaluated without changing its geometry. `Condition-specific optimum` means the geometry is optimized under the modified condition.
+`Nominal geometry` evaluates the corresponding baseline P1 optimum without changing its geometry. `Condition-specific optimum` uses a re-optimized P1 design when the modified condition changes that optimization problem; otherwise the nominal optimum is reused explicitly.
 
-The hover-load factor `chi_h` scales the complete nominal hover wrench. With fixed gravity and actuator normalization, it represents relative vehicle or payload mass. The task deviations remain fixed, so the study captures static weight loading rather than inertia, centre-of-mass offset, or acceleration-dependent task scaling.
+Baseline-relative percentages use the physical metric value, not the sign-adjusted ordinate used for maximization objectives in raw plots. Re-optimization improvement is reported separately and compares the condition-specific optimum with the fixed nominal geometry under the same modified condition.
 
-The table `sensitivity_curve_summary` reports the sampled minima, maxima, baseline values, and largest condition-specific improvement for the ten continuous curves. `sensitivity_directionality` reports both task scale and force authority for the two actuator-bound cases. `sensitivity_all_cases` retains every evaluated case with both natural metrics and minimization-form objective values.
+Scientifically invalid evaluations remain part of the matrix. Design validity and metric availability are reported separately: finite metrics computed before a later feasibility failure are retained, while metrics that were not available are represented as `NaN` and appear as plot gaps. A valid condition-specific result at the same parameter value is retained independently.
 
-The task-capability figure files store both `q_star` and the plotted ordinate `minus_q`. Force-authority files store both `r_F0` and `minus_r_F0`. Weakest-gain files store both `sigma_min` and `minus_sigma_min`. Isotropy files store `condition_number`, which is also the plotted objective.
+The complete matrix tables include raw values, validity flags, baseline-relative percentages, re-optimization improvement, and the source of each condition-specific result. Curve summaries report the number of valid points in addition to extrema computed from finite values.

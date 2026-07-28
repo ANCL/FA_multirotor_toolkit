@@ -224,6 +224,14 @@ if ~islogical(p.sensitivity.include_bidirectional) || ...
     issues{end+1} = 'the bidirectional sensitivity comparison must remain enabled'; 
 end
 
+approved_matrix_metrics = ...
+    {'q_star','r_F0','sigma_min','condition_number','hover_effort'};
+if ~iscellstr(p.sensitivity.matrix_metrics) || ... %#ok<ISCLSTR>
+        ~isequal(p.sensitivity.matrix_metrics,approved_matrix_metrics)
+    issues{end+1} = ...
+        'sensitivity matrix metrics do not match the approved complete matrix';
+end
+
 fields = fieldnames(p.sensitivity.optimized_objectives);
 for k = 1:numel(fields)
     objectives = p.sensitivity.optimized_objectives.(fields{k});
@@ -231,13 +239,13 @@ for k = 1:numel(fields)
         issues{end+1} = sprintf('invalid sensitivity objective list: %s',fields{k}); 
     end
 end
-approved_optimized_objectives = struct( ...
-    'task_emphasis',{{'q_star'}}, ...
-    'characteristic_length',{{'sigma_min','condition_number'}}, ...
-    'reaction_moment',{{'q_star','sigma_min','condition_number'}}, ...
-    'actuator_capacity',{{'q_star','r_F0'}}, ...
-    'bidirectional',{{'q_star','r_F0'}}, ...
-    'hover_load',{{'q_star','r_F0'}});
+approved_optimized_objectives = struct();
+approved_optimized_objectives.task_emphasis = {'q_star'};
+approved_optimized_objectives.characteristic_length = approved_matrix_metrics;
+approved_optimized_objectives.reaction_moment = approved_matrix_metrics;
+approved_optimized_objectives.actuator_capacity = approved_matrix_metrics;
+approved_optimized_objectives.bidirectional = approved_matrix_metrics;
+approved_optimized_objectives.hover_load = approved_matrix_metrics;
 if ~isequal(p.sensitivity.optimized_objectives,approved_optimized_objectives)
     issues{end+1} = 'sensitivity objective lists do not match the approved protocol'; 
 end

@@ -20,7 +20,7 @@ shared_tables = fullfile(publication,'shared','tables');
 mkdir(shared_tables);
 write_table_bundle(study_conditions_table(parameters,solver), ...
     shared_tables,'study_conditions');
-write_output_guide(publication);
+write_output_guide(publication,parameters);
 
 output = struct();
 output.objective_designs = make_objective_design_outputs();

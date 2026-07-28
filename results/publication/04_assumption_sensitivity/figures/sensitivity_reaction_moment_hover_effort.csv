@@ -1,0 +1,27 @@
+case_name,kappa,design,hover_effort,metric_available,valid,source
+kappa_0,0,Nominal geometry,NaN,0,0,fixed_nominal_geometry
+kappa_0p005,0.005,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p01,0.01,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p015,0.015,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p02,0.02,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p025,0.025,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p03,0.03,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p035,0.035,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p04,0.04,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p045,0.045,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p05,0.05,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p055,0.055,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0p06,0.06,Nominal geometry,0.166666667288458,1,1,fixed_nominal_geometry
+kappa_0,0,Condition-specific optimum,0.174715537129571,1,1,checkpoint
+kappa_0p005,0.005,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p01,0.01,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p015,0.015,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p02,0.02,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p025,0.025,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p03,0.03,Condition-specific optimum,0.166666667288458,1,1,baseline
+kappa_0p035,0.035,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p04,0.04,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p045,0.045,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p05,0.05,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p055,0.055,Condition-specific optimum,0.166666667288458,1,1,checkpoint
+kappa_0p06,0.06,Condition-specific optimum,0.166666667288458,1,1,checkpoint

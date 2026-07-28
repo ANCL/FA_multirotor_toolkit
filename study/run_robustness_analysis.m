@@ -7,8 +7,9 @@ try
     stage_folder = ensure_folder(folders.robustness);
     source_file = fullfile(folders.designs,'rotorwise_selected_designs.mat');
     if ~isfile(source_file), error('fa:MissingStage01','Run Stage 01 first.'); end
-    design_provenance = assert_compatible_result( ...
-        source_file,'design_comparison',parameters,solver);
+    design_provenance = assert_completed_stage( ...
+        fullfile(folders.designs,'stage_manifest.mat'), ...
+        'design_comparison',parameters,solver);
     source = load(source_file,'selected');
     keep = ismember({source.selected.name},parameters.robustness.design_objectives);
     designs = source.selected(keep);
@@ -16,7 +17,6 @@ try
         error('fa:MissingRobustnessDesigns', ...
             'Every requested objective must have a selected Stage 01 design.');
     end
-
     level_sets = {parameters.robustness.position_sigma, ...
         parameters.robustness.direction_sigma_rad, ...
         parameters.robustness.capacity_sigma,parameters.robustness.kappa_sigma};
@@ -24,7 +24,37 @@ try
         runtime.robustness_batch_size);
     store = open_case_store(fullfile(ensure_folder(folders.checkpoints), ...
         '05_robustness'),'robustness');
-    resumed = sum(arrayfun(@(x) case_store_has(store,x),specifications));
+    [complete,completed_provenance,~,completed_manifest] = stage_is_complete( ...
+        stage_folder,'robustness',parameters,solver,design_provenance);
+    if complete
+        expected = completed_manifest.counts.batch_cases;
+        counts = case_store_counts(store);
+        if counts.full == expected && counts.records == expected
+            study_log('line','Stage 05 already complete and compatible. No work required.');
+            output = struct('status','complete','reused',true, ...
+                'provenance',completed_provenance,'folder',stage_folder);
+            return;
+        elseif counts.full == expected
+            study_log('line', ...
+                'Stage 05 products are current; reconciling missing compact checkpoint twins only.');
+            ensure_case_record_twins(specifications,store,runtime);
+            counts = case_store_counts(store);
+            if counts.records ~= expected
+                error('fa:IncompleteRobustnessRecordStore', ...
+                    'Expected %d compact checkpoint records, but found %d.', ...
+                    expected,counts.records);
+            end
+            study_log('line','Stage 05 checkpoint twins complete. Canonical stage products unchanged.');
+            output = struct('status','complete','reused',true, ...
+                'provenance',completed_provenance,'folder',stage_folder);
+            return;
+        end
+        study_log('line', ...
+            'Stage 05 manifest is current, but authoritative checkpoint count changed; rebuilding stage data.');
+    end
+    invalidate_stage_manifest(stage_folder);
+    inventory = case_store_inventory(store,specifications);
+    resumed = inventory.full_count;
     logger = study_log('stage_start','Stage 05','Robustness analysis', ...
         numel(specifications),resumed);
 
@@ -50,12 +80,17 @@ try
     end
 
     summary = build_summary_table(all_trials);
+    trial_table = struct2table(all_trials);
     provenance = study_provenance('robustness',parameters,solver, ...
         provenance_plan(specifications),design_provenance);
-    save(fullfile(stage_folder,'all_robustness_trials.mat'), ...
-        'all_trials','expected_trials','parameters','solver','provenance','-v7.3');
-    write_table_bundle(summary,stage_folder,'robustness_summary');
-    output = struct('trials',all_trials,'summary',summary, ...
+    write_table_bundle(trial_table,stage_folder,'robustness_trials',provenance);
+    write_table_bundle(summary,stage_folder,'robustness_summary',provenance);
+    artifacts = ["robustness_trials.mat";"robustness_summary.mat"];
+    counts = struct('batch_cases',numel(batch_results), ...
+        'checkpoint_records',numel(batch_results), ...
+        'trials',height(trial_table),'summary_rows',height(summary));
+    write_stage_manifest(stage_folder,provenance,artifacts,counts);
+    output = struct('summary',summary,'trial_count',numel(all_trials), ...
         'provenance',provenance,'folder',stage_folder);
     study_log('stage_finish',logger);
 catch ME

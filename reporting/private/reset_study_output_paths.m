@@ -1,5 +1,5 @@
 function paths = reset_study_output_paths(paths)
-%RESET_STUDY_OUTPUT_PATHS Reset only one current study output folder.
+%RESET_STUDY_OUTPUT_PATHS Reset one study-specific publication folder.
 remove_combined_manifests(paths.publication);
 if ~isfolder(paths.publication), mkdir(paths.publication); end
 if isfolder(paths.root)

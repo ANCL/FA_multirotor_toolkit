@@ -1,10 +1,16 @@
-\begin{tabular}{@{}lllllll@{}}
+\begin{tabular}{@{}llllllllllllllll@{}}
 \toprule
-Objective & Case & ActuatorBounds & NominalGeometry & ConditionSpecificOptimum & Improvement & RelativeImprovementPct \\
+Objective & Case & mumin & ActuatorBounds & BaselineMetricValue & NominalGeometry & NominalMetricAvailable & NominalValid & NominalChangePct & ConditionSpecificOptimum & ConditionSpecificMetricAvailable & ConditionSpecificValid & ConditionSpecificChangePct & ConditionSpecificImprovement & ReoptimizationImprovementPct & conditionspecificsource \\
 \midrule
-Task-oriented design & Unidirectional bounds & 0 <= mu\_i <= 1 & 1.771853929 & 1.771853929 & 0 & 0 \\
-Task-oriented design & Bidirectional bounds & -1 <= mu\_i <= 1 & 1.775216744 & 3.641212947 & 1.865996203 & 105.1137113 \\
-Force-authority design & Unidirectional bounds & 0 <= mu\_i <= 1 & 0.81648741 & 0.81648741 & 0 & 0 \\
-Force-authority design & Bidirectional bounds & -1 <= mu\_i <= 1 & 0.8164885644 & 1.497057482 & 0.6805689175 & 83.35314751 \\
+Task-oriented design & Bidirectional bounds & -1 & -1 <= mu\_i <= 1 & 1.771853929 & 1.775216744 & true & true & 0.1897907748 & 3.641212947 & true & true & 105.5029982 & 1.865996203 & 105.1137113 & checkpoint \\
+Task-oriented design & Unidirectional bounds & 0 & 0 <= mu\_i <= 1 & 1.771853929 & 1.771853929 & true & true & 0 & 1.771853929 & true & true & 0 & 0 & 0 & baseline \\
+Force-authority design & Bidirectional bounds & -1 & -1 <= mu\_i <= 1 & 0.81648741 & 0.8164885644 & true & true & 0.0001413871904 & 1.497057482 & true & true & 83.35340674 & 0.6805689175 & 83.35314751 & checkpoint \\
+Force-authority design & Unidirectional bounds & 0 & 0 <= mu\_i <= 1 & 0.81648741 & 0.81648741 & true & true & 0 & 0.81648741 & true & true & 0 & 0 & 0 & baseline \\
+Weakest-gain design & Bidirectional bounds & -1 & -1 <= mu\_i <= 1 & 1.409005298 & 1.409005298 & true & true & 0 & 1.409006692 & true & true & 9.897130039e-05 & 1.394510866e-06 & 9.897130039e-05 & checkpoint \\
+Weakest-gain design & Unidirectional bounds & 0 & 0 <= mu\_i <= 1 & 1.409005298 & 1.409005298 & true & true & 0 & 1.409005298 & true & true & 0 & 0 & 0 & baseline \\
+Isotropy design & Bidirectional bounds & -1 & -1 <= mu\_i <= 1 & 1.006597901 & 1.006597901 & true & true & 0 & 1.006594699 & true & true & -0.000318076377 & 3.201750135e-06 & 0.000318076377 & checkpoint \\
+Isotropy design & Unidirectional bounds & 0 & 0 <= mu\_i <= 1 & 1.006597901 & 1.006597901 & true & true & 0 & 1.006597901 & true & true & 0 & 0 & 0 & baseline \\
+Hover-effort design & Bidirectional bounds & -1 & -1 <= mu\_i <= 1 & 0.1666666673 & 0.1666666673 & true & true & 0 & 0.1666666673 & true & true & 0 & 0 & 0 & checkpoint \\
+Hover-effort design & Unidirectional bounds & 0 & 0 <= mu\_i <= 1 & 0.1666666673 & 0.1666666673 & true & true & 0 & 0.1666666673 & true & true & 0 & 0 & 0 & baseline \\
 \bottomrule
 \end{tabular}
