@@ -2,7 +2,7 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "authority_effort",
   "output_title": "Study 3: Authority-effort trade-off",
-  "created_at": "2026-07-27T20:01:50***",
+  "created_at": "2026-08-03T13:57:54***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "8209ce1d90a481d7",
@@ -161,7 +161,7 @@
     },
     {
       "path": "reporting\\private\\generate_sensitivity_outputs.m",
-      "hash": "3e21dcc1bdaf4843"
+      "hash": "1f8dffe4df7a6e2c"
     },
     {
       "path": "reporting\\private\\load_result_table.m",
@@ -477,7 +477,7 @@
     },
     {
       "path": "core\\plotting\\plot_pareto_runs.m",
-      "hash": "06edd9e0cabd7b70"
+      "hash": "d28b580309105b4f"
     },
     {
       "path": "core\\plotting\\plot_robustness_qstar.m",
@@ -493,7 +493,7 @@
     },
     {
       "path": "core\\plotting\\plot_sensitivity_comparison.m",
-      "hash": "05d7f6292f380fbb"
+      "hash": "dd1b244f608cc941"
     },
     {
       "path": "core\\plotting\\plot_trajectory_feasibility.m",
