@@ -1,6 +1,40 @@
 function export = sensitivity_selected_design_export(context,summary,runs)
 %SENSITIVITY_SELECTED_DESIGN_EXPORT Save selected P2 geometries for every condition.
-% Derived from authoritative compact case records; no optimizer is invoked.
+% Prefer a permanent selected-design archive, independent of ignored checkpoints.
+canonical = fullfile(context.folders.sensitivity, ...
+    'condition_specific_selected_designs.mat');
+
+if isfile(canonical)
+    data = load(canonical,'selected');
+
+    if ~isfield(data,'selected') || ~isstruct(data.selected)
+        error('fa:SensitivityArchive', ...
+            'Invalid selected-design archive: %s',canonical);
+    end
+
+    export = data.selected;
+    required = {'condition','objective','source','geometry', ...
+        'design_variables','case_name'};
+
+    if ~all(isfield(export,required)) || ...
+            numel(export) ~= height(summary)
+        error('fa:SensitivityArchive', ...
+            'Archive does not match the sensitivity summary.');
+    end
+
+    identifiers = string(summary.analysis)+":"+string(summary.case_name);
+
+    if ~isequal(string({export.condition}).',identifiers) || ...
+            ~isequal(string({export.objective}).',string(summary.objective)) || ...
+            ~isequal(string({export.source}).',string(summary.source))
+        error('fa:SensitivityArchive', ...
+            'Archive row identities do not match the numerical summary.');
+    end
+
+    return;
+end
+
+% Backward-compatible reconstruction from saved checkpoints.
 p2_data = load(context.files.spatial_c3_designs,'selected');
 nominal = p2_data.selected;
 selected = struct('condition',{},'objective',{},'source',{}, ...
@@ -49,5 +83,6 @@ for k = 1:height(summary)
         'objective',string(objective),'source',string(source), ...
         'geometry',geometry,'design_variables',variables,'case_name',string(name));
 end
+save(canonical,'selected','-v7');
 export = selected;
 end

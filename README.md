@@ -1,6 +1,6 @@
 # Fully Actuated Multirotor Toolkit
 
-MATLAB tools for constructing, analyzing, and optimizing fully actuated multirotor configurations. The toolkit evaluates allocation matrices, bounded wrench feasibility, hover effort, force authority, feasible wrench sets, and trajectory feasibility. It also contains a checkpointed five-stage comparative study and publication-output pipeline.
+MATLAB tools for constructing, analyzing, and optimizing fully actuated multirotor configurations. The toolkit evaluates allocation matrices, bounded wrench feasibility, hover effort, force authority, feasible wrench sets, and trajectory feasibility. It also contains a checkpointed six-stage comparative study and publication-output pipeline.
 
 ## Requirements
 
@@ -44,7 +44,7 @@ Edit only the `USER INPUTS` section of [`examples/example_analyze_configuration.
 
 The files in `analyses/` and `examples/` are user-facing workflows. Functions under `core/` are reusable numerical building blocks; functions under `internal/` support execution, checkpointing, and provenance.
 
-## Numerical studies: five-stage architecture
+## Numerical studies: six-stage architecture
 
 | Stage | MATLAB entry point | Scientific role |
 |---|---|---|
@@ -53,6 +53,7 @@ The files in `analyses/` and `examples/` are user-facing workflows. Functions un
 | 03 | `run_pareto_analysis` | P1 and P2 authority–effort analyses; pooled Pareto reporting |
 | 04 | `run_sensitivity_analysis` | P2 fixed-geometry and reoptimized sensitivity |
 | 05 | `run_robustness_analysis` | P2 robustness under implementation errors |
+| 06 | `run_p2_seeded_p1` | P2-seeded P1 objective and geometry comparison |
 
 ### Running the numerical stages
 
@@ -68,8 +69,11 @@ run_unrestricted_optimization();        % reuse the existing 120 P1 cases
 run_parameterization_comparison();      % run 40 new P2/P3 cases (Stage 02)
 ```
 
-Stages 03–05 use P2 geometries selected by Stage 02. Generate publication
-outputs only after their corresponding numerical stages finish. The 120
+Stage 03 runs independent P1 and P2 Pareto studies and pools their feasible
+outcomes in the publication figure; P1 is not seeded from P2. Stages 04–05
+use P2 geometries selected by Stage 02. Stage 06 compares P2 designs with
+P2-seeded P1 refinements. Generate publication outputs only after their
+corresponding numerical stages finish. The 120
 full and 120 compact P1 checkpoints in
 `results/current/checkpoints/01_unrestricted_optimization/` are protected.
 

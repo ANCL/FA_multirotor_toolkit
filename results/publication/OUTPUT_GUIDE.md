@@ -32,11 +32,11 @@ Study 2 includes `configuration_geometry_distance` (one row per objective and st
 
 ## Stage 03 pooled Pareto outputs
 
-The P1 Pareto optimization runs independently across 6 normalization cases and 5 repeats per threshold, with no P2 initialization. The existing completed P2 runs are pooled with the P1 results for the joint scatter/front figure; the two numerical studies retain separate checkpoints.
+The P1 Pareto optimization runs independently across 6 normalization cases and 5 repeats per threshold, with no P2 initialization. The completed P2 runs are pooled with the P1 results. The blue front is computed against all feasible runs, not only the threshold-selected solutions. The combined authority_effort_values table matches the plotted frontier; separate P1/P2 threshold tables are retained.
 
 ## Sensitivity outputs
 
-The sensitivity study exports one raw-value figure and one baseline-relative percentage figure for each configured parameter-metric combination. Raw figure names follow `sensitivity_<analysis>_<metric>`; percentage figure names append `_relative`.
+The sensitivity study exports one raw-value figure and one baseline-relative percentage figure for each configured parameter-metric combination. Raw figure names follow `sensitivity_<analysis>_<metric>`; percentage figure names append `_relative`. Selected P2 geometries and variables are permanently archived in results/current/04_sensitivity/condition_specific_selected_designs.mat, independent of ignored checkpoints.
 
 The configured metrics are: `r_F0`, `sigma_min`, `condition_number`, `hover_effort`.
 

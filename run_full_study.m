@@ -7,5 +7,6 @@ output.parameterization_comparison = run_parameterization_comparison();
 output.authority_effort = run_pareto_analysis();
 output.sensitivity = run_sensitivity_analysis();
 output.robustness = run_robustness_analysis();
+output.p2_seeded_p1 = run_p2_seeded_p1();
 fprintf('\nFULL NUMERICAL STUDY COMPLETED OR RESUMED\n');
 end

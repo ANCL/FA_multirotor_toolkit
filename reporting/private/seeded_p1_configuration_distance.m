@@ -29,7 +29,7 @@ for k = 1:numel(objectives)
             best = error_value;
             delta_p = vecnorm(dp,2,1);
             angular = acos(max(-1,min(1,sum((R*u).*b.u,1))));
-            delta_ell = a.ell(order)-b.ell(:).';
+            delta_ell = a.ell(order(:))-b.ell(:);
             best_yaw = yaw;
         end
     end

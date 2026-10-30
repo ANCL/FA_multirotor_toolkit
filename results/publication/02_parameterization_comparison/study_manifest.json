@@ -2,7 +2,7 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "parameterizations",
   "output_title": "Study 2: Parameterization comparison",
-  "created_at": "2026-10-30T03:41:27***",
+  "created_at": "2026-10-30T04:05:20***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "informational-only",
@@ -47,7 +47,7 @@
     },
     {
       "path": "run_full_study.m",
-      "hash": "13b8d0c3042df9ab"
+      "hash": "3d9ce48b64c9868d"
     },
     {
       "path": "run_preflight.m",
@@ -163,7 +163,7 @@
     },
     {
       "path": "reporting\\private\\combine_authority_effort_results.m",
-      "hash": "76d77fc8b5946f52"
+      "hash": "319ad57b944e8829"
     },
     {
       "path": "reporting\\private\\condition_specific_sensitivity_value.m",
@@ -187,7 +187,7 @@
     },
     {
       "path": "reporting\\private\\generate_authority_effort_outputs.m",
-      "hash": "8554acdb35c44a8f"
+      "hash": "11009b7a9c0dab42"
     },
     {
       "path": "reporting\\private\\generate_objective_design_outputs.m",
@@ -263,7 +263,7 @@
     },
     {
       "path": "reporting\\private\\seeded_p1_configuration_distance.m",
-      "hash": "3b76c7e7114cf335"
+      "hash": "23decc8d88ff57f1"
     },
     {
       "path": "reporting\\private\\selected_geometry.m",
@@ -295,7 +295,7 @@
     },
     {
       "path": "reporting\\private\\sensitivity_selected_design_export.m",
-      "hash": "8e76661f8e101e37"
+      "hash": "52a3bff2936c6452"
     },
     {
       "path": "reporting\\private\\sensitivity_summary_table.m",
@@ -343,7 +343,7 @@
     },
     {
       "path": "reporting\\private\\write_output_guide.m",
-      "hash": "f0e959a0789f941e"
+      "hash": "74b1c9f758835f7d"
     },
     {
       "path": "core\\feasibility\\build_feasible_wrench_sets.m",
