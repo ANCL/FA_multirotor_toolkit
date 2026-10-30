@@ -6,7 +6,7 @@ function data = design_comparison_plot_data(root,parameters,solver)
 % postprocessing only and never invokes an optimizer or changes numerical
 % results under results/current.
 
-path_in = fullfile(root,'results','current','01_design_comparison', ...
+path_in = fullfile(root,'results','current','01_unrestricted_optimization', ...
     'rotorwise_selected_designs.mat');
 if ~isfile(path_in)
     error('fa:MissingSelectedDesigns','Could not find %s.',path_in);

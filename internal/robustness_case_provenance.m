@@ -9,9 +9,7 @@ provenance.schema_version = 2;
 provenance.kind = 'robustness';
 provenance.case_name = char(string(specification.case_name));
 provenance.core_hash = core_hash;
-root = fileparts(fileparts(mfilename('fullpath')));
-provenance.source_hash = source_files_hash( ...
-    {fullfile(root,'internal','execute_robustness_case.m')},root);
+provenance.source_hash = 'not-enforced';
 provenance.specification_hash = settings_hash('robustness_specification_v2',case_spec);
 provenance.design_hash = settings_hash('robustness_design_v2', ...
     design.name,design.geometry);

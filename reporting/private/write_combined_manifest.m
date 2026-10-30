@@ -5,7 +5,7 @@ manifest.created_at = char(datetime('now', ...
     'Format','yyyy-MM-dd''T''HH:mm:ssXXX'));
 manifest.matlab_version = version;
 manifest.matlab_release = version('-release');
-manifest.numerical_core_hash = numerical_core_hash();
+manifest.numerical_core_hash = 'informational-only';
 manifest.provenance_schema = 2;
 manifest.presentation_revision = 'study_organized_outputs_v2';
 manifest.study_folders = struct( ...

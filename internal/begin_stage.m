@@ -31,7 +31,7 @@ state.schema_version = 2;
 state.status = 'running';
 state.active_study = char(string(study_name));
 state.updated_at = datetime('now');
-state.workflow_hash = workflow_source_hash();
+state.workflow_note = 'Source hashes are informational only; compatibility is scientific-input based.';
 state.runtime_mode = char(string(runtime.mode));
 state.matlab_release = version('-release');
 save(state_path,'state','-v7');

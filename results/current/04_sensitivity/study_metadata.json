@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "study": "sensitivity",
+  "parameterization": "spatial_c3",
+  "study_id": "fa_multirotor_comparative_design",
+  "created_at": "2026-10-30 01:48:26",
+  "matlab_release": "2024b",
+  "origin": "fresh_numerical_run",
+  "compatibility_policy": "Scientific settings and case inputs only; source file edits do not invalidate results.",
+  "numerical_protocol": "manual-numerical-protocol-v1",
+  "objectives": [
+    "r_F0",
+    "sigma_min",
+    "condition_number",
+    "hover_effort"
+  ],
+  "counts": {
+    "fixed_geometry_evaluations": 264,
+    "condition_specific_matrix_rows": 264,
+    "optimization_cases": 1220,
+    "checkpoint_records": 1220,
+    "optimization_run_rows": 1220
+  },
+  "scientific_settings": {
+    "study_id": "fa_multirotor_comparative_design",
+    "objectives": [
+      "r_F0",
+      "sigma_min",
+      "condition_number",
+      "hover_effort"
+    ],
+    "n_rotors": 6,
+    "kappa": 0.03,
+    "reaction_signs": [
+      1,
+      1,
+      1,
+      -1,
+      -1,
+      -1
+    ],
+    "actuator_bounds": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "geometry": {
+      "ell_min": 0.3,
+      "exclusion_radius": 0.15,
+      "rotorwise": {
+        "gamma": [
+          -3.1415926535897931,
+          3.1415926535897931
+        ],
+        "eta": [
+          -1.5707963267948966,
+          1.5707963267948966
+        ],
+        "alpha": [
+          -3.1415926535897931,
+          3.1415926535897931
+        ],
+        "beta": [
+          -1.5707963267948966,
+          1.5707963267948966
+        ]
+      },
+      "spatial_ranges": [
+        [
+          0,
+          1.0471975511965976
+        ],
+        [
+          -0.52359877559829882,
+          0.52359877559829882
+        ],
+        [
+          -1.0471975511965976,
+          1.0471975511965976
+        ],
+        [
+          -1.0471975511965976,
+          1.0471975511965976
+        ],
+        [
+          -1.0471975511965976,
+          1.0471975511965976
+        ],
+        [
+          -1.0471975511965976,
+          1.0471975511965976
+        ]
+      ],
+      "planar_ranges": [
+        [
+          -1.0471975511965976,
+          1.0471975511965976
+        ],
+        [
+          -1.0471975511965976,
+          1.0471975511965976
+        ]
+      ]
+    },
+    "hover_wrench": [
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0
+    ],
+    "force_moment_length": 1,
+    "sensitivity": {
+      "actuator_capacity_values": [
+        0.8,
+        0.82500000000000007,
+        0.85000000000000009,
+        0.875,
+        0.9,
+        0.925,
+        0.95,
+        0.975,
+        1,
+        1.025,
+        1.05,
+        1.075,
+        1.1,
+        1.125,
+        1.15,
+        1.1749999999999998,
+        1.2
+      ],
+      "kappa_values": [
+        0,
+        0.005,
+        0.01,
+        0.015,
+        0.02,
+        0.024999999999999998,
+        0.03,
+        0.034999999999999996,
+        0.04,
+        0.045000000000000005,
+        0.049999999999999996,
+        0.054999999999999993,
+        0.06
+      ],
+      "characteristic_length_values": [
+        0.5,
+        0.54525386633262884,
+        0.59460355750136051,
+        0.64841977732550482,
+        0.70710678118654746,
+        0.77110541270397048,
+        0.84089641525371461,
+        0.91700404320467122,
+        1,
+        1.0905077326652577,
+        1.189207115002721,
+        1.2968395546510096,
+        1.4142135623730951,
+        1.542210825407941,
+        1.6817928305074292,
+        1.8340080864093424,
+        2
+      ],
+      "hover_load_factor_values": [
+        0.8,
+        0.82500000000000007,
+        0.85000000000000009,
+        0.875,
+        0.9,
+        0.925,
+        0.95,
+        0.975,
+        1,
+        1.025,
+        1.05,
+        1.075,
+        1.1,
+        1.125,
+        1.15,
+        1.1749999999999998,
+        1.2
+      ],
+      "include_bidirectional": true,
+      "matrix_metrics": [
+        "r_F0",
+        "sigma_min",
+        "condition_number",
+        "hover_effort"
+      ],
+      "optimized_objectives": {
+        "characteristic_length": [
+          "r_F0",
+          "sigma_min",
+          "condition_number",
+          "hover_effort"
+        ],
+        "reaction_moment": [
+          "r_F0",
+          "sigma_min",
+          "condition_number",
+          "hover_effort"
+        ],
+        "actuator_capacity": [
+          "r_F0",
+          "sigma_min",
+          "condition_number",
+          "hover_effort"
+        ],
+        "bidirectional": [
+          "r_F0",
+          "sigma_min",
+          "condition_number",
+          "hover_effort"
+        ],
+        "hover_load": [
+          "r_F0",
+          "sigma_min",
+          "condition_number",
+          "hover_effort"
+        ]
+      }
+    },
+    "robustness": {
+      "design_objectives": [
+        "r_F0",
+        "sigma_min",
+        "condition_number",
+        "hover_effort"
+      ],
+      "position_sigma": [
+        0.005,
+        0.01,
+        0.02
+      ],
+      "direction_sigma_rad": [
+        0.0087266462599716477,
+        0.017453292519943295,
+        0.034906585039886591
+      ],
+      "capacity_sigma": [
+        0.02,
+        0.05,
+        0.1
+      ],
+      "kappa_sigma": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "trials_per_level": 500,
+      "truncation_sigma": 3
+    }
+  },
+  "solver_settings": {
+    "validated_release": "2024b",
+    "global_solver": "ga",
+    "local_solver": "patternsearch",
+    "master_seed": 2.0260717E+7,
+    "independent_runs": 5,
+    "local_refinements": 2,
+    "local_start_min_distance": 0.05,
+    "ga": {
+      "population_size": 120,
+      "max_generations": 60,
+      "max_stall_generations": 20,
+      "function_tolerance": 1E-10,
+      "nonlinear_constraint_algorithm": "penalty",
+      "initial_penalty": 10,
+      "penalty_factor": 100
+    },
+    "rotorwise_ga_population_size": 400,
+    "rotorwise_ga_max_generations": 500,
+    "rotorwise_ga_max_stall_generations": 200,
+    "rotorwise_patternsearch_max_function_evaluations": 20000,
+    "patternsearch": {
+      "max_function_evaluations": 3000,
+      "function_tolerance": 1E-7,
+      "mesh_tolerance": 1E-5
+    },
+    "full_actuation_threshold": 0.0001,
+    "equality_tolerance": 1E-8,
+    "bound_tolerance": 1E-9,
+    "hull_tolerance": 1E-8,
+    "vertex_tolerance": 1E-9,
+    "constraint_tolerance": 1E-6,
+    "pareto_classification_tolerance": 0.0001,
+    "pareto_points": 41
+  }
+}

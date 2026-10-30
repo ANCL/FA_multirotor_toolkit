@@ -7,7 +7,7 @@ mkdir(folder);
 cleanup = onCleanup(@() remove_test_folder(folder)); %#ok<NASGU>
 
 provenance = study_provenance( ...
-    'design_comparison',parameters,solver,struct(),struct());
+    'unrestricted_optimization',parameters,solver,struct(),struct());
 T = table((1:2).','VariableNames',{'value'});
 paths = write_table_bundle(T,folder,'example',provenance);
 written = load(paths.mat,'table_data','dataset_metadata','provenance');
@@ -17,7 +17,7 @@ assert(strcmp(written.provenance.study_hash,provenance.study_hash));
 
 manifest_path = write_stage_manifest(folder,provenance,"example.mat", ...
     struct('rows',height(T)));
-validated = assert_completed_stage(manifest_path,'design_comparison', ...
+validated = assert_completed_stage(manifest_path,'unrestricted_optimization', ...
     parameters,solver);
 assert(strcmp(validated.study_hash,provenance.study_hash));
 manifest_data = load(manifest_path,'manifest');

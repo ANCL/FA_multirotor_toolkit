@@ -1,9 +1,9 @@
 function output = run_full_study()
-%RUN_FULL_STUDY Run or resume all numerical studies in dependency order.
-% Compatible completed checkpoints are reused. A mismatch remains local to
-% its study or case and never archives the complete results/current tree.
+%RUN_FULL_STUDY Execute numerical stages in explicit dependency order.
+% Never alters or deletes previously completed P1 checkpoints.
 output = struct();
-output.design_comparison = run_design_comparison();
+output.unrestricted_optimization = run_unrestricted_optimization();
+output.parameterization_comparison = run_parameterization_comparison();
 output.authority_effort = run_pareto_analysis();
 output.sensitivity = run_sensitivity_analysis();
 output.robustness = run_robustness_analysis();

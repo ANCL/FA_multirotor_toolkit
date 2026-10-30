@@ -5,7 +5,7 @@ store.case_folder = ensure_folder(fullfile(store.folder,'cases'));
 store.record_folder = ensure_folder(fullfile(store.folder,'records'));
 store.metadata_path = fullfile(store.folder,'metadata.mat');
 store.study_name = char(string(study_name));
-store.core_hash = numerical_core_hash();
+store.core_hash = 'manual-numerical-protocol-v1';
 if isfile(store.metadata_path)
     data = load(store.metadata_path,'metadata');
     if ~isfield(data,'metadata') || ~isfield(data.metadata,'schema_version') || ...

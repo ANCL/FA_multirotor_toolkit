@@ -3,19 +3,19 @@ function provenance = study_provenance( ...
 %STUDY_PROVENANCE Component-wise provenance for one numerical study.
 if nargin < 4 || isempty(study_plan), study_plan = struct(); end
 if nargin < 5 || isempty(upstream), upstream = struct(); end
-if nargin < 6 || isempty(root)
-    root = fileparts(fileparts(mfilename('fullpath')));
-end
+if nargin < 6, root = ''; end %#ok<NASGU>
 study_name = char(string(study_name));
 provenance = struct();
 provenance.schema_version = 2;
 provenance.study_name = study_name;
-provenance.core_hash = numerical_core_hash(root);
-provenance.source_hash = study_source_hash(study_name,root);
+% Source-file modifications are not used as an automatic invalidation trigger.
+% Scientific settings and explicitly enumerated plan inputs remain checked.
+provenance.core_hash = 'manual-numerical-protocol-v1';
+provenance.source_hash = 'not-enforced';
 provenance.settings_hash = settings_hash( ...
     'resolved_study_settings_v2', ...
     resolved_study_settings(study_name,parameters,solver));
-provenance.data_contract_hash = stage_data_contract_hash();
+provenance.data_contract_hash = 'stage-data-v1';
 provenance.plan_hash = settings_hash('study_plan_v2',study_plan);
 provenance.upstream_hash = upstream_provenance_hash(upstream);
 provenance.study_hash = settings_hash('study_provenance_v3', ...

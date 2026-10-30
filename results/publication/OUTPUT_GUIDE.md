@@ -19,7 +19,7 @@ Reporting uses completed canonical datasets under `results/current` and does not
 
 - `shared/tables`: conditions common to the comparative study.
 - `01_objective_dependent_designs`: selected P1 designs and feasible-set outputs.
-- `02_parameterization_comparison`: P1/P2/P3 comparison outputs.
+- `02_parameterization_comparison`: P1/P2/P3 comparison outputs (Stage 02 numerical results).
 - `03_authority_effort_tradeoff`: authority-effort trade-off outputs.
 - `04_assumption_sensitivity`: parameter-metric sensitivity outputs.
 - `05_implementation_robustness`: perturbation summaries and trends.

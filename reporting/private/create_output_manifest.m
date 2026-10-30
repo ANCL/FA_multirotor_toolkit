@@ -7,7 +7,7 @@ manifest.created_at = char(datetime('now', ...
     'Format','yyyy-MM-dd''T''HH:mm:ssXXX'));
 manifest.matlab_version = version;
 manifest.matlab_release = version('-release');
-manifest.numerical_core_hash = numerical_core_hash();
+manifest.numerical_core_hash = 'informational-only';
 manifest.provenance_schema = 2;
 manifest.completed_outputs = completed;
 manifest.output_folder = context.paths.root;

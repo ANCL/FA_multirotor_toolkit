@@ -37,8 +37,7 @@ expected_groups = ...
     changed_count(parameters.sensitivity.hover_load_factor_values,1)* ...
         numel(parameters.sensitivity.optimized_objectives.hover_load);
 assert(plan.optimization_group_count == expected_groups);
-normalization_count = numel(initial_rotorwise_seeds(parameters,solver));
-expected_cases = expected_groups*normalization_count*solver.independent_runs;
+expected_cases = expected_groups*solver.independent_runs;
 assert(plan.optimization_case_count == expected_cases);
 checks(end+1) = "optimization_plan_counts";
 
@@ -75,14 +74,14 @@ end
 
 function selected = mock_selected_designs(parameters,solver)
 objectives = parameters.objectives(:);
-seeds = initial_rotorwise_seeds(parameters,solver);
-design_variables = seeds{1}(1,:).';
+seeds = initial_structured_seeds('spatial_c3',parameters);
+design_variables = seeds(1,:).';
 template = struct('name','','optimization_result',struct());
 selected = repmat(template,numel(objectives),1);
 for index = 1:numel(objectives)
     selected(index).name = objectives{index};
     selected(index).optimization_result = struct( ...
-        'normalization_case',1, ...
+        'normalization_case',0, ...
         'design_variables',design_variables);
 end
 end

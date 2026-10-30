@@ -1,0 +1,4 @@
+parameterization,objective,attempted_independent_runs,valid_independent_runs,best_objective_value,median_objective_value,worst_objective_value,absolute_run_spread,relative_run_spread
+rotorwise,r_F0,5,5,0.816493166068875,0.816492358616911,0.816491346922448,1.81914642749526e-06,2.22799957561654e-06
+rotorwise,sigma_min,5,5,1.40901564345199,1.40901397759839,1.40901204899029,3.59446169784228e-06,2.5510445640164e-06
+rotorwise,condition_number,5,5,1.0065909510262,1.00659187185947,1.00659314263383,2.19160763537118e-06,2.17725743822442e-06

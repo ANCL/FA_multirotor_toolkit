@@ -78,7 +78,7 @@ p.sensitivity.hover_load_factor_values = linspace(0.8,1.2,17);
 p.sensitivity.include_bidirectional = true;
 
 % Metrics reported for every physical sensitivity condition. Each metric is
-% evaluated on its corresponding baseline P1 optimum.
+% evaluated on its corresponding baseline P2 optimum.
 p.sensitivity.matrix_metrics = { ...
     'r_F0', ...
     'sigma_min', ...
@@ -98,7 +98,7 @@ p.sensitivity.optimized_objectives.hover_load = ...
     p.sensitivity.matrix_metrics;
 
 %% Robustness study
-% Apply every perturbation family to the configured rotor-wise optima.
+% Apply every perturbation family to the configured P2 optima.
 p.robustness.design_objectives = {
     'r_F0'
     'sigma_min'
@@ -149,10 +149,10 @@ s.ga.initial_penalty = 10;
 s.ga.penalty_factor = 100;
 
 %% Unrestricted P1 search budget
-s.rotorwise_ga_population_size = 160;
-s.rotorwise_ga_max_generations = 100;
-s.rotorwise_ga_max_stall_generations = 40;
-s.rotorwise_patternsearch_max_function_evaluations = 4500;
+s.rotorwise_ga_population_size = 400;
+s.rotorwise_ga_max_generations = 500;
+s.rotorwise_ga_max_stall_generations = 200;
+s.rotorwise_patternsearch_max_function_evaluations = 20000;
 
 %% Pattern-search refinement
 s.patternsearch.max_function_evaluations = 3000;

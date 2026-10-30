@@ -7,13 +7,13 @@ function output = run_sensitivity_analysis()
 [root,parameters,solver,runtime,cleanup] = begin_stage('sensitivity'); %#ok<NASGU>
 try
     folders = output_folders(root);
-    source_file = fullfile(folders.designs,'rotorwise_selected_designs.mat');
+    source_file = fullfile(folders.parameterizations,'spatial_c3_selected_designs.mat');
     if ~isfile(source_file)
-        error('fa:MissingStage01','Run the design-comparison study first.');
+        error('fa:MissingStage02','Run the P2/P3 comparison study first.');
     end
     design_provenance = assert_completed_stage( ...
-        fullfile(folders.designs,'stage_manifest.mat'), ...
-        'design_comparison',parameters,solver);
+        fullfile(folders.parameterizations,'stage_manifest.mat'), ...
+        'parameterization_comparison',parameters,solver);
     stage_folder = ensure_folder(folders.sensitivity);
     checkpoint_folder = fullfile(ensure_folder(folders.checkpoints), ...
         '04_sensitivity');
@@ -120,6 +120,8 @@ try
         'checkpoint_records',numel(condition_specific_results), ...
         'optimization_run_rows',height(condition_specific_runs));
     write_stage_manifest(stage_folder,provenance,artifacts,counts);
+    write_study_metadata(stage_folder,'sensitivity','spatial_c3', ...
+        parameters,solver,counts,'fresh_numerical_run');
 
     output = struct('nominal_geometry_summary',nominal_summary, ...
         'condition_specific_summary',condition_specific_summary, ...
@@ -201,7 +203,7 @@ function summary = summarize_condition_specific_results( ...
     results,groups,baseline_cases,selected,nominal_summary)
 rows = repmat(condition_specific_row_template(),0,1);
 
-% Exact baseline points reuse the already selected P1 optima for all four
+% Exact baseline points reuse the already selected P2 optima for all four
 % matrix metrics.
 for baseline_index = 1:numel(baseline_cases)
     item = baseline_cases(baseline_index);
@@ -220,7 +222,7 @@ for baseline_index = 1:numel(baseline_cases)
     end
 end
 
-% Changed conditions that require re-optimization select the best valid P1
+% Changed conditions that require re-optimization select the best valid P2
 % result across normalization cases and repeats.
 for group_index = 1:numel(groups)
     group = groups(group_index);
@@ -238,7 +240,7 @@ for group_index = 1:numel(groups)
 end
 
 % Some matrix cells do not define a different optimization problem. Their
-% corresponding nominal P1 optimum is therefore also the condition-specific
+% corresponding nominal P2 optimum is therefore also the condition-specific
 % optimum. Add those rows explicitly instead of launching duplicate searches.
 existing_keys = condition_specific_keys(rows);
 for row_index = 1:height(nominal_summary)

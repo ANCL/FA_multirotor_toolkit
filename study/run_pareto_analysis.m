@@ -7,11 +7,11 @@ function output = run_pareto_analysis()
 try
     folders = output_folders(root);
     stage_folder = ensure_folder(folders.pareto);
-    source_file = fullfile(folders.designs,'rotorwise_selected_designs.mat');
-    if ~isfile(source_file), error('fa:MissingStage01','Run Stage 01 first.'); end
+    source_file = fullfile(folders.parameterizations,'spatial_c3_selected_designs.mat');
+    if ~isfile(source_file), error('fa:MissingStage02','Run Stage 02 first.'); end
     design_provenance = assert_completed_stage( ...
-        fullfile(folders.designs,'stage_manifest.mat'), ...
-        'design_comparison',parameters,solver);
+        fullfile(folders.parameterizations,'stage_manifest.mat'), ...
+        'parameterization_comparison',parameters,solver);
     store = open_case_store(fullfile(ensure_folder(folders.checkpoints), ...
         '03_authority_effort'),'authority_effort');
     [complete,completed_provenance,~,completed_manifest] = stage_is_complete( ...
@@ -40,7 +40,7 @@ try
     effort_design = selected(strcmp({selected.name},'hover_effort'));
     if numel(authority_design) ~= 1 || numel(effort_design) ~= 1
         error('fa:MissingParetoEndpoints', ...
-            'Stage 01 must contain one r_F0 and one hover_effort design.');
+            'Stage 02 P2 must contain one r_F0 and one hover_effort design.');
     end
     if ~record_reconcile_only
         invalidate_stage_manifest(stage_folder);
@@ -55,28 +55,23 @@ try
             'The force-authority design is below the hover-effort endpoint.');
     end
     thresholds = linspace(authority_min,authority_max,solver.pareto_points);
-    seed_designs = initial_rotorwise_seeds(parameters,solver);
-    seed_designs = add_normalization_seed( ...
-        seed_designs,effort_design.optimization_result);
-    seed_designs = add_normalization_seed( ...
-        seed_designs,authority_design.optimization_result);
+    seed_designs = initial_structured_seeds('spatial_c3',parameters);
+    seed_designs = unique([ ...
+        effort_design.optimization_result.design_variables(:).'; ...
+        authority_design.optimization_result.design_variables(:).'; ...
+        seed_designs],'rows','stable');
     expected_names = authority_effort_case_names( ...
         numel(thresholds),solver.independent_runs);
     resumed = count_resumable_pareto_cases(store,expected_names);
-    logger = study_log('stage_start','Stage 03','Authority-effort trade-off', ...
+    logger = study_log('stage_start','Stage 03','P2 authority-effort trade-off', ...
         numel(expected_names),resumed);
-
-    previous_by_case = cell(6,1);
-    previous_by_case{effort_design.optimization_result.normalization_case} = ...
-        effort_design.optimization_result.design_variables(:).';
-    previous_by_case{authority_design.optimization_result.normalization_case} = ...
-        authority_design.optimization_result.design_variables(:).';
+    previous_incumbent = effort_design.optimization_result.design_variables(:).';
     all_specifications = struct([]);
     result_blocks = cell(numel(thresholds),1);
 
     for threshold_index = 1:numel(thresholds)
         specifications = authority_effort_threshold_plan( ...
-            threshold_index,thresholds,seed_designs,previous_by_case,parameters,solver);
+            threshold_index,thresholds,seed_designs,previous_incumbent,parameters,solver);
         [threshold_results,logger,runtime] = run_optimization_cases( ...
             specifications,store,logger,solver,runtime);
         result_blocks{threshold_index} = threshold_results;
@@ -85,15 +80,10 @@ try
         else
             all_specifications = [all_specifications;specifications]; %#ok<AGROW>
         end
-        for normalization_case = 1:6
-            keep = [threshold_results.normalization_case] == normalization_case & ...
-                [threshold_results.valid];
-            candidates = threshold_results(keep);
-            if ~isempty(candidates)
-                [~,best_index] = min([candidates.objective_value]);
-                previous_by_case{normalization_case} = ...
-                    candidates(best_index).design_variables(:).';
-            end
+        candidates = threshold_results([threshold_results.valid]);
+        if ~isempty(candidates)
+            [~,best_index] = min([candidates.objective_value]);
+            previous_incumbent = candidates(best_index).design_variables(:).';
         end
     end
 
@@ -145,6 +135,8 @@ try
         'valid_scientific_runs',height(all_summary), ...
         'selected_designs',numel(selected_designs));
     write_stage_manifest(stage_folder,provenance,artifacts,counts);
+    write_study_metadata(stage_folder,'authority_effort','spatial_c3', ...
+        parameters,solver,counts,'fresh_numerical_run');
 
     output = struct('summary',selected_summary, ...
         'all_valid_runs',all_summary,'repeatability',repeatability, ...
@@ -188,7 +180,7 @@ row_template = struct('case_name',"",'threshold_index',0, ...
     'normalization_case',NaN,'seed',NaN,'constraint_violation',NaN,'elapsed_seconds',NaN);
 rows = repmat(row_template,0,1);
 for threshold_index = 1:numel(thresholds)
-    pattern = [sprintf('pareto_%03d_norm_',threshold_index),'\d+_run_\d+$'];
+    pattern = [sprintf('pareto_%03d_run_',threshold_index),'\d+$'];
     keep = false(numel(runs),1);
     for k = 1:numel(runs)
         keep(k) = runs(k).valid && ~isempty(regexp(runs(k).case_name,pattern,'once'));
@@ -233,18 +225,8 @@ end
 end
 
 function index = parse_threshold(case_name)
-tokens = regexp(case_name,'pareto_(\d+)_norm','tokens','once');
+tokens = regexp(case_name,'pareto_(\d+)_run_','tokens','once');
 index = str2double(tokens{1});
-end
-
-function seeds = add_normalization_seed(seeds,optimization_result)
-%ADD_NORMALIZATION_SEED Add a known design to its compatible case seeds.
-normalization_case = optimization_result.normalization_case;
-if ~(isscalar(normalization_case) && normalization_case >= 1 && normalization_case <= numel(seeds) && normalization_case == fix(normalization_case))
-    error('fa:InvalidNormalizationSeed','Optimization result has an invalid normalization case.');
-end
-variables = optimization_result.design_variables(:).';
-seeds{normalization_case} = unique([variables;seeds{normalization_case}],'rows','stable');
 end
 
 function summary = assess_pareto_repeatability(results,thresholds)
@@ -253,7 +235,7 @@ rows = repmat(row_template(),numel(thresholds),1);
 for threshold_index = 1:numel(thresholds)
     run_ids = nan(numel(results),1);
     matches = false(numel(results),1);
-    pattern = sprintf('pareto_%03d_norm_\\d+_run_(\\d+)$',threshold_index);
+    pattern = [sprintf('pareto_%03d_run_',threshold_index),'(\d+)$'];
     for k = 1:numel(results)
         token = regexp(results(k).case_name,pattern,'tokens','once');
         if ~isempty(token)

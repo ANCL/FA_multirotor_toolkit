@@ -25,7 +25,7 @@ fprintf(fid,'Reporting uses completed canonical datasets under `results/current`
 fprintf(fid,'## Folders\n\n');
 fprintf(fid,'- `shared/tables`: conditions common to the comparative study.\n');
 fprintf(fid,'- `01_objective_dependent_designs`: selected P1 designs and feasible-set outputs.\n');
-fprintf(fid,'- `02_parameterization_comparison`: P1/P2/P3 comparison outputs.\n');
+fprintf(fid,'- `02_parameterization_comparison`: P1/P2/P3 comparison outputs (Stage 02 numerical results).\n');
 fprintf(fid,'- `03_authority_effort_tradeoff`: authority-effort trade-off outputs.\n');
 fprintf(fid,'- `04_assumption_sensitivity`: parameter-metric sensitivity outputs.\n');
 fprintf(fid,'- `05_implementation_robustness`: perturbation summaries and trends.\n\n');

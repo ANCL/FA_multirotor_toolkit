@@ -1,6 +1,6 @@
 # Fully Actuated Multirotor Toolkit
 
-MATLAB tools for constructing, analyzing, and optimizing fully actuated multirotor configurations. The toolkit evaluates allocation matrices, bounded wrench feasibility, hover effort, force authority, feasible wrench sets, and trajectory feasibility. It also contains a checkpointed four-stage comparative study and publication-output pipeline.
+MATLAB tools for constructing, analyzing, and optimizing fully actuated multirotor configurations. The toolkit evaluates allocation matrices, bounded wrench feasibility, hover effort, force authority, feasible wrench sets, and trajectory feasibility. It also contains a checkpointed five-stage comparative study and publication-output pipeline.
 
 ## Requirements
 
@@ -43,6 +43,45 @@ Edit only the `USER INPUTS` section of [`examples/example_analyze_configuration.
 | Build publication figures and tables | `make_all_outputs` | `results/publication/` |
 
 The files in `analyses/` and `examples/` are user-facing workflows. Functions under `core/` are reusable numerical building blocks; functions under `internal/` support execution, checkpointing, and provenance.
+
+## Numerical studies: five-stage architecture
+
+| Stage | MATLAB entry point | Scientific role |
+|---|---|---|
+| 01 | `run_unrestricted_optimization` | P1 unrestricted rotorwise optimization |
+| 02 | `run_parameterization_comparison` | New P2/P3 optimization and comparison with P1 |
+| 03 | `run_pareto_analysis` | P2 authority–effort trade-off |
+| 04 | `run_sensitivity_analysis` | P2 fixed-geometry and reoptimized sensitivity |
+| 05 | `run_robustness_analysis` | P2 robustness under implementation errors |
+
+### Running the numerical stages
+
+The high-budget **P1 Stage 01 is already migrated and verified**. Its 120
+completed cases and four selected designs are reused without optimization.
+The original migration utility was retired after verification; do not rerun
+or reconstruct P1 simply to reorganize the toolkit.
+
+```matlab
+setup_project();
+run_preflight();                         % numerical environment gate
+run_unrestricted_optimization();        % reuse the existing 120 P1 cases
+run_parameterization_comparison();      % run 40 new P2/P3 cases (Stage 02)
+```
+
+Stages 03–05 use P2 geometries selected by Stage 02. Generate publication
+outputs only after their corresponding numerical stages finish. The 120
+full and 120 compact P1 checkpoints in
+`results/current/checkpoints/01_unrestricted_optimization/` are protected.
+
+Compatibility is based on scientific settings, case identity, and solver
+inputs—not changes to source-file formatting. Human-readable
+`study_metadata.json` files accompany each completed stage. A real change
+to the numerical algorithm requires an explicit protocol update and review
+of the affected saved results, not an automatic source-code hash cascade.
+
+The regression tests are kept under `tests/`, separate from normal numerical
+workflows. Run `run_cheap_tests()` only when checking the toolkit. The test
+folder is added to the MATLAB path temporarily by that command.
 
 ## Analyze a configuration
 
@@ -191,12 +230,13 @@ study_output = run_full_study();
 publication_output = make_all_outputs();
 ```
 
-`run_full_study` executes the stages in dependency order:
+`run_full_study` executes the five stages in dependency order:
 
-1. `run_design_comparison` — independent P1/P2/P3 optimization for the four configured objectives.
-2. `run_pareto_analysis` — force-authority versus hover-effort trade-off.
-3. `run_sensitivity_analysis` — physical-assumption sensitivity.
-4. `run_robustness_analysis` — seeded implementation-perturbation trials.
+1. `run_unrestricted_optimization` — P1-only Stage 01; reuses the verified high-budget results.
+2. `run_parameterization_comparison` — P2/P3 searches and comparison against P1.
+3. `run_pareto_analysis` — P2 authority–effort trade-off.
+4. `run_sensitivity_analysis` — P2 model/parameter sensitivity.
+5. `run_robustness_analysis` — P2 implementation robustness.
 
 Every numerical stage requires a compatible successful preflight. Rerunning `run_full_study` resumes compatible missing cases from `results/current/checkpoints/`. Reporting reads completed numerical results and does not rerun optimization.
 
@@ -206,7 +246,7 @@ To run without parallel workers, edit [`inputs/runtime_settings.m`](inputs/runti
 runtime.mode = 'serial';
 ```
 
-Use `auto` to use a process pool when available, or `parallel` to require one. Runtime settings do not change scientific results and are excluded from compatibility hashes.
+Use `auto` to use a process pool when available, or `parallel` to require one. Runtime settings do not change scientific results and are excluded from scientific-input compatibility checks.
 
 ## Results
 
@@ -264,3 +304,30 @@ help analyze_configuration
 help optimize_custom_design
 help check_wrench_feasibility
 ```
+
+
+## Optional Stage 06: P2-seeded unrestricted P1 (independent experiment)
+
+After completing Stages 01 and 02, run:
+
+```matlab
+setup_project();
+run_p2_seeded_p1();
+```
+
+Stage 06 performs 90 independent unrestricted P1 optimizations: three objectives
+(`r_F0`, `sigma_min`, `condition_number`), six normalization cases, and five
+repeats. Hover effort is excluded because P2 already attains the nominal lower
+bound of 1/6. It uses the **same GA and pattern-search budgets, random seeds,
+and existing deterministic population starts as Stage 01**, replacing only
+one deterministic initial population row with the corresponding optimized
+P2 geometry. Seed conversion is verified to preserve physical geometry and
+objective values before optimization begins. The initial P2 candidate is
+retained during feasible-candidate selection.
+
+Results are independent of the five-stage pipeline and are saved under
+`results/current/06_p2_seeded_p1/` and
+`results/current/checkpoints/06_p2_seeded_p1/`. The comparison table
+`seeded_vs_baselines.csv` compares Stage 01, Stage 02, and Stage 06.
+Re-running the command reuses completed checkpoints. This experiment tests
+best-found seeded performance; it does **not** certify global optimality.

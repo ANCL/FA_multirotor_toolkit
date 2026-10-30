@@ -5,11 +5,11 @@ function output = run_robustness_analysis()
 try
     folders = output_folders(root);
     stage_folder = ensure_folder(folders.robustness);
-    source_file = fullfile(folders.designs,'rotorwise_selected_designs.mat');
-    if ~isfile(source_file), error('fa:MissingStage01','Run Stage 01 first.'); end
+    source_file = fullfile(folders.parameterizations,'spatial_c3_selected_designs.mat');
+    if ~isfile(source_file), error('fa:MissingStage02','Run Stage 02 first.'); end
     design_provenance = assert_completed_stage( ...
-        fullfile(folders.designs,'stage_manifest.mat'), ...
-        'design_comparison',parameters,solver);
+        fullfile(folders.parameterizations,'stage_manifest.mat'), ...
+        'parameterization_comparison',parameters,solver);
     source = load(source_file,'selected');
     keep = ismember({source.selected.name},parameters.robustness.design_objectives);
     designs = source.selected(keep);
@@ -90,6 +90,8 @@ try
         'checkpoint_records',numel(batch_results), ...
         'trials',height(trial_table),'summary_rows',height(summary));
     write_stage_manifest(stage_folder,provenance,artifacts,counts);
+    write_study_metadata(stage_folder,'robustness','spatial_c3', ...
+        parameters,solver,counts,'fresh_numerical_run');
     output = struct('summary',summary,'trial_count',numel(all_trials), ...
         'provenance',provenance,'folder',stage_folder);
     study_log('stage_finish',logger);

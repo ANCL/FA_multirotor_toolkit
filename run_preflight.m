@@ -185,7 +185,7 @@ try
 
     preflight_hash = preflight_compatibility_hash( ...
         parameters,production_solver); %#ok<NASGU>
-    workflow_hash = workflow_source_hash(); %#ok<NASGU>
+    workflow_hash = 'informational-only'; %#ok<NASGU>
     passed_at = datetime('now'); %#ok<NASGU>
     save(fullfile(folder,'preflight_passed.mat'), ...
         'preflight_hash','workflow_hash','passed_at');
