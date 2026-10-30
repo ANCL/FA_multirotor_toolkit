@@ -23,11 +23,25 @@ hold(ax,'on');
 
 number_of_rotors = size(geometry.p,2);
 
+if options.show_rotor_groups
+    if number_of_rotors ~= 6 || ...
+            ~isfield(geometry,'parameterization') || ...
+            ~strcmp(char(string(geometry.parameterization)),'spatial_c3')
+        error('fa:TriadLabels', ...
+            'Grouped rotor labels require a six-rotor spatial C3 design.');
+    end
+
+end
+
 % Arms remain visually secondary to the rotor planes and thrust markers.
 for rotor = 1:number_of_rotors
     position = geometry.p(:,rotor);
+    arm_color = style.colors.geometry_arm;
+    if options.show_rotor_groups
+        arm_color = rotor_triad_color(rotor,style);
+    end
     plot3(ax,[0 position(1)],[0 position(2)],[0 position(3)],'-', ...
-        'Color',style.colors.geometry_arm, ...
+        'Color',arm_color, ...
         'LineWidth',options.arm_line_width, ...
         'HandleVisibility','off');
 end
@@ -40,7 +54,7 @@ scatter3(ax,0,0,0,options.center_marker_size, ...
 % Opaque filled disks show the rotor-plane orientations and depth ordering.
 for rotor = 1:number_of_rotors
     draw_rotor_disk(ax,geometry.p(:,rotor),geometry.u(:,rotor), ...
-        options,style);
+        options,style,rotor);
 end
 
 % Tapered markers widen along the positive thrust direction. Their narrow
@@ -65,6 +79,10 @@ if options.show_angles
     draw_geometry_angle_annotations(ax,geometry,options,style);
 end
 format_publication_axes(ax,'schematic');
+
+if options.show_rotor_groups
+    draw_rotor_group_labels(ax,geometry,options,style);
+end
 
 source_data = struct('geometry',geometry,'options',options);
 end
@@ -103,7 +121,8 @@ defaults = struct( ...
     'thrust_frustum_tip_radius',0.038*length_scale, ...
     'thrust_frustum_segments',24, ...
     'center_marker_size',3.5, ...
-    'show_angles',false);
+    'show_angles',false, ...
+    'show_rotor_groups',false);
 
 fields = fieldnames(defaults);
 for index = 1:numel(fields)
@@ -113,14 +132,19 @@ for index = 1:numel(fields)
 end
 end
 
-function draw_rotor_disk(ax,position,direction,options,style)
+function draw_rotor_disk(ax,position,direction,options,style,rotor)
 [basis_1,basis_2] = disc_basis(direction);
 angle = 2*pi*(0:options.rotor_segments-1)/options.rotor_segments;
 points = position + options.rotor_radius*( ...
     basis_1*cos(angle) + basis_2*sin(angle));
 
+disk_color = style.colors.rotor_fill;
+if options.show_rotor_groups
+    disk_color = rotor_triad_color(rotor,style);
+end
+
 patch(ax,points(1,:),points(2,:),points(3,:), ...
-    style.colors.rotor_fill, ...
+    disk_color, ...
     'EdgeColor','none', ...
     'FaceAlpha',1.0, ...
     'FaceLighting','none', ...
@@ -187,4 +211,87 @@ end
 basis_1 = cross(direction,reference);
 basis_1 = basis_1/norm(basis_1);
 basis_2 = cross(direction,basis_1);
+end
+
+function color = rotor_triad_color(rotor,style)
+% Muted group colors, consistent with the publication palette.
+if rotor <= 3
+    base = style.colors.blue;
+else
+    base = style.colors.ochre;
+end
+color = 0.65*base + 0.35*style.colors.white;
+end
+
+
+function draw_rotor_group_labels(ax,geometry,options,style)
+%DRAW_ROTOR_GROUP_LABELS Number rotors immediately beyond thrust-cone tips.
+% Fixed physical positioning; no adaptive spacing or external legend.
+
+L = median(vecnorm(geometry.p,2,1));
+
+if ~isfinite(L) || L <= 0
+    L = 1;
+end
+
+% Small clearance after each cone tip.
+label_clearance = 0.15*L;
+
+for rotor = 1:6
+    direction = geometry.u(:,rotor);
+    position = geometry.p(:,rotor);
+
+    % The cone extends along the positive thrust direction.
+    cone_tip = position + ...
+        options.thrust_frustum_length*direction;
+
+    label_position = cone_tip + label_clearance*direction;
+
+    % Check clearance in the camera viewing plane.
+    % Only flip a label if it overlaps a neighbouring rotor.
+    forward = ax.CameraTarget(:)-ax.CameraPosition(:);
+    forward = forward/norm(forward);
+
+    right = cross(forward,ax.CameraUpVector(:));
+    right = right/norm(right);
+
+    up = cross(right,forward);
+    screen_basis = [right.';up.'];
+
+    other_rotors = [1:rotor-1,rotor+1:6];
+
+    distances = vecnorm( ...
+        screen_basis*(geometry.p(:,other_rotors)-label_position), ...
+        2,1);
+
+    minimum_clearance = options.rotor_radius + 0.11*L;
+
+    if min(distances) < minimum_clearance
+        % Test the opposite side of this rotor.
+        alternate = position - ...
+            (options.thrust_frustum_length+label_clearance)*direction;
+
+        alternate_distances = vecnorm( ...
+            screen_basis*(geometry.p(:,other_rotors)-alternate), ...
+            2,1);
+
+        if min(alternate_distances) > min(distances)+0.05*L
+            label_position = alternate;
+        end
+    end
+
+    text(ax, ...
+        label_position(1), ...
+        label_position(2), ...
+        label_position(3), ...
+        sprintf('$%d$',rotor), ...
+        'Interpreter','latex', ...
+        'FontSize',9, ...
+        'FontWeight','normal', ...
+        'Color',style.colors.charcoal, ...
+        'HorizontalAlignment','center', ...
+        'VerticalAlignment','middle', ...
+        'Clipping','off', ...
+        'HandleVisibility','off');
+end
 end
