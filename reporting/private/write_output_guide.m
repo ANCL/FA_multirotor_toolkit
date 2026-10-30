@@ -30,6 +30,9 @@ fprintf(fid,'- `03_authority_effort_tradeoff`: authority-effort trade-off output
 fprintf(fid,'- `04_assumption_sensitivity`: parameter-metric sensitivity outputs.\n');
 fprintf(fid,'- `05_implementation_robustness`: perturbation summaries and trends.\n\n');
 
+fprintf(fid,'## Parameterization geometry distances\n\n');
+fprintf(fid,'Study 2 includes `configuration_geometry_distance` (one row per objective and structured family) and `configuration_rotor_differences` (matched rotor-level coordinates) as CSV, MAT, and TeX tables. P1 is aligned to P2/P3 by an optimal common yaw rotation and rotor permutations restricted to equal reaction signs. Position and thrust-axis distances use physical vectors, whereas installation-angle differences depend on coordinate conventions. No optimization is rerun.\n\n');
+
 fprintf(fid,'## Sensitivity outputs\n\n');
 fprintf(fid,'The sensitivity study exports one raw-value figure and one baseline-relative percentage figure for each configured parameter-metric combination. Raw figure names follow `sensitivity_<analysis>_<metric>`; percentage figure names append `_relative`.\n\n');
 fprintf(fid,'The configured metrics are: `%s`.\n\n', ...

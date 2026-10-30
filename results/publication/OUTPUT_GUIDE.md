@@ -24,6 +24,10 @@ Reporting uses completed canonical datasets under `results/current` and does not
 - `04_assumption_sensitivity`: parameter-metric sensitivity outputs.
 - `05_implementation_robustness`: perturbation summaries and trends.
 
+## Parameterization geometry distances
+
+Study 2 includes `configuration_geometry_distance` (one row per objective and structured family) and `configuration_rotor_differences` (matched rotor-level coordinates) as CSV, MAT, and TeX tables. P1 is aligned to P2/P3 by an optimal common yaw rotation and rotor permutations restricted to equal reaction signs. Position and thrust-axis distances use physical vectors, whereas installation-angle differences depend on coordinate conventions. No optimization is rerun.
+
 ## Sensitivity outputs
 
 The sensitivity study exports one raw-value figure and one baseline-relative percentage figure for each configured parameter-metric combination. Raw figure names follow `sensitivity_<analysis>_<metric>`; percentage figure names append `_relative`.
