@@ -50,11 +50,11 @@ try
     verify_fast_force_authority(rotorwise_result.metrics,parameters,solver);
     results = append_result(results,rotorwise_result);
 
-    %% 2. Planar task-capability optimization
-    study_log('case_start',2,8,'Planar shared geometry | q_star');
-    problem = make_design_problem('planar_shared','q_star',0,parameters);
+    %% 2. Planar hover-effort optimization
+    study_log('case_start',2,8,'Planar shared geometry | hover_effort');
+    problem = make_design_problem('planar_shared','hover_effort',0,parameters);
     problem.initial_designs = initial_structured_seeds('planar_shared',parameters);
-    problem.case_name = 'preflight_planar_q_star';
+    problem.case_name = 'preflight_planar_hover_effort';
     timer = tic;
     planar_specification = make_optimization_case(2,'',problem,parameters, ...
         stable_seed(solver.master_seed,problem.case_name),struct());
@@ -65,15 +65,6 @@ try
     logger = study_log('optimization_complete',logger,planar_result,toc(timer));
     require_valid_optimization(planar_result);
     verify_geometry_in_rotorwise(planar_result.geometry,parameters,solver,'P3');
-    task_at_limit = verify_task_scale( ...
-        planar_result.metrics.A,parameters,solver,planar_result.metrics.q_star);
-    task_above_limit = verify_task_scale( ...
-        planar_result.metrics.A,parameters,solver, ...
-        planar_result.metrics.q_star+solver.task_verification_increment);
-    if ~task_at_limit.all_feasible || task_above_limit.all_feasible
-        error('fa:PreflightTaskVerificationFailed', ...
-            'The task-scale boundary did not pass the 64-vertex verification.');
-    end
     results = append_result(results,planar_result);
 
     %% 3. Spatial parameterization optimization
@@ -91,8 +82,6 @@ try
     logger = study_log('optimization_complete',logger,spatial_result,toc(timer));
     require_valid_optimization(spatial_result);
     verify_geometry_in_rotorwise(spatial_result.geometry,parameters,solver,'P2');
-    verify_structured_seed_augmentation(seeds, ...
-        {spatial_result.geometry,planar_result.geometry},solver);
     results = append_result(results,spatial_result);
 
     %% 4. Pareto epsilon-constraint optimization
@@ -120,7 +109,7 @@ try
     fixed_metrics = evaluate_design(rotorwise_result.geometry,p_case,solver);
     assert_no_internal_error(fixed_metrics);
     logger = study_log('case_complete',logger,fixed_metrics.valid, ...
-        sprintf('q_star %.8g | r_F0 %.8g',fixed_metrics.q_star,fixed_metrics.r_F0), ...
+        sprintf('r_F0 %.8g',fixed_metrics.r_F0), ...
         toc(timer));
     if ~fixed_metrics.valid
         error('fa:PreflightNominalSensitivityInvalid','Nominal-geometry sensitivity evaluation was invalid.');
@@ -130,7 +119,7 @@ try
     study_log('case_start',6,8,'Rotor-wise geometry | sensitivity optimization');
     p_case = parameters;
     p_case.kappa = parameters.sensitivity.kappa_values(end);
-    problem = make_design_problem('rotorwise','q_star',1,p_case);
+    problem = make_design_problem('rotorwise','sigma_min',1,p_case);
     problem.initial_designs = [rotorwise_result.design_variables(:).';seeds{1}];
     problem.case_name = 'preflight_sensitivity_optimization';
     timer = tic;
@@ -190,8 +179,7 @@ try
     export_figure(fig,folder,'preflight_geometry');
     close(fig);
     save(fullfile(folder,'preflight_results.mat'),'results','fixed_metrics', ...
-        'robustness_trials','robustness_summary','task_at_limit', ...
-        'task_above_limit','summary','publication_summary', ...
+        'robustness_trials','robustness_summary','summary','publication_summary', ...
         'parameters','solver','-v7.3');
     logger = study_log('case_complete',logger,true,'all outputs reloaded and written',toc(timer));
 
@@ -273,23 +261,6 @@ end
 
 function value = field_or(s,name,fallback)
 if isstruct(s) && isfield(s,name), value = s.(name); else, value = fallback; end
-end
-
-function verify_structured_seed_augmentation(base_seeds,geometries,solver)
-%VERIFY_STRUCTURED_SEED_AUGMENTATION Exercise the production nesting helper.
-augmented = add_rotorwise_seed_geometries(base_seeds,geometries,solver);
-for normalization_case = 1:6
-    for k = 1:numel(geometries)
-        expected = encode_rotorwise_geometry( ...
-            geometries{k},normalization_case,solver).';
-        distance = max(abs(augmented{normalization_case}-expected),[],2);
-        if ~any(distance <= 10*solver.vertex_tolerance)
-            error('fa:PreflightStructuredSeedMissing', ...
-                'A structured incumbent was not retained in P1 normalization case %d.', ...
-                normalization_case);
-        end
-    end
-end
 end
 
 function verify_fast_force_authority(metrics,parameters,solver)
@@ -405,7 +376,7 @@ for family_index = 1:numel(families)
             if ~nested_metrics.valid || ...
                     max(abs(nested_metrics.A-original_metrics.A),[],'all') > 1e-10 || ...
                     abs(nested_metrics.r_F0-original_metrics.r_F0) > 1e-9 || ...
-                    abs(nested_metrics.q_star-original_metrics.q_star) > 1e-9
+                    abs(nested_metrics.hover_effort-original_metrics.hover_effort) > 1e-9
                 error('fa:ParameterizationNestingMetrics', ...
                     '%s changes physical metrics when encoded in P1.',family);
             end
@@ -430,7 +401,7 @@ for normalization_case = 1:6
             max(abs(nested.u-original.u),[],'all') > 1e-10 || ...
             max(abs(nested_metrics.A-original_metrics.A),[],'all') > 1e-10 || ...
             abs(nested_metrics.r_F0-original_metrics.r_F0) > 1e-9 || ...
-            abs(nested_metrics.q_star-original_metrics.q_star) > 1e-9
+            abs(nested_metrics.hover_effort-original_metrics.hover_effort) > 1e-9
         error('fa:ParameterizationNestingOptimizedDesign', ...
             '%s changes geometry or metrics when represented in P1.',label);
     end

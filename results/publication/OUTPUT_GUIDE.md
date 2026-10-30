@@ -28,7 +28,7 @@ Reporting uses completed canonical datasets under `results/current` and does not
 
 The sensitivity study exports one raw-value figure and one baseline-relative percentage figure for each configured parameter-metric combination. Raw figure names follow `sensitivity_<analysis>_<metric>`; percentage figure names append `_relative`.
 
-The configured metrics are: `q_star`, `r_F0`, `sigma_min`, `condition_number`, `hover_effort`.
+The configured metrics are: `r_F0`, `sigma_min`, `condition_number`, `hover_effort`.
 
 `Nominal geometry` evaluates the corresponding baseline P1 optimum without changing its geometry. `Condition-specific optimum` uses a re-optimized P1 design when the modified condition changes that optimization problem; otherwise the nominal optimum is reused explicitly.
 

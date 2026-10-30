@@ -324,8 +324,7 @@ end
 
 function options = objective_evaluation_options(problem)
 options = struct('compute_force_authority', ...
-    strcmp(problem.objective,'r_F0') || ~isempty(problem.authority_threshold), ...
-    'compute_task_scale',strcmp(problem.objective,'q_star'));
+    strcmp(problem.objective,'r_F0') || ~isempty(problem.authority_threshold));
 end
 
 function value = objective_metric_value(metrics, objective)

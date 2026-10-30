@@ -79,11 +79,7 @@ T = struct2table(rows);
 end
 
 function parameter = reported_parameter(family)
-if string(family.analysis(1))=="task_emphasis"
-    parameter = family.rho;
-else
-    parameter = family.parameter_value;
-end
+parameter = family.parameter_value;
 parameter = parameter(:);
 end
 
@@ -115,19 +111,13 @@ end
 end
 
 function specs = matrix_specs(parameters)
-baseline_task = diag(parameters.task.Lambda);
-force_norm = norm(baseline_task(1:3),2);
-moment_norm = norm(baseline_task(4:6),2);
-rho_0 = moment_norm/(force_norm+moment_norm);
-
 analyses = [ ...
-    "task_emphasis"; ...
     "actuator_capacity"; ...
     "hover_load"; ...
     "reaction_moment"; ...
     "directionality"; ...
     "characteristic_length"];
-baselines = [rho_0;1;1;parameters.kappa;0;parameters.force_moment_length];
+baselines = [1;1;parameters.kappa;0;parameters.force_moment_length];
 metrics = string(parameters.sensitivity.matrix_metrics(:));
 
 analysis = strings(numel(analyses)*numel(metrics),1);

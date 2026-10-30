@@ -25,11 +25,8 @@ desktop.ini
 *.temp
 ~$*
 
-# Numerical checkpoints
-# Full checkpoints and compact checkpoint twins are execution state and
-# can be regenerated or reconstructed by the study runners.
+# Local and intermediate numerical outputs
 **/checkpoints/
-
-# Runtime logs
+/results/preflight/
+/results/analyses/
 /results/current/run_log.txt
-/results/preflight/run_log.txt

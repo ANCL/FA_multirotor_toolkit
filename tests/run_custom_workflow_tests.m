@@ -9,8 +9,8 @@ root = setup_project();
 checks = strings(0,1);
 
 %% Case names become stable folder tokens.
-token = safe_case_token('  Candidate A / task scale  ');
-assert(strcmp(token,'Candidate_A_task_scale'));
+token = safe_case_token('  Candidate A / force authority  ');
+assert(strcmp(token,'Candidate_A_force_authority'));
 checks(end+1) = "case_token";
 
 %% Named folders below results/analyses are permitted.

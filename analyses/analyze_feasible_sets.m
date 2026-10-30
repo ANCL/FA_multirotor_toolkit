@@ -2,7 +2,7 @@ function output = analyze_feasible_sets()
 %ANALYZE_FEASIBLE_SETS Construct and export force and moment sets.
 %
 % Edit only the USER INPUTS section. For a complete configuration package,
-% including geometry, allocation, hover, task, and manifest outputs, use
+% including geometry, allocation, hover, and manifest outputs, use
 % analyze_configuration instead.
 
 root = setup_project();

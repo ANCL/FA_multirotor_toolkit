@@ -42,8 +42,6 @@ end
 function values = resolved_parameter(T,parameter_source)
 parameter_source = char(string(parameter_source));
 switch parameter_source
-    case 'rho'
-        values = T.rho;
     case {'mu_min','parameter_value'}
         values = T.parameter_value;
     otherwise

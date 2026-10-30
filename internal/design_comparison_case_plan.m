@@ -1,7 +1,6 @@
 function specifications = design_comparison_case_plan( ...
-    phase,parameters,solver,structured_selected)
+    phase,parameters,solver)
 %DESIGN_COMPARISON_CASE_PLAN Deterministic Stage 01 case definitions.
-if nargin < 4, structured_selected = struct([]); end
 phase = char(string(phase));
 switch phase
     case 'structured'
@@ -32,10 +31,6 @@ switch phase
             end
         end
     case 'rotorwise'
-        if isempty(structured_selected)
-            error('fa:MissingStructuredIncumbents', ...
-                'Rotor-wise plan requires the selected structured designs.');
-        end
         objectives = parameters.objectives;
         base_seeds = initial_rotorwise_seeds(parameters,solver);
         count = numel(objectives)*6*solver.independent_runs;
@@ -46,8 +41,6 @@ switch phase
         index = 0;
         for objective_index = 1:numel(objectives)
             objective = objectives{objective_index};
-            geometries = structured_geometries(structured_selected,objective);
-            seeds = add_rotorwise_seed_geometries(base_seeds,geometries,solver);
             for normalization_case = 1:6
                 for run_number = 1:solver.independent_runs
                     index = index+1;
@@ -58,7 +51,7 @@ switch phase
                         objective,normalization_case,run_number,solver.independent_runs);
                     problem = make_design_problem( ...
                         'rotorwise',objective,normalization_case,parameters);
-                    problem.initial_designs = seeds{normalization_case};
+                    problem.initial_designs = base_seeds{normalization_case};
                     problem.case_name = case_name;
                     specifications(index) = make_optimization_case( ...
                         index,description,problem,parameters, ...
@@ -70,16 +63,6 @@ switch phase
         error('fa:UnknownDesignPlanPhase','Unknown design-plan phase: %s',phase);
 end
 specifications = finalize_optimization_cases(specifications,solver);
-end
-
-function geometries = structured_geometries(selected,objective)
-mask = endsWith(string({selected.name}),"_"+string(objective));
-items = selected(mask);
-if numel(items) ~= 2
-    error('fa:StructuredIncumbentCount', ...
-        'Expected one P2 and one P3 incumbent for objective %s.',objective);
-end
-geometries = {items.geometry};
 end
 
 function label = family_label(family)

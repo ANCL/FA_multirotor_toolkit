@@ -64,24 +64,12 @@ if options.compute_force_authority
     metrics.force_authority_computed = true;
 end
 
-if options.compute_task_scale
-    metrics.task = task_scale(metrics.A,parameters,solver);
-    metrics.q_star = metrics.task.q_star;
-    metrics.task_feasible = metrics.task.valid && ...
-        metrics.q_star >= 1-solver.task_tolerance;
-    if ~metrics.task.valid
-        metrics.failure_reason = metrics.task.failure_reason;
-        return;
-    end
-    metrics.task_scale_computed = true;
-end
-
 metrics.valid = true;
 metrics.failure_reason = '';
 end
 
 function options = complete_options(options)
-defaults = struct('compute_force_authority',true,'compute_task_scale',true, ...
+defaults = struct('compute_force_authority',true, ...
     'enforce_normalization',true,'enforce_upper_length',true);
 fields = fieldnames(defaults);
 for k = 1:numel(fields)
@@ -98,8 +86,7 @@ metrics = struct('geometry',[],'evaluation_options',struct(),'geometry_check',[]
     'hover_effort',Inf,'hover_feasible',false,'F0',[], ...
     'force_authority',struct(),'r_F0',-Inf, ...
     'hover_force_in_F0',false,'F0_facet_gaps',[], ...
-    'force_authority_computed',false,'task',[],'q_star',-Inf, ...
-    'task_feasible',false,'task_scale_computed',false, ...
+    'force_authority_computed',false, ...
     'constraint_margins',struct(),'valid',false,'failure_reason','', ...
     'internal_error_identifier','');
 end

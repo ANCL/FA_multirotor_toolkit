@@ -2,8 +2,6 @@ function id = sensitivity_case_id(family,value)
 %SENSITIVITY_CASE_ID Deterministic ID from a resolved physical value.
 family = char(string(family));
 switch family
-    case 'task_emphasis'
-        prefix = 'task_rho_';
     case 'actuator_capacity'
         prefix = 'mu_max_';
     case 'reaction_moment'

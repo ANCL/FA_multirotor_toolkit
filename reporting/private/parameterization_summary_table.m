@@ -1,7 +1,7 @@
 function T = parameterization_summary_table(comparison)
 %PARAMETERIZATION_SUMMARY_TABLE Compare P1, P2, and P3 by objective.
 objectives = ["r_F0";"sigma_min";"condition_number"; ...
-    "hover_effort";"q_star"];
+    "hover_effort"];
 rotor_wise = zeros(numel(objectives),1);
 spatial_c3 = zeros(numel(objectives),1);
 planar_shared = zeros(numel(objectives),1);
@@ -34,7 +34,7 @@ end
 function loss_pct = relative_performance_loss(reference,value,metric)
 if reference == 0
     loss_pct = NaN;
-elseif any(string(metric)==["r_F0","sigma_min","q_star"])
+elseif any(string(metric)==["r_F0","sigma_min"])
     loss_pct = 100*(reference-value)/abs(reference);
 else
     loss_pct = 100*(value-reference)/abs(reference);

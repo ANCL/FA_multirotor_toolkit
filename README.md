@@ -1,6 +1,6 @@
 # Fully Actuated Multirotor Toolkit
 
-MATLAB tools for constructing, analyzing, and optimizing fully actuated multirotor configurations. The toolkit evaluates allocation matrices, bounded wrench feasibility, hover effort, force authority, task capability, feasible wrench sets, and trajectory feasibility. It also contains a checkpointed five-stage comparative study and publication-output pipeline.
+MATLAB tools for constructing, analyzing, and optimizing fully actuated multirotor configurations. The toolkit evaluates allocation matrices, bounded wrench feasibility, hover effort, force authority, feasible wrench sets, and trajectory feasibility. It also contains a checkpointed four-stage comparative study and publication-output pipeline.
 
 ## Requirements
 
@@ -66,7 +66,6 @@ case_spec.kappa = parameters.kappa;
 case_spec.reaction_signs = parameters.reaction_signs;
 case_spec.actuator_bounds = parameters.actuator_bounds;
 case_spec.hover_wrench = parameters.hover_wrench;
-case_spec.task_Lambda = parameters.task.Lambda;
 
 output = analyze_configuration(case_spec);
 ```
@@ -91,7 +90,7 @@ case_spec.requested_wrenches = [wrench_1, wrench_2];
 case_spec.requested_wrench_names = ["wrench_1"; "wrench_2"];
 ```
 
-For a non-six-rotor configuration, supply `reaction_signs` explicitly. The default six-rotor task matrix is not applied automatically to other rotor counts.
+For a non-six-rotor configuration, supply `reaction_signs` explicitly. The default vehicle assumptions are defined for six rotors.
 
 ### Geometry constructors
 
@@ -113,9 +112,9 @@ Start with [`examples/example_optimize_one_design.m`](examples/example_optimize_
 setup_project();
 
 case_spec = struct();
-case_spec.name = 'my_task_design';
+case_spec.name = 'my_force_authority_design';
 case_spec.parameterization = 'planar_shared';
-case_spec.objective = 'q_star';
+case_spec.objective = 'r_F0';
 case_spec.independent_runs = 1;
 case_spec.overwrite = false;
 
@@ -138,14 +137,12 @@ Supported objectives:
 | `sigma_min` | Maximize the weakest gain of the normalized allocation matrix |
 | `condition_number` | Minimize the normalized allocation-matrix condition number |
 | `hover_effort` | Minimize the squared actuator effort at hover |
-| `q_star` | Maximize the scale of the prescribed task-wrench box |
 
 One independent run is suitable for exercising the workflow. Increase `independent_runs` when the result will be used scientifically. Compatible completed runs are checkpointed and reused when `overwrite` is `false`; set it to `true` to clear only that custom optimization folder. Use a distinct `name` for a different problem.
 
 Partial overrides use the nested fields from [`inputs/study_settings.m`](inputs/study_settings.m) and [`inputs/runtime_settings.m`](inputs/runtime_settings.m):
 
 ```matlab
-case_spec.parameters.task.Lambda = diag([0.30 0.30 0.15 0.10 0.10 0.05]);
 case_spec.solver.ga.max_generations = 30;
 case_spec.runtime.mode = 'serial';
 ```
@@ -179,7 +176,7 @@ See [`analyses/analyze_trajectory.m`](analyses/analyze_trajectory.m) for a compl
 
 ## Reproduce the comparative study
 
-The complete study is computationally expensive. Validate the installation first:
+The complete study is computationally expensive. The independent P1 search uses a larger budget than the structured P2/P3 searches. Validate the installation first:
 
 ```matlab
 setup_project();
@@ -196,11 +193,10 @@ publication_output = make_all_outputs();
 
 `run_full_study` executes the stages in dependency order:
 
-1. `run_design_comparison` — P1/P2/P3 optimization for the configured objectives.
-2. `run_task_evaluation` — independent force-authority and task-boundary verification.
-3. `run_pareto_analysis` — force-authority versus hover-effort trade-off.
-4. `run_sensitivity_analysis` — physical-assumption sensitivity.
-5. `run_robustness_analysis` — seeded implementation-perturbation trials.
+1. `run_design_comparison` — independent P1/P2/P3 optimization for the four configured objectives.
+2. `run_pareto_analysis` — force-authority versus hover-effort trade-off.
+3. `run_sensitivity_analysis` — physical-assumption sensitivity.
+4. `run_robustness_analysis` — seeded implementation-perturbation trials.
 
 Every numerical stage requires a compatible successful preflight. Rerunning `run_full_study` resumes compatible missing cases from `results/current/checkpoints/`. Reporting reads completed numerical results and does not rerun optimization.
 
@@ -247,7 +243,7 @@ Sensitivity publication tables distinguish overall design validity from metric a
 - `reaction_signs` contains one `-1` or `+1` value per rotor.
 - Force and moment comparisons use the characteristic length in `force_moment_length`.
 
-The scientific assumptions, geometry bounds, task matrix, robustness levels, solver budgets, seeds, and tolerances are centralized in [`inputs/study_settings.m`](inputs/study_settings.m).
+The scientific assumptions, geometry bounds, robustness levels, solver budgets, seeds, and tolerances are centralized in [`inputs/study_settings.m`](inputs/study_settings.m).
 
 ## Troubleshooting
 

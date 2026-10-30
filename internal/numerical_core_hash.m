@@ -1,10 +1,6 @@
 function digest = numerical_core_hash(root)
 %NUMERICAL_CORE_HASH Hash shared code that can change existing case results.
-% Plotting, reporting, study runners, documentation, and settings-file text
-% are excluded. The lower-dimensional task validation extension is
-% canonicalized to its former positive-task validation because calculations
-% for every existing positive task remain identical. The sensitivity study
-% separately hashes the actual task-scale source.
+% Plotting, reporting, and study runners are excluded.
 if nargin < 1 || isempty(root)
     root = fileparts(fileparts(mfilename('fullpath')));
 end
@@ -31,32 +27,7 @@ for k = 1:numel(files)
     relative_path = erase(path_in,[root filesep]);
     text = strrep(fileread(path_in),sprintf('\r\n'),sprintf('\n'));
     text = strrep(text,sprintf('\r'),sprintf('\n'));
-    if strcmp(relative_path,fullfile('core','metrics','task_scale.m'))
-        text = canonical_positive_task_validation(text);
-    end
     parts{k} = [relative_path,newline,text];
 end
 digest = settings_hash('source_manifest_v2',parts);
-end
-
-function text = canonical_positive_task_validation(text)
-current = [ ...
-    'task_diagonal = diag(Lambda);' newline ...
-    'if norm(Lambda-diag(task_diagonal),Inf) > solver.equality_tolerance || ...' newline ...
-    '        any(task_diagonal < 0) || ~any(task_diagonal > 0)' newline ...
-    '    error(''fa:InvalidTaskMatrix'', ...' newline ...
-    '        [''task.Lambda must be diagonal with nonnegative entries and at '' ...' newline ...
-    '         ''least one positive entry.'']);' newline ...
-    'end'];
-former = [ ...
-    'if norm(Lambda-diag(diag(Lambda)),Inf) > solver.equality_tolerance || ...' newline ...
-    '        any(diag(Lambda) <= 0)' newline ...
-    '    error(''fa:InvalidTaskMatrix'', ...' newline ...
-    '        ''task.Lambda must be diagonal with positive entries.'');' newline ...
-    'end'];
-if ~contains(text,current)
-    error('fa:TaskScaleHashCanonicalization', ...
-        'The task-scale validation block changed unexpectedly.');
-end
-text = strrep(text,current,former);
 end

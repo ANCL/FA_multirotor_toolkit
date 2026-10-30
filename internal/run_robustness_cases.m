@@ -96,9 +96,7 @@ end
 
 function detail = robustness_detail(trials)
 valid = [trials.evaluation_valid];
-task = [trials.task_feasible];
-detail = sprintf('%d trials | valid %d | task-feasible %d', ...
-    numel(trials),sum(valid),sum(task));
+detail = sprintf('%d trials | valid %d',numel(trials),sum(valid));
 end
 
 function validate_robustness_results(results,specifications,designs,solver)

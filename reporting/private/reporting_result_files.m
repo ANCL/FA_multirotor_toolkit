@@ -15,9 +15,6 @@ files.structured_optimization_runs = fullfile(folders.designs, ...
     'structured_optimization_runs.mat');
 files.nested_domain_audit = fullfile(folders.designs,'nested_domain_audit.mat');
 
-files.task_manifest = fullfile(folders.task,'stage_manifest.mat');
-files.task = fullfile(folders.task,'task_capability.mat');
-files.task_verification = fullfile(folders.task,'task_verification.mat');
 
 files.pareto_manifest = fullfile(folders.pareto,'stage_manifest.mat');
 files.pareto = fullfile(folders.pareto,'authority_effort_tradeoff.mat');

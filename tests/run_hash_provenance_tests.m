@@ -19,23 +19,13 @@ assert(strcmp(base_design_source, ...
     'Plotting changed a numerical study source hash.');
 checks(end+1) = "plotting_isolated";
 
-%% Adding a task-emphasis point affects sensitivity only.
+%% Adding a physical sensitivity point affects sensitivity only.
 changed = parameters;
-
-rho_values = sort(unique( ...
-    parameters.sensitivity.task_emphasis_values(:).'));
-
-% Insert a point midway across the largest existing gap. This guarantees
-% that the test changes the sensitivity grid without depending on any
-% particular configured sample value.
-rho_gaps = diff(rho_values);
-[~,largest_gap_index] = max(rho_gaps);
-added_rho = 0.5*( ...
-    rho_values(largest_gap_index) + ...
-    rho_values(largest_gap_index+1));
-
-changed.sensitivity.task_emphasis_values = ...
-    sort([rho_values,added_rho]);
+values = parameters.sensitivity.kappa_values(:).';
+gaps = diff(values);
+[~,index] = max(gaps);
+added = 0.5*(values(index)+values(index+1));
+changed.sensitivity.kappa_values = sort([values,added]);
 
 base_design = study_provenance('design_comparison',parameters,solver);
 new_design = study_provenance('design_comparison',changed,solver);
@@ -140,7 +130,7 @@ function specification = sensitivity_example_case(parameters,solver,kappa,core_h
 if nargin < 4, core_hash = numerical_core_hash(); end
 case_parameters = parameters;
 case_parameters.kappa = kappa;
-problem = make_design_problem('rotorwise','q_star',1,case_parameters);
+problem = make_design_problem('rotorwise','r_F0',1,case_parameters);
 seeds = initial_rotorwise_seeds(parameters,solver);
 problem.initial_designs = seeds{1};
 problem.case_name = sprintf('hash_test_kappa_%g',kappa);
@@ -168,7 +158,7 @@ copyfile(fullfile(root,'study'),fullfile(temp_root,'study'));
 mkdir(fullfile(temp_root,'internal'));
 needed = {'design_comparison_case_plan.m','authority_effort_threshold_plan.m', ...
     'authority_effort_case_names.m','sensitivity_case_plan.m', ...
-    'sensitivity_study_plan.m','task_emphasis_diagonal.m', ...
+    'sensitivity_study_plan.m', ...
     'sensitivity_case_id.m','numeric_case_token.m', ...
     'robustness_case_plan.m','execute_robustness_case.m'};
 for k = 1:numel(needed)

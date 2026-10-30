@@ -39,7 +39,6 @@ switch category
             case 'sigma_min', label = '$\mathrm{Weakest\!\mbox{-}gain\ design}$';
             case 'condition_number', label = '$\mathrm{Isotropy\ design}$';
             case 'hover_effort', label = '$\mathrm{Hover\!\mbox{-}effort\ design}$';
-            case 'q_star', label = '$\mathrm{Task\!\mbox{-}oriented\ design}$';
             otherwise, unknown_identifier(category,key);
         end
     otherwise

@@ -3,7 +3,7 @@ function resolved = resolved_case_parameters(parameters)
 % Study grids, labels, and unrelated robustness/sensitivity plans are not
 % case inputs and therefore cannot invalidate an unchanged case.
 fields = {'n_rotors','kappa','reaction_signs','actuator_bounds','geometry', ...
-    'hover_wrench','task','force_moment_length'};
+    'hover_wrench','force_moment_length'};
 resolved = copy_required_fields(parameters,fields,'case parameters');
 end
 

@@ -66,7 +66,7 @@ if ~isequal(size(p.geometry.planar_ranges),size(expected_planar)) || ...
     issues{end+1} = 'planar_ranges do not match the approved P3 definition'; 
 end
 
-%% Hover and task definitions
+%% Hover definition
 if numel(p.hover_wrench) ~= 6 || any(~isfinite(p.hover_wrench)) || ...
         norm(p.hover_wrench(4:6),Inf) > s.equality_tolerance
     issues{end+1} = 'hover_wrench must contain six finite values and zero moment'; 
@@ -74,16 +74,6 @@ end
 if numel(p.hover_wrench) == 6 && ...
         norm(p.hover_wrench(:)-[0;0;-1;0;0;0],Inf) > s.equality_tolerance
     issues{end+1} = 'baseline hover_wrench must equal [0;0;-1;0;0;0]'; 
-end
-if ~isequal(size(p.task.Lambda),[6 6]) || any(~isfinite(p.task.Lambda),'all') || ...
-        norm(p.task.Lambda-diag(diag(p.task.Lambda)),Inf) > 0 || ...
-        any(diag(p.task.Lambda) <= 0)
-    issues{end+1} = 'task.Lambda must be diagonal with six positive entries'; 
-end
-approved_task = [0.25;0.25;0.15;0.12;0.12;0.06];
-if isequal(size(p.task.Lambda),[6 6]) && ...
-        norm(diag(p.task.Lambda)-approved_task,Inf) > s.equality_tolerance
-    issues{end+1} = 'baseline task diagonal does not match the approved study'; 
 end
 if ~positive_scalar(p.force_moment_length) || ...
         abs(p.force_moment_length-1) > s.equality_tolerance
@@ -96,7 +86,10 @@ if ~strcmpi(s.global_solver,'ga') || ~strcmpi(s.local_solver,'patternsearch')
 end
 integer_values = [s.master_seed,s.independent_runs,s.ga.population_size, ...
     s.ga.max_generations,s.ga.max_stall_generations, ...
-    s.patternsearch.max_function_evaluations,s.pareto_points];
+    s.patternsearch.max_function_evaluations,s.pareto_points, ...
+    s.rotorwise_ga_population_size,s.rotorwise_ga_max_generations, ...
+    s.rotorwise_ga_max_stall_generations, ...
+    s.rotorwise_patternsearch_max_function_evaluations];
 if any(~isfinite(integer_values)) || any(integer_values < 1) || ...
         any(integer_values ~= floor(integer_values))
     issues{end+1} = 'solver counts and budgets must be positive integers'; 
@@ -105,15 +98,15 @@ if ~finite_scalar(s.local_refinements) || s.local_refinements < 0 || ...
         s.local_refinements ~= floor(s.local_refinements)
     issues{end+1} = 'local_refinements must be a nonnegative integer'; 
 end
-if s.ga.max_stall_generations > s.ga.max_generations
+if s.ga.max_stall_generations > s.ga.max_generations || ...
+        s.rotorwise_ga_max_stall_generations > s.rotorwise_ga_max_generations
     issues{end+1} = 'GA stall generations cannot exceed max generations'; 
 end
 positive_values = [s.local_start_min_distance,s.ga.function_tolerance, ...
     s.ga.initial_penalty,s.ga.penalty_factor, ...
     s.patternsearch.function_tolerance,s.patternsearch.mesh_tolerance, ...
     s.full_actuation_threshold,s.equality_tolerance,s.bound_tolerance, ...
-    s.hull_tolerance,s.vertex_tolerance,s.task_tolerance, ...
-    s.task_verification_increment,s.constraint_tolerance, ...
+    s.hull_tolerance,s.vertex_tolerance,s.constraint_tolerance, ...
     s.pareto_classification_tolerance];
 if any(~isfinite(positive_values)) || any(positive_values <= 0)
     issues{end+1} = 'solver tolerances and positive settings must be finite and positive'; 
@@ -132,56 +125,10 @@ if s.pareto_points < 2
 end
 
 %% Sensitivity and robustness definitions
-valid_objectives = {'r_F0','sigma_min','condition_number','hover_effort','q_star'};
+valid_objectives = {'r_F0','sigma_min','condition_number','hover_effort'};
 if ~iscellstr(p.objectives) || ~isequal(p.objectives(:),valid_objectives(:)) %#ok<ISCLSTR>
-    issues{end+1} = 'objectives must contain the five approved criteria in order'; 
+    issues{end+1} = 'objectives must contain the four approved criteria in order';
 end
-baseline_diagonal = diag(p.task.Lambda);
-force_norm = norm(baseline_diagonal(1:3),2);
-moment_norm = norm(baseline_diagonal(4:6),2);
-rho_0 = moment_norm/(force_norm+moment_norm);
-
-approved_rho = linspace(0,1,25);
-[~,nominal_rho_index] = min(abs(approved_rho-rho_0));
-approved_rho(nominal_rho_index) = rho_0;
-approved_rho = sort(approved_rho);
-
-if ~same_values(p.sensitivity.task_emphasis_values, ...
-        approved_rho,100*s.equality_tolerance)
-    issues{end+1} = ...
-        'task-emphasis values do not match the approved expanded grid'; 
-end
-
-baseline_task_norm = norm(baseline_diagonal,2);
-for k = 1:numel(approved_rho)
-    diagonal = task_emphasis_diagonal(approved_rho(k),baseline_diagonal);
-
-    if abs(norm(diagonal,2)-baseline_task_norm) > ...
-            100*s.equality_tolerance
-        issues{end+1} = ...
-            'task-emphasis construction changes the task magnitude'; 
-        break;
-    end
-
-    if approved_rho(k) == 0 && ...
-            norm(diagonal(4:6),Inf) > 100*s.equality_tolerance
-        issues{end+1} = ...
-            'the pure-force task must have zero moment deviations'; 
-    end
-
-    if approved_rho(k) == 1 && ...
-            norm(diagonal(1:3),Inf) > 100*s.equality_tolerance
-        issues{end+1} = ...
-            'the pure-moment task must have zero force deviations'; 
-    end
-end
-
-if norm(task_emphasis_diagonal(rho_0,baseline_diagonal)- ...
-        baseline_diagonal,Inf) > 100*s.equality_tolerance
-    issues{end+1} = ...
-        'the baseline task-emphasis point must reproduce Lambda_0'; 
-end
-
 approved_capacity = linspace(0.8,1.2,17);
 if ~same_values(p.sensitivity.actuator_capacity_values, ...
         approved_capacity,100*s.equality_tolerance)
@@ -225,7 +172,7 @@ if ~islogical(p.sensitivity.include_bidirectional) || ...
 end
 
 approved_matrix_metrics = ...
-    {'q_star','r_F0','sigma_min','condition_number','hover_effort'};
+    {'r_F0','sigma_min','condition_number','hover_effort'};
 if ~iscellstr(p.sensitivity.matrix_metrics) || ... %#ok<ISCLSTR>
         ~isequal(p.sensitivity.matrix_metrics,approved_matrix_metrics)
     issues{end+1} = ...
@@ -240,7 +187,6 @@ for k = 1:numel(fields)
     end
 end
 approved_optimized_objectives = struct();
-approved_optimized_objectives.task_emphasis = {'q_star'};
 approved_optimized_objectives.characteristic_length = approved_matrix_metrics;
 approved_optimized_objectives.reaction_moment = approved_matrix_metrics;
 approved_optimized_objectives.actuator_capacity = approved_matrix_metrics;
@@ -254,7 +200,7 @@ if ~iscellstr(p.robustness.design_objectives) || ... %#ok<ISCLSTR>
     issues{end+1} = 'robustness design objectives are invalid'; 
 end
 if ~isequal(p.robustness.design_objectives(:),valid_objectives(:))
-    issues{end+1} = 'robustness must evaluate all five objective-dependent designs'; 
+    issues{end+1} = 'robustness must evaluate all four objective-dependent designs';
 end
 levels = {p.robustness.position_sigma,p.robustness.direction_sigma_rad, ...
     p.robustness.capacity_sigma,p.robustness.kappa_sigma};

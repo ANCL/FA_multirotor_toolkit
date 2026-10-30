@@ -2,7 +2,7 @@ function output = analyze_wrench()
 %ANALYZE_WRENCH Analyze one requested body-frame wrench.
 %
 % Edit only the USER INPUTS section. For several wrench requests together
-% with geometry, set, task, and manifest outputs, use analyze_configuration.
+% with geometry, set, and manifest outputs, use analyze_configuration.
 
 root = setup_project();
 [parameters,solver] = study_settings();

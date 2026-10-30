@@ -1,6 +1,0 @@
-names,objectives,objectivevalues,Valid
-preflight_rotorwise_r_F0,r_F0,0.283096249218656,1
-preflight_planar_q_star,q_star,1.12182162487638,1
-preflight_spatial_sigma_min,sigma_min,1.37546028652081,1
-preflight_pareto,hover_effort,0.194444444444444,1
-preflight_sensitivity_optimization,q_star,0.595303109713725,1

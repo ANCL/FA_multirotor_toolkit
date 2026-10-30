@@ -7,7 +7,7 @@ function [p,s] = study_settings()
 
 %% Study identity
 p.study_id = 'fa_multirotor_comparative_design';
-p.objectives = {'r_F0','sigma_min','condition_number','hover_effort','q_star'};
+p.objectives = {'r_F0','sigma_min','condition_number','hover_effort'};
 
 %% Vehicle and actuator model
 p.n_rotors = 6;
@@ -59,45 +59,10 @@ p.geometry.planar_ranges = [
 % body-frame force with zero commanded moment.
 p.hover_wrench = [0; 0; -1; 0; 0; 0];
 
-%% Prescribed anisotropic task-wrench set
-% Force coordinates are normalized by the unit actuator capacity.
-% Moment coordinates are normalized using the unit characteristic length.
-%
-% The baseline task emphasizes horizontal force, includes moderate
-% vertical reserve and roll/pitch moments, and assigns a smaller yaw
-% requirement.
-baseline_task = [
-    0.25    % F_x
-    0.25    % F_y
-    0.15    % F_z
-    0.12    % tau_x
-    0.12    % tau_y
-    0.06    % tau_z
-];
-
-p.task.Lambda = diag(baseline_task);
-
 %% Force-moment normalization
 p.force_moment_length = 1;
 
 %% Physical assumption sensitivity
-% Task emphasis is parameterized by the physical moment-emphasis fraction
-%
-%   rho = ||lambda_m||_2 / (||lambda_f||_2 + ||lambda_m||_2),
-%
-% where lambda = diag(Lambda). The sampled values include the pure-force
-% and pure-moment limiting cases while preserving ||lambda||_2.
-baseline_force_norm = norm(baseline_task(1:3),2);
-baseline_moment_norm = norm(baseline_task(4:6),2);
-rho_0 = baseline_moment_norm/(baseline_force_norm+baseline_moment_norm);
-
-% Build an approximately uniform task-emphasis grid and replace the nearest
-% sample with rho_0 so the exact nominal task remains represented.
-rho_values = linspace(0,1,25);
-[~,nominal_rho_index] = min(abs(rho_values-rho_0));
-rho_values(nominal_rho_index) = rho_0;
-p.sensitivity.task_emphasis_values = sort(rho_values);
-
 % Physical sensitivity grids.
 p.sensitivity.actuator_capacity_values = linspace(0.8,1.2,17);
 p.sensitivity.kappa_values = linspace(0,0.06,13);
@@ -105,8 +70,8 @@ p.sensitivity.characteristic_length_values = ...
     2.^linspace(-1,1,17);
 
 % Normalized vertical hover-load factor. With fixed gravity and actuator
-% normalization, this represents relative vehicle or payload mass. The task
-% deviations remain fixed, so only the static weight component is varied.
+% normalization, this represents relative vehicle or payload mass. The
+% static weight component changes while the vehicle geometry is fixed.
 p.sensitivity.hover_load_factor_values = linspace(0.8,1.2,17);
 
 % Secondary binary comparison; the baseline remains unidirectional.
@@ -115,17 +80,12 @@ p.sensitivity.include_bidirectional = true;
 % Metrics reported for every physical sensitivity condition. Each metric is
 % evaluated on its corresponding baseline P1 optimum.
 p.sensitivity.matrix_metrics = { ...
-    'q_star', ...
     'r_F0', ...
     'sigma_min', ...
     'condition_number', ...
     'hover_effort'};
 
-% Objectives re-optimized under each changed assumption. Task emphasis changes
-% only the prescribed task definition, so the four non-task P1 problems reuse
-% their nominal optima. All other changed conditions are solved for every P1
-% objective so the complete parameter-metric matrix is available.
-p.sensitivity.optimized_objectives.task_emphasis = {'q_star'};
+% Objectives optimized under each changed assumption.
 p.sensitivity.optimized_objectives.characteristic_length = ...
     p.sensitivity.matrix_metrics;
 p.sensitivity.optimized_objectives.reaction_moment = ...
@@ -144,7 +104,6 @@ p.robustness.design_objectives = {
     'sigma_min'
     'condition_number'
     'hover_effort'
-    'q_star'
 };
 
 % Independent Gaussian position-component errors normalized by the maximum
@@ -167,7 +126,7 @@ p.robustness.trials_per_level = 500;
 p.robustness.truncation_sigma = 3;
 
 % Numerical settings used by the comparative study.
-% The same global and local budgets are applied to every objective.
+% Unrestricted P1 searches use a larger population and refinement budget.
 
 %% Required software and solvers
 s.validated_release = '2024b';
@@ -189,6 +148,12 @@ s.ga.nonlinear_constraint_algorithm = 'penalty';
 s.ga.initial_penalty = 10;
 s.ga.penalty_factor = 100;
 
+%% Unrestricted P1 search budget
+s.rotorwise_ga_population_size = 160;
+s.rotorwise_ga_max_generations = 100;
+s.rotorwise_ga_max_stall_generations = 40;
+s.rotorwise_patternsearch_max_function_evaluations = 4500;
+
 %% Pattern-search refinement
 s.patternsearch.max_function_evaluations = 3000;
 s.patternsearch.function_tolerance = 1e-7;
@@ -200,8 +165,6 @@ s.equality_tolerance = 1e-8;
 s.bound_tolerance = 1e-9;
 s.hull_tolerance = 1e-8;
 s.vertex_tolerance = 1e-9;
-s.task_tolerance = 1e-8;
-s.task_verification_increment = 1e-5;
 s.constraint_tolerance = 1e-6;
 
 %% Pareto settings

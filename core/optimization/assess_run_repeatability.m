@@ -67,5 +67,5 @@ end
 end
 
 function yes = is_maximized(objective)
-yes = ismember(char(string(objective)),{'r_F0','sigma_min','q_star'});
+yes = ismember(char(string(objective)),{'r_F0','sigma_min'});
 end

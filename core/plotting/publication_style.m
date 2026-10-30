@@ -107,7 +107,6 @@ style.alpha.surface_restricted = 0.28;
 style.alpha.rotor_disc = 1.00;
 style.alpha.mesh_edge = 0.24;
 
-style.markers.task = 'o';
 style.markers.authority = 's';
 style.markers.fixed = 'o';
 style.markers.optimized = 's';
@@ -116,7 +115,6 @@ style.labels.r_F0 = '$r_{\mathcal F_0}(f_h)$';
 style.labels.sigma_min = '$\sigma_{\min}(\bar A)$';
 style.labels.condition_number = '$C(\bar A)$';
 style.labels.hover_effort = '$\|\mu_h\|_2^2$';
-style.labels.q_star = '$q^\star$';
 style.labels.force_set = '$\mathcal F$';
 style.labels.zero_moment_force_set = '$\mathcal F_0$';
 style.labels.moment_set = '$\mathcal T$';

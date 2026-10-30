@@ -1,7 +1,7 @@
 function T = objective_comparison_table(cross_evaluation,selected)
 %OBJECTIVE_COMPARISON_TABLE Cross-evaluation with retained P1 solutions.
 columns = {'name','r_F0','sigma_min','condition_number', ...
-    'hover_effort','q_star'};
+    'hover_effort'};
 T = cross_evaluation(:,columns);
 solution = strings(height(T),1);
 for row = 1:height(T)
@@ -22,8 +22,6 @@ elseif any(value == ["condition_number","isotropy design","isotropy"])
     name = "condition_number";
 elseif any(value == ["hover_effort","hover-effort design","hover effort"])
     name = "hover_effort";
-elseif any(value == ["q_star","task-oriented design","task oriented"])
-    name = "q_star";
 else
     error('fa:UnknownObjectiveName', ...
         'Could not map objective-comparison row: %s.',value);

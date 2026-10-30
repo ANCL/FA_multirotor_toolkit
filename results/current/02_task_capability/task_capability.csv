@@ -1,6 +1,0 @@
-name,q_star,task_feasible,limiting_actuator,limiting_bound,force_authority_verified,q_star_verified,larger_scale_infeasible
-r_F0,1.52646686472314,1,5,upper,1,1,1
-sigma_min,1.02555002174159,1,1,lower,1,1,1
-condition_number,0.95806413805424,0,1,lower,1,1,1
-hover_effort,8.822979400043e-05,0,4,lower,1,1,1
-q_star,1.77185392863963,1,5,lower,1,1,1

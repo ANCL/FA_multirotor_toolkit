@@ -1,7 +1,7 @@
 function [fig, source_data] = plot_parameterization_bar(comparison, metric)
 %PLOT_PARAMETERIZATION_BAR Compare P1, P2, and P3 for one metric.
 metric = char(string(metric));
-if ~ismember(metric,{'r_F0','sigma_min','condition_number','hover_effort','q_star'})
+if ~ismember(metric,{'r_F0','sigma_min','condition_number','hover_effort'})
     error('fa:ParameterizationMetric','Unknown metric: %s',metric);
 end
 style = publication_style();

@@ -1,2 +1,0 @@
-CaseName,Parameterization,Objective,NormalizationCase,Seed,Valid,SelectedSolver,ObjectiveValue,ForceAuthority,SigmaMin,ConditionNumber,HoverEffort,TaskScale,MaximumConstraintViolation,ElapsedSeconds
-example_planar_shared_q_star_optimization_planar_shared_q_star_n0_run_01,planar_shared,q_star,0,939994750,1,ga,1.12202461451556,0.654651249033186,0.911029535240364,2.28815236490461,0.666660193359672,1.12202461451556,0,2.2190749

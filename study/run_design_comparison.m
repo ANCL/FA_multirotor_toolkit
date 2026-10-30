@@ -1,8 +1,5 @@
 function output = run_design_comparison()
-%RUN_DESIGN_COMPARISON Optimize P2/P3, then the containing rotor-wise P1 domain.
-% Optimized structured designs are supplied as deterministic P1 incumbents.
-% This enforces the physical nesting relation in the reported best-found
-% results: P1 cannot be reported as worse than a contained P2 or P3 design.
+%RUN_DESIGN_COMPARISON Independently optimize P1, P2, and P3.
 
 [root,parameters,solver,runtime,cleanup] = begin_stage('design_comparison'); %#ok<NASGU>
 try
@@ -35,13 +32,9 @@ try
             structured_specifications = design_comparison_case_plan( ...
                 'structured',parameters,solver);
             ensure_case_record_twins(structured_specifications,structured_store,runtime);
-            saved = load(fullfile(stage_folder,'all_selected_designs.mat'),'selected');
-            saved_names = string({saved.selected.name});
-            structured_selected = saved.selected( ...
-                startsWith(saved_names,"spatial_c3_") | ...
-                startsWith(saved_names,"planar_shared_"));
+            p1_solver = rotorwise_solver(solver);
             rotorwise_specifications = design_comparison_case_plan( ...
-                'rotorwise',parameters,solver,structured_selected);
+                'rotorwise',parameters,p1_solver);
             ensure_case_record_twins(rotorwise_specifications,rotorwise_store,runtime);
             structured_counts = case_store_counts(structured_store);
             rotorwise_counts = case_store_counts(rotorwise_store);
@@ -78,16 +71,17 @@ try
     structured_selected = select_structured_designs( ...
         structured_runs,families,parameters.objectives);
 
-    %% Rotor-wise P1 searches with guaranteed structured incumbents
+    %% Rotor-wise P1 searches
+    p1_solver = rotorwise_solver(solver);
     rotorwise_specifications = design_comparison_case_plan( ...
-        'rotorwise',parameters,solver,structured_selected);
+        'rotorwise',parameters,p1_solver);
     rotorwise_inventory = case_store_inventory( ...
         rotorwise_store,rotorwise_specifications);
     resumed = rotorwise_inventory.full_count;
     rotorwise_logger = study_log('stage_start','Stage 01B', ...
         'Rotor-wise P1 optimization',numel(rotorwise_specifications),resumed);
     [rotorwise_runs,rotorwise_logger] = run_optimization_cases( ...
-        rotorwise_specifications,rotorwise_store,rotorwise_logger,solver,runtime);
+        rotorwise_specifications,rotorwise_store,rotorwise_logger,p1_solver,runtime);
     study_log('stage_finish',rotorwise_logger);
     expected_rotorwise_cases = {rotorwise_specifications.case_name}.';
     validate_optimization_results(rotorwise_runs,expected_rotorwise_cases, ...
@@ -95,7 +89,7 @@ try
 
     rotorwise_selected = select_rotorwise_designs( ...
         rotorwise_runs,parameters.objectives);
-    nested_domain_audit = verify_nested_best_found_results( ...
+    nested_domain_audit = compare_nested_best_found_results( ...
         rotorwise_selected,structured_selected,parameters.objectives);
 
     %% Shared evaluation and saved evidence
@@ -201,7 +195,7 @@ end
 end
 
 
-function audit = verify_nested_best_found_results( ...
+function audit = compare_nested_best_found_results( ...
     rotorwise_selected,structured_selected,objectives)
 objective = strings(numel(objectives),1);
 rotorwise_cost = nan(numel(objectives),1);
@@ -225,12 +219,6 @@ for k = 1:numel(objectives)
     passed(k) = margin(k) >= -tolerance;
 end
 audit = table(objective,rotorwise_cost,best_structured_cost,margin,passed);
-if any(~passed)
-    failed = strjoin(cellstr(objective(~passed)),', ');
-    error('fa:NestedDomainDominance', ...
-        ['P1 was reported worse than a contained structured incumbent for: %s. ' ...
-         'The deterministic seed or selection pathway is inconsistent.'],failed);
-end
 end
 
 function label = family_label(family)
@@ -242,4 +230,13 @@ switch family
     otherwise
         label = family;
 end
+end
+
+function p1_solver = rotorwise_solver(solver)
+p1_solver = solver;
+p1_solver.ga.population_size = solver.rotorwise_ga_population_size;
+p1_solver.ga.max_generations = solver.rotorwise_ga_max_generations;
+p1_solver.ga.max_stall_generations = solver.rotorwise_ga_max_stall_generations;
+p1_solver.patternsearch.max_function_evaluations = ...
+    solver.rotorwise_patternsearch_max_function_evaluations;
 end

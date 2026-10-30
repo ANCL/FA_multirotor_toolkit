@@ -1,6 +1,0 @@
-Design,TaskScale,TaskFeasible,LimitingActuator,LimitingBound,ForceAuthorityVerified,TaskScaleVerified,LargerScaleInfeasible
-Force-authority design,1.52646686472314,1,5,upper,1,1,1
-Weakest-gain design,1.02555002174159,1,1,lower,1,1,1
-Isotropy design,0.95806413805424,0,1,lower,1,1,1
-Hover-effort design,8.822979400043e-05,0,4,lower,1,1,1
-Task-oriented design,1.77185392863963,1,5,lower,1,1,1

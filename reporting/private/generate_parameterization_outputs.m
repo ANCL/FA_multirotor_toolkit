@@ -2,7 +2,7 @@ function output = generate_parameterization_outputs()
 %GENERATE_PARAMETERIZATION_OUTPUTS Study 2 reporting implementation.
 context = create_output_context('parameterizations', ...
     'Study 2: Parameterization comparison', ...
-    '02_parameterization_comparison','Outputs 02',9);
+    '02_parameterization_comparison','Outputs 02',8);
 logger = context.logger;
 completed = strings(0,1);
 try
@@ -38,10 +38,10 @@ try
         'diagnostic: nested-domain audit',nested_audit, ...
         context.paths.diagnostics,'nested_domain_audit');
 
-    metrics = ["r_F0","sigma_min","condition_number","hover_effort","q_star"];
+    metrics = ["r_F0","sigma_min","condition_number","hover_effort"];
     names = ["parameterization_force_authority", ...
         "parameterization_weakest_gain","parameterization_isotropy", ...
-        "parameterization_hover_effort","parameterization_task_scale"];
+        "parameterization_hover_effort"];
     for index = 1:numel(metrics)
         name = char(names(index));
         metric = metrics(index);

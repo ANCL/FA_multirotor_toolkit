@@ -3,7 +3,6 @@ function folders = output_folders(root)
 base = fullfile(root,'results','current');
 folders.root = base;
 folders.designs = fullfile(base,'01_design_comparison');
-folders.task = fullfile(base,'02_task_capability');
 folders.pareto = fullfile(base,'03_authority_effort');
 folders.sensitivity = fullfile(base,'04_sensitivity');
 folders.robustness = fullfile(base,'05_robustness');

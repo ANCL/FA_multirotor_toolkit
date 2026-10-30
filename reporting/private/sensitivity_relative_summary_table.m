@@ -73,12 +73,7 @@ T = struct2table(rows);
 end
 
 function parameter = reported_parameter(family)
-analysis = string(family.analysis(1));
-if analysis=="task_emphasis"
-    parameter = family.rho;
-else
-    parameter = family.parameter_value;
-end
+parameter = family.parameter_value;
 parameter = parameter(:);
 end
 

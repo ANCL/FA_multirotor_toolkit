@@ -1,7 +1,7 @@
 function summary = summarize_robustness(trials)
 %SUMMARIZE_ROBUSTNESS Report every trial and Wilson feasibility intervals.
-metric_names={'r_F0','sigma_min','condition_number','hover_effort','q_star'};
-flag_names={'evaluation_valid','geometric_feasible','numerically_fully_actuated','hover_feasible','task_feasible'};
+metric_names={'r_F0','sigma_min','condition_number','hover_effort'};
+flag_names={'evaluation_valid','geometric_feasible','numerically_fully_actuated','hover_feasible'};
 summary=struct('total_trials',numel(trials),'rates',struct(),'metrics',struct());
 for k=1:numel(flag_names)
     values=[trials.(flag_names{k})].';

@@ -1,2 +1,0 @@
-CaseName,Parameterization,Objective,NormalizationCase,Seed,Valid,SelectedSolver,ObjectiveValue,ForceAuthority,SigmaMin,ConditionNumber,HoverEffort,TaskScale,MaximumConstraintViolation,ElapsedSeconds
-example_planar_shared_r_F0_optimization_planar_shared_r_F0_n0_run_01,planar_shared,r_F0,0,534507463,1,ga,0.68312126762847,0.68312126762847,0.386841021776306,4.39258833893145,1.49998992050201,1.00776748561365,0,2.8407402

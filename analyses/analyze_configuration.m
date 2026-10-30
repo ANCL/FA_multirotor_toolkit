@@ -14,7 +14,6 @@ function output = analyze_configuration(case_spec)
 %   case_spec.actuator_bounds Common [lower upper] or N-by-2 bounds.
 %   case_spec.hover_wrench    Six-element body-frame hover wrench.
 %   case_spec.length_scale    Positive force-moment scaling length.
-%   case_spec.task_Lambda     Optional 6-by-6 diagonal task matrix.
 %   case_spec.requested_wrenches  Optional 6-by-M wrench matrix.
 %   case_spec.output_folder   Optional exact output folder.
 %
@@ -89,13 +88,11 @@ try
 
     authority = evaluate_zero_moment_authority( ...
         sets,case_spec.hover_wrench,case_spec.hull_tolerance);
-    task = evaluate_optional_task( ...
-        model,case_spec,study_parameters,solver);
     requested = evaluate_requested_wrenches( ...
         model,case_spec,allocation_options);
 
     tables = build_analysis_tables( ...
-        model,actuation,hover,sets,authority,task,requested,case_spec, ...
+        model,actuation,hover,sets,authority,requested,case_spec, ...
         force_extrema,moment_extrema,zero_moment_extrema);
     write_analysis_tables(tables,paths.tables);
     write_matrix_tables(model,paths.tables);
@@ -113,7 +110,6 @@ try
         'moment_extrema',moment_extrema, ...
         'zero_moment_force_extrema',zero_moment_extrema, ...
         'zero_moment_authority',authority, ...
-        'task',task, ...
         'requested_wrenches',requested, ...
         'tables',tables, ...
         'figure_files',figure_files); %#ok<NASGU>
@@ -192,13 +188,6 @@ case_spec = set_default(case_spec,'requested_wrenches',zeros(6,0));
 case_spec = set_default(case_spec,'requested_wrench_names',strings(0,1));
 case_spec = set_default(case_spec,'plot_options',struct());
 
-if ~isfield(case_spec,'task_Lambda')
-    if number_of_rotors == 6
-        case_spec.task_Lambda = parameters.task.Lambda;
-    else
-        case_spec.task_Lambda = [];
-    end
-end
 if ~isfield(case_spec,'output_folder') || isempty(case_spec.output_folder)
     case_spec.output_folder = fullfile( ...
         root,'results','analyses','configurations',case_spec.token);
@@ -219,10 +208,6 @@ validateattributes(case_spec.sigma_threshold,{'numeric'}, ...
     {'real','finite','scalar','nonnegative'});
 validateattributes(case_spec.requested_wrenches,{'numeric'}, ...
     {'real','finite','nrows',6});
-if ~isempty(case_spec.task_Lambda)
-    validateattributes(case_spec.task_Lambda,{'numeric'}, ...
-        {'real','finite','size',[6 6]});
-end
 case_spec.requested_wrench_names = complete_wrench_names( ...
     case_spec.requested_wrench_names,size(case_spec.requested_wrenches,2));
 end
@@ -307,38 +292,6 @@ if ~inside
 end
 end
 
-function task = evaluate_optional_task(model,case_spec,parameters,solver)
-task = struct( ...
-    'requested',~isempty(case_spec.task_Lambda), ...
-    'supported',false, ...
-    'result',[], ...
-    'verification',[], ...
-    'reason','');
-if isempty(case_spec.task_Lambda)
-    task.reason = 'no task matrix supplied';
-    return;
-end
-if model.n_rotors ~= 6 || size(model.A,2) ~= 6
-    task.reason = 'analytic task scale requires a square 6-by-6 allocation map';
-    return;
-end
-local_parameters = parameters;
-local_parameters.n_rotors = 6;
-local_parameters.kappa = case_spec.kappa;
-local_parameters.reaction_signs = case_spec.reaction_signs;
-local_parameters.actuator_bounds = model.actuator_bounds;
-local_parameters.hover_wrench = case_spec.hover_wrench;
-local_parameters.force_moment_length = case_spec.length_scale;
-local_parameters.task.Lambda = case_spec.task_Lambda;
-result = task_scale(model.A,local_parameters,solver);
-task.supported = true;
-task.result = result;
-if result.valid && isfinite(result.q_star)
-    task.verification = verify_task_scale( ...
-        model.A,local_parameters,solver,result.q_star);
-end
-end
-
 function requested = evaluate_requested_wrenches(model,case_spec,options)
 number_of_wrenches = size(case_spec.requested_wrenches,2);
 
@@ -358,11 +311,11 @@ end
 end
 
 function tables = build_analysis_tables( ...
-    model,actuation,hover,sets,authority,task,requested,case_spec, ...
+    model,actuation,hover,sets,authority,requested,case_spec, ...
     force_extrema,moment_extrema,zero_moment_extrema)
 tables.geometry = geometry_table(model);
 tables.actuation = actuation_table( ...
-    model,actuation,hover,sets,authority,task,case_spec);
+    model,actuation,hover,sets,authority,case_spec);
 tables.hover_allocation = allocation_table( ...
     hover,model.n_rotors,'hover');
 tables.set_dimensions = set_dimension_table(sets);
@@ -372,12 +325,6 @@ tables.zero_moment_force_extrema = zero_moment_extrema;
 tables.requested_wrenches = requested_wrench_table(requested);
 tables.requested_allocations = requested_allocation_table( ...
     requested,model.n_rotors);
-if task.supported
-    tables.task = task_table(task);
-else
-    tables.task = table(string(task.reason), ...
-        'VariableNames',{'Reason'});
-end
 end
 
 function T = geometry_table(model)
@@ -412,23 +359,13 @@ end
 end
 
 function T = actuation_table( ...
-    model,actuation,hover,sets,authority,task,case_spec)
+    model,actuation,hover,sets,authority,case_spec)
 force_dimension = set_dimension(sets.force);
 moment_dimension = set_dimension(sets.moment);
 zero_moment_dimension = set_dimension(sets.zero_moment_force);
 hover_effort = NaN;
 if hover.feasible
     hover_effort = sum(hover.mu.^2);
-end
-task_scale_value = NaN;
-task_scale_valid = false;
-task_vertices_verified = false;
-if task.supported
-    task_scale_value = task.result.q_star;
-    task_scale_valid = task.result.valid;
-    if ~isempty(task.verification)
-        task_vertices_verified = task.verification.all_feasible;
-    end
 end
 T = table( ...
     model.n_rotors, ...
@@ -450,9 +387,6 @@ T = table( ...
     zero_moment_dimension, ...
     authority.radius, ...
     authority.hover_force_inside, ...
-    task_scale_value, ...
-    task_scale_valid, ...
-    task_vertices_verified, ...
     'VariableNames',{ ...
         'NumberOfRotors','RankA','RankAf','RankAtau', ...
         'AlgebraicallyFullRank','SigmaMin','ConditionNumber', ...
@@ -460,8 +394,7 @@ T = table( ...
         'HoverStatus','HoverFeasible','HoverEffort', ...
         'HoverSaturationMargin','ForceSetDimension', ...
         'MomentSetDimension','ZeroMomentForceSetDimension', ...
-        'ZeroMomentForceAuthority','HoverForceInsideF0', ...
-        'TaskScale','TaskScaleValid','TaskVerticesVerified'});
+        'ZeroMomentForceAuthority','HoverForceInsideF0'});
 end
 
 function value = set_dimension(set_data)
@@ -550,23 +483,6 @@ end
 T = table(Name,Rotor,Allocation,NormalizedMargin);
 end
 
-function T = task_table(task)
-result = task.result;
-verified = false;
-if ~isempty(task.verification)
-    verified = task.verification.all_feasible;
-end
-T = table( ...
-    result.q_star, ...
-    result.valid, ...
-    result.limiting_actuator, ...
-    string(result.limiting_bound), ...
-    verified, ...
-    string(result.failure_reason), ...
-    'VariableNames',{ ...
-        'TaskScale','Valid','LimitingActuator','LimitingBound', ...
-        'AllVerticesVerified','FailureReason'});
-end
 
 function write_analysis_tables(tables,folder)
 fields = fieldnames(tables);

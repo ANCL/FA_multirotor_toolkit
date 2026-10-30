@@ -1,7 +1,7 @@
 function output = example_optimize_one_design()
 %EXAMPLE_OPTIMIZE_ONE_DESIGN Run several custom optimization objectives.
 %
-% Edit only the USER INPUTS section. The default example optimizes all five
+% Edit only the USER INPUTS section. The default example optimizes all four
 % supported objectives for the planar shared-angle family (P3), using one
 % deterministic repetition per objective. Each objective is an independent
 % custom problem with its own checkpoints, selected design, and complete
@@ -17,13 +17,12 @@ setup_project();
 parameterization = 'planar_shared';
 
 % Add, remove, or reorder objectives as needed. Supported objectives are
-% r_F0, sigma_min, condition_number, hover_effort, and q_star.
+% r_F0, sigma_min, condition_number, and hover_effort.
 objectives = { ...
     'r_F0'
     'sigma_min'
     'condition_number'
-    'hover_effort'
-    'q_star'};
+    'hover_effort'};
 
 % Repetitions are applied independently to every objective. One repetition
 % is suitable for demonstrating the workflow. Increase this value when the

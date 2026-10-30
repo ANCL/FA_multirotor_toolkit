@@ -71,16 +71,13 @@ end
 
 function metrics = compact_metrics(result)
 metrics = struct('r_F0',NaN,'sigma_min',NaN,'condition_number',NaN, ...
-    'hover_effort',NaN,'q_star',NaN,'task_feasible',false,'valid',false);
+    'hover_effort',NaN,'valid',false);
 if ~isfield(result,'metrics') || ~isstruct(result.metrics), return; end
-names = {'r_F0','sigma_min','condition_number','hover_effort','q_star'};
+names = {'r_F0','sigma_min','condition_number','hover_effort'};
 for k = 1:numel(names)
     if isfield(result.metrics,names{k})
         metrics.(names{k}) = result.metrics.(names{k});
     end
-end
-if isfield(result.metrics,'task_feasible')
-    metrics.task_feasible = logical(result.metrics.task_feasible);
 end
 if isfield(result.metrics,'valid')
     metrics.valid = logical(result.metrics.valid);

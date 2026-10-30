@@ -1,2 +1,0 @@
-CaseName,Parameterization,Objective,NormalizationCase,Seed,Valid,SelectedSolver,ObjectiveValue,ForceAuthority,SigmaMin,ConditionNumber,HoverEffort,TaskScale,MaximumConstraintViolation,ElapsedSeconds
-example_planar_shared_hover_effort_optimization_planar_shared_hover_effort_n0_run_01,planar_shared,hover_effort,0,597734281,1,ga,0.166666667599899,3.61636320902312e-05,0.000125274496041026,19552.9801622443,0.166666667599899,0.000105866354316092,0,1.8172028

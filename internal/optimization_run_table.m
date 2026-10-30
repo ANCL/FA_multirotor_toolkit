@@ -13,7 +13,6 @@ objective = strings(n, 1);
 analysis = strings(n,1);
 physical_parameter = strings(n,1);
 parameter_value = nan(n,1);
-rho = nan(n,1);
 authority_threshold = nan(n,1);
 parameterization = strings(n, 1);
 normalization_case = nan(n, 1);
@@ -42,8 +41,8 @@ r_F0 = nan(n,1);
 sigma_min = nan(n,1);
 condition_number = nan(n,1);
 hover_effort = nan(n,1);
-q_star = nan(n,1);
-task_feasible = false(n,1);
+
+
 
 for k = 1:n
     result = results(k);
@@ -53,7 +52,6 @@ for k = 1:n
         if isfield(result.context,'analysis'), analysis(k) = string(result.context.analysis); end
         if isfield(result.context,'physical_parameter'), physical_parameter(k) = string(result.context.physical_parameter); end
         if isfield(result.context,'physical_value'), parameter_value(k) = result.context.physical_value; end
-        if isfield(result.context,'rho'), rho(k) = result.context.rho; end
         if isfield(result.context,'authority_threshold'), authority_threshold(k) = result.context.authority_threshold; end
     end
     parameterization(k) = string(result.parameterization);
@@ -102,13 +100,11 @@ for k = 1:n
         if isfield(result.metrics,'sigma_min'), sigma_min(k) = result.metrics.sigma_min; end
         if isfield(result.metrics,'condition_number'), condition_number(k) = result.metrics.condition_number; end
         if isfield(result.metrics,'hover_effort'), hover_effort(k) = result.metrics.hover_effort; end
-        if isfield(result.metrics,'q_star'), q_star(k) = result.metrics.q_star; end
-        if isfield(result.metrics,'task_feasible'), task_feasible(k) = logical(result.metrics.task_feasible); end
     end
 end
 
 T = table( ...
-    case_name, objective, analysis, physical_parameter, parameter_value, rho, ...
+    case_name, objective, analysis, physical_parameter, parameter_value, ...
     authority_threshold, parameterization, normalization_case, seed, valid, ...
     global_exit_flag, global_generations, global_evaluation_count, ...
     global_termination_message, global_solver_cost, global_objective_value, ...
@@ -118,7 +114,7 @@ T = table( ...
     solver_cost, objective_value, local_improvement, ...
     maximum_constraint_violation, evaluation_count, ...
     elapsed_seconds, r_F0, sigma_min, condition_number, hover_effort, ...
-    q_star, task_feasible, failure_reason);
+    failure_reason);
 end
 
 function value = numeric_field(s,name)

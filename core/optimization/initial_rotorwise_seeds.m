@@ -19,7 +19,7 @@ end
 valid = false(numel(candidate_cells),1);
 score = inf(numel(candidate_cells),1);
 for k = 1:numel(candidate_cells)
-    options = struct('compute_force_authority',false,'compute_task_scale',false);
+    options = struct('compute_force_authority',false);
     metrics = evaluate_design(candidate_cells{k},parameters,solver,options);
     valid(k) = metrics.valid;
     if valid(k), score(k) = -metrics.sigma_min; end

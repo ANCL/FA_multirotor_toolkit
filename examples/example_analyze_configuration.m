@@ -2,7 +2,7 @@ function output = example_analyze_configuration()
 %EXAMPLE_ANALYZE_CONFIGURATION Analyze several fixed configurations.
 %
 % Edit only the USER INPUTS section. The example evaluates three distinct
-% six-rotor configurations using the same actuator, hover, task, and wrench
+% six-rotor configurations using the same actuator, hover, and wrench
 % assumptions. Each configuration receives a complete and independent
 % analysis package under results/analyses/configurations/.
 
@@ -98,7 +98,6 @@ case_spec.reaction_signs = parameters.reaction_signs;
 case_spec.actuator_bounds = parameters.actuator_bounds;
 case_spec.hover_wrench = parameters.hover_wrench;
 case_spec.length_scale = parameters.force_moment_length;
-case_spec.task_Lambda = parameters.task.Lambda;
 case_spec.requested_wrenches = requested_wrenches;
 case_spec.requested_wrench_names = requested_wrench_names;
 end
