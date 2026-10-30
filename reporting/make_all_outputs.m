@@ -28,6 +28,7 @@ output.parameterizations = make_parameterization_outputs();
 output.authority_effort = make_authority_effort_outputs();
 output.sensitivity = make_sensitivity_outputs();
 output.robustness = make_robustness_outputs();
+output.p2_seeded_p1 = make_seeded_p1_outputs();
 output.shared = struct('root',fullfile(publication,'shared'), ...
     'tables',shared_tables);
 write_combined_manifest(publication,parameters,solver,output);

@@ -61,6 +61,9 @@ view(ax,options.view);
 camproj(ax,'orthographic');
 camup(ax,[0 0 1]);
 
+if options.show_angles
+    draw_geometry_angle_annotations(ax,geometry,options,style);
+end
 format_publication_axes(ax,'schematic');
 
 source_data = struct('geometry',geometry,'options',options);
@@ -99,7 +102,8 @@ defaults = struct( ...
     'thrust_frustum_root_radius',0.010*length_scale, ...
     'thrust_frustum_tip_radius',0.038*length_scale, ...
     'thrust_frustum_segments',24, ...
-    'center_marker_size',3.5);
+    'center_marker_size',3.5, ...
+    'show_angles',false);
 
 fields = fieldnames(defaults);
 for index = 1:numel(fields)

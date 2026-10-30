@@ -2,7 +2,7 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "sensitivity",
   "output_title": "Study 4: Assumption sensitivity",
-  "created_at": "2026-10-30T02:36:48***",
+  "created_at": "2026-10-30T03:42:11***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "informational-only",
@@ -30,7 +30,8 @@
     "sensitivity_curve_summary_relative",
     "sensitivity_directionality",
     "condition_specific_repeatability",
-    "condition_specific_design_runs"
+    "condition_specific_design_runs",
+    "condition_specific_selected_variables"
   ],
   "output_folder": "Z:\\Fully Actuated\\Codes\\FA_multirotor_toolkit\\results\\publication\\04_assumption_sensitivity",
   "source_files": [
@@ -83,6 +84,10 @@
       "hash": "7ba2a15f271f336d"
     },
     {
+      "path": "study\\run_p1_pareto_analysis.m",
+      "hash": "41d7a15b9cbdfe61"
+    },
+    {
       "path": "study\\run_p2_seeded_p1.m",
       "hash": "a2a6e4a1d377aad1"
     },
@@ -92,7 +97,7 @@
     },
     {
       "path": "study\\run_pareto_analysis.m",
-      "hash": "f1a6decb0030c2b1"
+      "hash": "969d59b3ef8d83ff"
     },
     {
       "path": "study\\run_robustness_analysis.m",
@@ -108,7 +113,7 @@
     },
     {
       "path": "reporting\\make_all_outputs.m",
-      "hash": "b87a86ae6972fe8c"
+      "hash": "9514b8a9ab4928d9"
     },
     {
       "path": "reporting\\make_authority_effort_outputs.m",
@@ -125,6 +130,10 @@
     {
       "path": "reporting\\make_robustness_outputs.m",
       "hash": "e983dc6c5fd36e42"
+    },
+    {
+      "path": "reporting\\make_seeded_p1_outputs.m",
+      "hash": "cebd20887b384766"
     },
     {
       "path": "reporting\\make_sensitivity_outputs.m",
@@ -145,6 +154,10 @@
     {
       "path": "reporting\\private\\begin_output_log.m",
       "hash": "e724a97abc173a52"
+    },
+    {
+      "path": "reporting\\private\\combine_authority_effort_results.m",
+      "hash": "76d77fc8b5946f52"
     },
     {
       "path": "reporting\\private\\condition_specific_sensitivity_value.m",
@@ -168,7 +181,7 @@
     },
     {
       "path": "reporting\\private\\generate_authority_effort_outputs.m",
-      "hash": "5c07449ba67d4ba9"
+      "hash": "8554acdb35c44a8f"
     },
     {
       "path": "reporting\\private\\generate_objective_design_outputs.m",
@@ -176,15 +189,19 @@
     },
     {
       "path": "reporting\\private\\generate_parameterization_outputs.m",
-      "hash": "6720813ccf6528ec"
+      "hash": "361ee216fa19f7ec"
     },
     {
       "path": "reporting\\private\\generate_robustness_outputs.m",
       "hash": "caeb03fa6a6386b0"
     },
     {
+      "path": "reporting\\private\\generate_seeded_p1_outputs.m",
+      "hash": "ac3593dba7c51ae5"
+    },
+    {
       "path": "reporting\\private\\generate_sensitivity_outputs.m",
-      "hash": "6e0e37eab62eab20"
+      "hash": "8094d3ff7ec7e4b7"
     },
     {
       "path": "reporting\\private\\load_result_table.m",
@@ -199,12 +216,16 @@
       "hash": "5df34b904dd79d08"
     },
     {
+      "path": "reporting\\private\\parameterization_plot_data.m",
+      "hash": "ef3381ba7cdaa370"
+    },
+    {
       "path": "reporting\\private\\parameterization_summary_table.m",
       "hash": "da6686947061d904"
     },
     {
       "path": "reporting\\private\\reporting_result_files.m",
-      "hash": "1a94bdd434ebd23e"
+      "hash": "2c25c2e4f7c71322"
     },
     {
       "path": "reporting\\private\\reporting_source_manifest.m",
@@ -235,6 +256,10 @@
       "hash": "c8f07d78ec7942c6"
     },
     {
+      "path": "reporting\\private\\seeded_p1_configuration_distance.m",
+      "hash": "3b76c7e7114cf335"
+    },
+    {
       "path": "reporting\\private\\selected_geometry.m",
       "hash": "5865f2f43962b356"
     },
@@ -263,6 +288,10 @@
       "hash": "127fc6735fb42bb1"
     },
     {
+      "path": "reporting\\private\\sensitivity_selected_design_export.m",
+      "hash": "8e76661f8e101e37"
+    },
+    {
       "path": "reporting\\private\\sensitivity_summary_table.m",
       "hash": "3c8eb76956c1a87f"
     },
@@ -280,7 +309,7 @@
     },
     {
       "path": "reporting\\private\\validate_all_reporting_results.m",
-      "hash": "51cc06d1443871a7"
+      "hash": "f11a307f6da8a5ed"
     },
     {
       "path": "reporting\\private\\validate_objective_outputs.m",
@@ -304,11 +333,11 @@
     },
     {
       "path": "reporting\\private\\write_combined_manifest.m",
-      "hash": "4d0a2f10eed86d46"
+      "hash": "4622529a83c27280"
     },
     {
       "path": "reporting\\private\\write_output_guide.m",
-      "hash": "ee5eb480a3304b98"
+      "hash": "f0e959a0789f941e"
     },
     {
       "path": "core\\feasibility\\build_feasible_wrench_sets.m",
@@ -471,6 +500,10 @@
       "hash": "50acf0e48f3dc0c6"
     },
     {
+      "path": "core\\plotting\\draw_geometry_angle_annotations.m",
+      "hash": "d32d903fcc2050dd"
+    },
+    {
       "path": "core\\plotting\\export_figure.m",
       "hash": "55d8abecee58d0d2"
     },
@@ -484,11 +517,7 @@
     },
     {
       "path": "core\\plotting\\plot_multirotor_configuration.m",
-      "hash": "a7abcc0b7cc2ad07"
-    },
-    {
-      "path": "core\\plotting\\plot_parameterization_bar.m",
-      "hash": "d4c60e7748c9e823"
+      "hash": "536e4008b16a54e0"
     },
     {
       "path": "core\\plotting\\plot_pareto_runs.m",
@@ -565,6 +594,14 @@
     {
       "path": "internal\\authority_effort_case_names.m",
       "hash": "8116d502d910c5aa"
+    },
+    {
+      "path": "internal\\authority_effort_p1_case_names.m",
+      "hash": "06609d6f5b961341"
+    },
+    {
+      "path": "internal\\authority_effort_p1_threshold_plan.m",
+      "hash": "44cc2a459a1d28f9"
     },
     {
       "path": "internal\\authority_effort_threshold_plan.m",
@@ -704,7 +741,7 @@
     },
     {
       "path": "internal\\output_folders.m",
-      "hash": "ee5d470cbfa58166"
+      "hash": "570dc731b7926927"
     },
     {
       "path": "internal\\parallel_environment_probe.m",
@@ -748,7 +785,7 @@
     },
     {
       "path": "internal\\resolved_study_settings.m",
-      "hash": "863860b80d4b2858"
+      "hash": "8da1ff1a63933718"
     },
     {
       "path": "internal\\robustness_case_plan.m",

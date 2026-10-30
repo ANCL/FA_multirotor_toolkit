@@ -1,5 +1,13 @@
 function output = run_pareto_analysis()
-%RUN_PARETO_ANALYSIS Epsilon-constraint authority-effort study.
+%RUN_PARETO_ANALYSIS Run/resume P2 and independent P1 authority-effort studies.
+% P2 uses its existing completed cases; P1 uses only P1 initialization.
+output = struct();
+output.p2 = run_p2_authority_effort();
+output.p1 = run_p1_pareto_analysis();
+end
+
+function output = run_p2_authority_effort()
+%RUN_P2_AUTHORITY_EFFORT Epsilon-constraint authority-effort study for P2.
 % Cases at one threshold run concurrently. Thresholds remain sequential so
 % the best solution from one threshold can seed the next.
 

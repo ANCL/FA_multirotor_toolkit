@@ -50,7 +50,7 @@ The files in `analyses/` and `examples/` are user-facing workflows. Functions un
 |---|---|---|
 | 01 | `run_unrestricted_optimization` | P1 unrestricted rotorwise optimization |
 | 02 | `run_parameterization_comparison` | New P2/P3 optimization and comparison with P1 |
-| 03 | `run_pareto_analysis` | P2 authority–effort trade-off |
+| 03 | `run_pareto_analysis` | P1 and P2 authority–effort analyses; pooled Pareto reporting |
 | 04 | `run_sensitivity_analysis` | P2 fixed-geometry and reoptimized sensitivity |
 | 05 | `run_robustness_analysis` | P2 robustness under implementation errors |
 
@@ -234,7 +234,7 @@ publication_output = make_all_outputs();
 
 1. `run_unrestricted_optimization` — P1-only Stage 01; reuses the verified high-budget results.
 2. `run_parameterization_comparison` — P2/P3 searches and comparison against P1.
-3. `run_pareto_analysis` — P2 authority–effort trade-off.
+3. `run_pareto_analysis` — P1 and P2 authority–effort analyses (P1 independent of P2 initialization).
 4. `run_sensitivity_analysis` — P2 model/parameter sensitivity.
 5. `run_robustness_analysis` — P2 implementation robustness.
 

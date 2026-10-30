@@ -18,6 +18,14 @@ files.structured_optimization_runs = fullfile(folders.parameterizations, ...
 files.nested_domain_audit = fullfile(folders.parameterizations,'nested_domain_audit.mat');
 
 
+files.p1_pareto_manifest = fullfile(folders.pareto_p1,'stage_manifest.mat');
+files.p1_pareto = fullfile(folders.pareto_p1,'authority_effort_tradeoff.mat');
+files.p1_pareto_all = fullfile(folders.pareto_p1,'authority_effort_all_runs.mat');
+files.p1_pareto_repeatability = fullfile(folders.pareto_p1,'run_repeatability.mat');
+files.p1_pareto_optimization_runs = fullfile(folders.pareto_p1,'optimization_runs.mat');
+files.p2_seeded_p1_manifest = fullfile(folders.p2_seeded_p1,'stage_manifest.mat');
+files.p2_seeded_p1_comparison = fullfile(folders.p2_seeded_p1,'seeded_vs_baselines.mat');
+files.p2_seeded_p1_designs = fullfile(folders.p2_seeded_p1,'seeded_selected_designs.mat');
 files.pareto_manifest = fullfile(folders.pareto,'stage_manifest.mat');
 files.pareto = fullfile(folders.pareto,'authority_effort_tradeoff.mat');
 files.pareto_all = fullfile(folders.pareto,'authority_effort_all_runs.mat');

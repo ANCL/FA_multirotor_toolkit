@@ -1,4 +1,0 @@
-name,parameterization,r_F0,sigma_min,condition_number,hover_effort,minimum_separation,minimum_hover_margin,valid,PlotMetric
-condition_number,rotorwise,0.213707186341041,1.39368279694575,1.02275576067714,0.493163584057602,1.15751686857931,0.10746714939774,1,condition_number
-spatial_c3_condition_number,spatial_c3,0.511813886542715,1.40502167136597,1.00662222325213,0.499992243486092,1.22020518130474,0.256249191228185,1,condition_number
-planar_shared_condition_number,planar_shared,0.457855759598242,1.24271822566168,1.37302351629814,0.343488829820577,1,0.239265831876241,1,condition_number
