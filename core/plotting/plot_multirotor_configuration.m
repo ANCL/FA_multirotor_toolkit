@@ -26,9 +26,9 @@ number_of_rotors = size(geometry.p,2);
 if options.show_rotor_groups
     if number_of_rotors ~= 6 || ...
             ~isfield(geometry,'parameterization') || ...
-            ~strcmp(char(string(geometry.parameterization)),'spatial_c3')
+            ~ismember(string(geometry.parameterization),["spatial_c3","planar_shared"])
         error('fa:TriadLabels', ...
-            'Grouped rotor labels require a six-rotor spatial C3 design.');
+            'Grouped rotor labels require a six-rotor P2 or P3 design.');
     end
 
 end
@@ -225,60 +225,101 @@ end
 
 
 function draw_rotor_group_labels(ax,geometry,options,style)
-%DRAW_ROTOR_GROUP_LABELS Number rotors immediately beyond thrust-cone tips.
-% Fixed physical positioning; no adaptive spacing or external legend.
+%DRAW_ROTOR_GROUP_LABELS Place labels outside rotors in camera view.
 
 L = median(vecnorm(geometry.p,2,1));
-
 if ~isfinite(L) || L <= 0
     L = 1;
 end
 
-% Small clearance after each cone tip.
-label_clearance = 0.15*L;
+% Camera-plane coordinates.
+forward = ax.CameraTarget(:)-ax.CameraPosition(:);
+forward = forward/norm(forward);
+
+right = cross(forward,ax.CameraUpVector(:));
+right = right/norm(right);
+
+up = cross(right,forward);
+screen_basis = [right.';up.'];
+
+rotor_xy = screen_basis*geometry.p;
+tip_xy = screen_basis*(geometry.p + ...
+    options.thrust_frustum_length*geometry.u);
+
+% Prefer radial placement; adjust only where needed.
+angle_offsets = [0 20 -20 40 -40 65 -65 90 -90];
+label_radii = L*[0.28 0.35 0.42];
+
+placed = nan(2,6);
 
 for rotor = 1:6
-    direction = geometry.u(:,rotor);
-    position = geometry.p(:,rotor);
 
-    % The cone extends along the positive thrust direction.
-    cone_tip = position + ...
-        options.thrust_frustum_length*direction;
+    origin = rotor_xy(:,rotor);
+    radial = origin;
 
-    label_position = cone_tip + label_clearance*direction;
+    if norm(radial) < 1e-6
+        radial = [cos(rotor*pi/3);sin(rotor*pi/3)];
+    end
 
-    % Check clearance in the camera viewing plane.
-    % Only flip a label if it overlaps a neighbouring rotor.
-    forward = ax.CameraTarget(:)-ax.CameraPosition(:);
-    forward = forward/norm(forward);
+    radial = radial/norm(radial);
 
-    right = cross(forward,ax.CameraUpVector(:));
-    right = right/norm(right);
+    best_score = inf;
+    best_xy = origin;
 
-    up = cross(right,forward);
-    screen_basis = [right.';up.'];
+    for radius = label_radii
+        for angle_deg = angle_offsets
 
-    other_rotors = [1:rotor-1,rotor+1:6];
+            a = deg2rad(angle_deg);
+            R = [cos(a) -sin(a);sin(a) cos(a)];
 
-    distances = vecnorm( ...
-        screen_basis*(geometry.p(:,other_rotors)-label_position), ...
-        2,1);
+            candidate = origin + radius*R*radial;
 
-    minimum_clearance = options.rotor_radius + 0.11*L;
+            % Keep labels away from all rotor disks.
+            disk_dist = vecnorm(rotor_xy-candidate,2,1);
+            disk_gap = options.rotor_radius + 0.10*L;
 
-    if min(distances) < minimum_clearance
-        % Test the opposite side of this rotor.
-        alternate = position - ...
-            (options.thrust_frustum_length+label_clearance)*direction;
+            score = 500*sum( ...
+                max(0,disk_gap-disk_dist).^2)/L^2;
 
-        alternate_distances = vecnorm( ...
-            screen_basis*(geometry.p(:,other_rotors)-alternate), ...
-            2,1);
+            % Avoid the projected thrust markers.
+            for j = 1:6
+                v = tip_xy(:,j)-rotor_xy(:,j);
+                t = max(0,min(1, ...
+                    dot(candidate-rotor_xy(:,j),v) / ...
+                    max(dot(v,v),eps)));
 
-        if min(alternate_distances) > min(distances)+0.05*L
-            label_position = alternate;
+                closest = rotor_xy(:,j)+t*v;
+                d = norm(candidate-closest);
+
+                score = score + ...
+                    300*max(0,0.13*L-d)^2/L^2;
+            end
+
+            % Avoid labels already placed.
+            previous = placed(:,all(isfinite(placed),1));
+
+            if ~isempty(previous)
+                d = vecnorm(previous-candidate,2,1);
+                score = score + ...
+                    600*sum(max(0,0.25*L-d).^2)/L^2;
+            end
+
+            % Prefer small, outward adjustments.
+            score = score + ...
+                0.03*(radius/L) + 0.004*abs(angle_deg);
+
+            if score < best_score
+                best_score = score;
+                best_xy = candidate;
+            end
         end
     end
+
+    placed(:,rotor) = best_xy;
+
+    % Convert the chosen screen-plane offset to 3D.
+    label_position = geometry.p(:,rotor) + ...
+        screen_basis.'*(best_xy-origin);
 
     text(ax, ...
         label_position(1), ...
@@ -294,4 +335,7 @@ for rotor = 1:6
         'Clipping','off', ...
         'HandleVisibility','off');
 end
+
+% Leave room around the complete numbered configuration.
+camzoom(ax,0.82);
 end

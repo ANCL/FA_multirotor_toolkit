@@ -2,7 +2,7 @@
   "study_id": "fa_multirotor_comparative_design",
   "output_study": "parameterizations",
   "output_title": "Study 2: Parameterization comparison",
-  "created_at": "2026-10-31T00:51:23***",
+  "created_at": "2026-10-31T02:34:46***",
   "matlab_version": "24.2.0.2740171 (R2024b) Update 1",
   "matlab_release": "2024b",
   "numerical_core_hash": "informational-only",
@@ -199,7 +199,7 @@
     },
     {
       "path": "reporting\\private\\generate_parameterization_outputs.m",
-      "hash": "f40f518003cf0e9e"
+      "hash": "777fd3e8d355561c"
     },
     {
       "path": "reporting\\private\\generate_robustness_outputs.m",
@@ -527,7 +527,7 @@
     },
     {
       "path": "core\\plotting\\plot_multirotor_configuration.m",
-      "hash": "e8a086f9ab7f7edd"
+      "hash": "97baf15d2ab2b12b"
     },
     {
       "path": "core\\plotting\\plot_pareto_runs.m",
