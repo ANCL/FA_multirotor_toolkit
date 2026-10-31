@@ -39,19 +39,19 @@ p.geometry.rotorwise.beta = [-pi/2, pi/2];
 % Spatial C3 family. Rows are [lower upper] for
 % [delta, eta_s, alpha_+, beta_+, alpha_-, beta_-].
 p.geometry.spatial_ranges = [
-     0,       pi/3
-    -pi/6,    pi/6
-    -pi/3,    pi/3
-    -pi/3,    pi/3
-    -pi/3,    pi/3
-    -pi/3,    pi/3
+     0,       2*pi/3
+    -pi/2,    pi/2
+    -pi,      pi
+    -pi/2,    pi/2
+    -pi,      pi
+    -pi/2,    pi/2
 ];
 
 % Planar shared-angle family.
 % Rows are [lower upper] for [alpha, beta].
 p.geometry.planar_ranges = [
-    -pi/3,    pi/3
-    -pi/3,    pi/3
+    -pi,      pi
+    -pi/2,    pi/2
 ];
 
 %% Hover condition

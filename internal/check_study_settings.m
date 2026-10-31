@@ -55,8 +55,9 @@ end
 if ~valid_range_matrix(p.geometry.planar_ranges,2)
     issues{end+1} = 'geometry.planar_ranges must be 2-by-2 with lower < upper'; 
 end
-expected_spatial = [0 pi/3;-pi/6 pi/6;repmat([-pi/3 pi/3],4,1)];
-expected_planar = repmat([-pi/3 pi/3],2,1);
+expected_spatial = [0 2*pi/3; -pi/2 pi/2; -pi pi; ...
+    -pi/2 pi/2; -pi pi; -pi/2 pi/2];
+expected_planar = [-pi pi; -pi/2 pi/2];
 if ~isequal(size(p.geometry.spatial_ranges),size(expected_spatial)) || ...
         any(abs(p.geometry.spatial_ranges-expected_spatial) > s.equality_tolerance,'all')
     issues{end+1} = 'spatial_ranges do not match the approved P2 definition'; 
