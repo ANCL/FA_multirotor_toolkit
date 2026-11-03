@@ -1,0 +1,5 @@
+objective,found,normalization_group,objective_value,analytical_bound,relative_gap_percent,feasible_cases,selected_file
+r_F0,1,negative,0.816011002048564,0.816496580927726,0.0594710241909201,2,r_F0_negative_sqp.mat
+sigma_min,1,negative,1.41421154955331,1.4142135623731,0.000142327851760153,2,sigma_min_negative_sqp.mat
+condition_number,1,negative,1.00000267625958,1,0.000267625958061402,2,condition_number_negative_sqp.mat
+hover_effort,1,negative,0.166674338271181,0.166666666666667,0.00460296270832217,2,hover_effort_negative_sqp.mat

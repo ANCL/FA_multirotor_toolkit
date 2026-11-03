@@ -1,0 +1,4 @@
+objective,accepted,sqp_attempts,qualifying_attempts,duplicates,failed,consecutive_without_new,median_gap_percent,stop_reason
+r_F0,1000,37913,1000,0,36904,0,0.067437327670219,target reached
+sigma_min,1000,2272,1151,151,1117,0,0.000284965088284524,target reached
+condition_number,1000,2819,1187,187,1626,0,0.000839354721748897,target reached

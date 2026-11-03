@@ -1,0 +1,20 @@
+# Operating-system and editor artifacts
+Thumbs.db
+**/Thumbs.db
+.DS_Store
+Desktop.ini
+*.asv
+*.m~
+*~
+*.swp
+*.swo
+*.tmp
+*.bak
+.vscode/
+.idea/
+
+# Temporary generated folders
+__pycache__/
+*.pyc
+
+# Keep scientific results: DO NOT ignore results/, *.mat, *.csv, *.pdf, *.png

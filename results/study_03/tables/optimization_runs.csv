@@ -1,0 +1,9 @@
+parameterization,objective,repeat,seed,file_name,status,objective_value,max_constraint_violation,elapsed_seconds,selected_solver
+p2,r_F0,1,20261104,p2_r_F0_01_sqp.mat,feasible,0.81648274469279,0,8.3508146,sqp
+p2,sigma_min,1,20262104,p2_sigma_min_01_sqp.mat,feasible,1.4142135544799,0,4.941897,sqp
+p2,condition_number,1,20263104,p2_condition_number_01_sqp.mat,feasible,1.00006016278788,0,1.5515537,sqp
+p2,hover_effort,1,20264104,p2_hover_effort_01_sqp.mat,feasible,0.166666667222226,0,2.3493314,sqp
+p3,r_F0,1,20271104,p3_r_F0_01_sqp.mat,feasible,0.816496552209071,0,1.3289109,sqp
+p3,sigma_min,1,20272104,p3_sigma_min_01_sqp.mat,feasible,1.24325165317605,0,0.978555,sqp
+p3,condition_number,1,20273104,p3_condition_number_01_sqp.mat,feasible,1.3730228768846,0,1.5232947,sqp
+p3,hover_effort,1,20274104,p3_hover_effort_01_sqp.mat,feasible,0.166666667222222,0,0.2730863,sqp
