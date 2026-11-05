@@ -1,74 +1,89 @@
 # Fully Actuated Multirotor Toolkit
 
-MATLAB implementation for modeling, analyzing, and optimizing **fixed-configuration, six-rotor fully actuated multirotors**. The toolkit supports an unrestricted geometry family (**P1**), a six-variable structured family (**P2**), and a two-variable planar subfamily (**P3**). It includes the completed numerical Studies 01–04 and their saved results.
+MATLAB tools for analyzing and optimizing fixed-configuration, six-rotor fully actuated multirotors. This repository accompanies *Design Optimization of Fixed-Configuration Fully Actuated Multirotors* and includes the source code, numerical results, and figures used in the paper.
 
-The repository is intended to support reproducibility of the numerical investigations accompanying the associated research manuscript. Numerical attainment of an analytical bound and a sampled Pareto frontier do **not** by themselves establish global optimality or exhaustive characterization of all attaining geometries.
+The toolkit can be used in two ways: to analyze an individual rotor configuration or to inspect and reproduce the paper's four numerical studies.
 
-## Requirements
+## Getting started
 
-- MATLAB with **Optimization Toolbox** (`fmincon`) for the SQP study runners.
-- **Parallel Computing Toolbox** is optional for parallel execution of independent cases/attempts. See each `config/study_XX_settings.m` file.
-- **Global Optimization Toolbox** (`ga`, `patternsearch`) is required **only** for the optional GA implementation and `verify_stage_03.m`. The completed scientific studies use SQP.
-- A MATLAB release supporting the language features used in the source (tables, local functions, `exportgraphics`, etc.). No specific release has been independently certified.
-
-Run commands from the repository root in MATLAB:
+Open the repository's root folder in MATLAB and run:
 
 ```matlab
 setup_project();
-verify_stage_01();   % Geometry and allocation invariants
-verify_stage_02();   % Metrics, hover, feasibility and invariance
 ```
 
-`verify_stage_03()` additionally tests the optional GA + pattern-search solver; it is **not necessary** to inspect or summarize the saved SQP studies.
+Single-configuration analysis and reporting from the supplied study results do not require running an optimizer. Repeating the optimization studies requires MATLAB's **Optimization Toolbox** (`fmincon`). The **Parallel Computing Toolbox** is optional. The alternative GA/pattern-search solver requires the **Global Optimization Toolbox**.
 
-## Geometry and metrics
+## Analyze a configuration
 
-- **P1**: 28 independent design variables with positive/negative normalization groups. One reference rotor has radius 1 and position azimuth 0; the remaining geometry is unrestricted within the stated design bounds. See `core/geometry/` and `p1_bounds.m`.
-- **P2**: Structured six-variable geometry (`make_p2_geometry`).
-- **P3**: Reduced planar two-variable geometry (`make_p3_geometry`).
-- **Metrics**: zero-moment force authority `r_F0`, minimum singular value `sigma_min`, allocation condition number `condition_number`, and hover effort `hover_effort`.
-- **Physical checks**: allocation matrix, full actuation, admissible geometry, hover feasibility and force/wrench feasibility are implemented under `core/`.
-
-For a single configuration:
+The analysis functions accept a six-rotor geometry defined by rotor positions and thrust directions. You can construct one using the supplied parameterizations or work directly with a geometry structure.
 
 ```matlab
 setup_project();
-model = default_model();
-numerics = default_numerics();
+
+% Example: planar configuration (angles in radians)
 geometry = make_p3_geometry([0.5; 0.2]);
-metrics = evaluate_design(geometry, model, numerics);
+
+% Allocation matrix, actuation, hover, and performance measures
+report = analyze_configuration(geometry);
+report.metrics
+
+% Feasible force and torque sets
+sets = analyze_feasible_sets(geometry);
+
+% Geometry and feasible-set plots
+plot_multirotor_configuration(geometry);
+plot_feasible_set(sets, struct('mode', 'force'));
+plot_feasible_set(sets, struct('mode', 'torque'));
+
+% Feasibility of a requested body-frame wrench
+wrench = [0; 0; -1; 0; 0; 0];
+allocation = analyze_wrench(geometry, wrench);
 ```
 
-## Completed numerical studies
+The four performance measures are **zero-moment force authority** (`r_F0`), **minimum singular value** (`sigma_min`), **allocation condition number** (`condition_number`), and **hover effort** (`hover_effort`). The analysis also provides full-actuation and hover-feasibility information, actuator inputs, and the allocation matrix. Wrench components are ordered `[Fx; Fy; Fz; Mx; My; Mz]` in the body frame.
 
-| Study | Scope | Saved numerical investigation |
+Three geometry families are provided:
+
+| Family | Geometry | Design variables |
+| --- | --- | ---: |
+| **P1** | Unrestricted rotor-arm and thrust-direction geometry | 28 |
+| **P2** | Spatially symmetric arrangement of two rotor triads | 6 |
+| **P3** | Planar arrangement with shared installation angles | 2 |
+
+The geometry constructors are in [`core/geometry/`](core/geometry/); individual-analysis functions are in [`analyses/`](analyses/). Model assumptions and numerical tolerances are set in [`config/default_model.m`](config/default_model.m) and [`config/default_numerics.m`](config/default_numerics.m).
+
+## Numerical studies
+
+Saved optimization results are supplied under [`results/`](results/). The studies cover unrestricted design optimization, the multiplicity of optimal geometries, reduced geometric parameterizations, and the trade-off between force authority and hover effort.
+
+| Study | Scope | Main output |
 | --- | --- | --- |
-| **01** | Unrestricted P1, four objectives × two normalization groups | Eight independent multistart SQP cases, 16 starts per case |
-| **02** | Unrestricted P1 attainment/discovery | 1,000 accepted, geometrically distinct near-bound configurations for **each** of `r_F0`, `sigma_min`, and `condition_number` (3,000 total) |
-| **03** | Structured P2 versus P3 | Eight reported cases: four objectives × two parameterizations, 16 SQP starts per case |
-| **04** | Unrestricted P1 force-authority/hover-effort trade-off only | 41 authority thresholds × two normalization groups = **82** saved cases; saved report has **80 feasible** cases |
+| **01 — Optimization objectives** | Optimize four performance objectives independently using unrestricted P1 geometry. | [Objective summary](results/study_01/tables/objective_summary.csv) |
+| **02 — Multiple optima** | Examine geometrically distinct configurations attaining the force-authority, singular-value, and condition-number bounds within numerical tolerance. | [Geometric analysis](results/study_02/tables/study02_manuscript_summary.csv) |
+| **03 — Reduced parameterizations** | Compare the six-variable spatial P2 family with the two-variable planar P3 family. | [Performance comparison](results/study_03/tables/parameterization_comparison.csv) |
+| **04 — Authority–effort trade-off** | Minimize hover effort subject to increasing force-authority requirements. | [Trade-off values](results/study_04/tables/authority_effort_key_points.csv) · [Figure](results/study_04/figures/pareto_authority_effort.pdf) |
 
-Study 02 uses independently randomized SQP attempts and a physical distinctness threshold of `0.05`; see `config/study_02_settings.m` for acceptance and stopping criteria. Study 04's saved authority–effort plot reports **406 feasible endpoint records and 50 plotted frontier representatives**. These are records/representatives, not 406 independent globally optimal designs. Study 04's reported feasible-case counts and plotted-front counts are generated with different candidate pools and filtering rules.
+### Regenerate tables and figures
 
-All studies use the existing `config/`, `core/`, `solvers/`, and `studies/` APIs. Their current study settings select `sqp`; the generic GA/pattern-search engine remains as an optional, reusable solver, **not** as a separate Study 02 GA experiment.
-
-## Inspect saved results without rerunning optimizations
+The following commands read the saved results; **they do not rerun optimization**:
 
 ```matlab
 setup_project();
-
-s01 = summarize_study_01();
-s02 = summarize_study_02();
-a02 = analyze_study_02();
-s03 = summarize_study_03();
-f03 = plot_study_03();
-s04 = summarize_study_04();
-f04 = plot_study_04();
+summarize_study_01();
+summarize_study_02();
+analyze_study_02();
+summarize_study_03();
+plot_study_03();
+summarize_study_04();
+plot_study_04();
 ```
 
-The summarizers and plotters read saved results and export CSVs and figures. They can overwrite **derived** report files, but they do not relaunch optimization. `summarize_study_01()` and `summarize_study_03()` also refresh `selected_designs.mat` from saved run files. The `analyze_study_02()` function performs additional analysis of the accepted geometry archive.
+Study 02 includes 1,000 geometrically distinct accepted configurations for each of its three objectives. Study 04's key-point report computes hover-effort reductions relative to the maximum-authority configuration selected in Study 01, including the **55.8% reduction for a 20% compromise in force authority**. Run the summaries in the order above because this report uses the Study 01 reference table.
 
-To rerun or extend numerical studies **deliberately**, use:
+### Run or extend an optimization study
+
+To start or resume a numerical search deliberately, use the corresponding runner:
 
 ```matlab
 run_study_01();
@@ -77,37 +92,21 @@ run_study_03();
 run_study_04();
 ```
 
-The runners are restartable and use saved results where their consistency checks permit. Rerunning them may initiate optimization if cases are missing or settings have changed; preserve `results/` and avoid changing seeds, thresholds, solver settings, or case names when seeking to reproduce the existing archive. In particular, Study 02 is a substantial randomized search and should not be restarted casually.
+Solver settings, design constraints, random seeds, and study-specific tolerances are defined in [`config/`](config/). The runners may be computationally expensive; the saved `.mat` archives are sufficient for inspecting the reported results.
 
-## Directory layout
+## Repository structure
 
-```text
-config/               Model, numerical defaults and study settings
-core/geometry/        Geometry families, parameterization and equivalence
-core/model/           Allocation and hover models
-core/metrics/         Performance metrics
-core/feasibility/     Feasible wrenches and force sets
-core/optimization/    Objective, constraints and solver orchestration
-core/plotting/        Multirotor configuration drawings
-solvers/              SQP implementation and optional GA selection
-analyses/             Single-design analysis functions
-studies/              Study runners, summaries and publication plots
-results/study_01/     Saved P1 optimization cases, selections and CSVs
-results/study_02/     3,000 accepted P1 configurations, analysis and figures
-results/study_03/     Saved P2/P3 cases and selected-geometry figures
-results/study_04/     Authority–effort P1 cases, tables and Pareto figure
-```
+| Directory | Contents |
+| --- | --- |
+| [`analyses/`](analyses/) | Single-configuration, feasible-set, and wrench analysis |
+| [`core/`](core/) | Geometry, allocation, feasibility, metrics, and plotting |
+| [`config/`](config/) | Physical model, numerical settings, and study configurations |
+| [`solvers/`](solvers/) | Numerical optimization methods |
+| [`studies/`](studies/) | Study runners, summaries, and figure generation |
+| [`results/`](results/) | Saved MATLAB data, numerical tables, and figures |
 
-`results/` includes scientific `.mat` archives, derived `.csv` summaries, and PDF/PNG figures. The `.gitignore` **does not exclude** these results. Do not replace original MAT files with derived CSVs: the MAT archive contains the saved optimization states.
+## Reproducibility and interpretation
 
-## Numerical interpretation and reproducibility
+The reported attainment of analytical bounds is numerical and subject to the specified tolerances. The configurations collected in Study 02 are distinct under the implemented geometry-distance criterion; this does not establish an exhaustive characterization of all optimal geometries. Study 04 provides a sampled authority–effort frontier, not a proof of the complete Pareto set. The `.mat` files preserve the numerical archives; the reporting routines regenerate derived `.csv` tables and figures.
 
-- The solver is randomized multistart SQP (`solvers/optimize_design_sqp.m`) with deterministic seed specifications in the corresponding study configurations.
-- Feasibility and objective values are reevaluated by the reporting functions using `core/` utilities; different studies intentionally use different validation tolerances.
-- Study 02's accepted designs are distinct under the implemented geometric equivalence/distance criterion, not necessarily members of different connected optimality families.
-- Study 04's front is a **numerically sampled** force-authority/hover-effort trade-off, not a proof of a globally complete Pareto set. Its plot is generated by the standalone `studies/plot_study_04.m`, which uses local plotting helpers.
-- CSV files generated before a local directory rename can contain absolute output paths; regenerate *derived* CSVs from the final repository directory if portable paths are needed. Do not edit saved MAT results for that purpose.
-
-## Source of truth
-
-Study settings and MATLAB source govern computational behavior. The README documents the snapshot at preparation time; if settings change in later experiments, update this table and regenerate the relevant reports. Citation, license and associated-manuscript metadata should be supplied by the repository maintainers before a public release.
+When citing the software, please reference *Design Optimization of Fixed-Configuration Fully Actuated Multirotors*. Publication details will be added once available.
