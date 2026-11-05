@@ -1,0 +1,3 @@
+authority_compromise_percent,authority_retained_percent,reference_authority,reference_hover_effort,target_authority,interpolated_hover_effort,hover_effort_reduction_percent
+20,80,0.816011002048564,1.49999085460365,0.652808801638851,0.662644784320049,55.8234117037238
+7.5,92.5,0.816011002048564,1.49999085460365,0.754810176894922,1.05302406531419,29.7979676287803

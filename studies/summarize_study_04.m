@@ -76,6 +76,53 @@ end
 coverage = table(label,total,feasible,sampled_nondominated, ...
     'VariableNames',{'pair','cases','feasible','sampled_nondominated'});
 writetable(coverage,fullfile(tables_folder,'pareto_coverage.csv'));
+% Report authority-effort trade-off from saved results.
+ref = readtable(fullfile(root,'results','study_01', ...
+    'tables','cross_objective.csv'));
+ref = ref(strcmp(ref.optimized_objective,'r_F0'),:);
+assert(height(ref)==1 && ref.valid, ...
+    'Valid Study 01 authority reference required.');
+
+t = cases(strcmp(cases.pair,'authority_effort') & ...
+    strcmp(cases.status,'feasible'),:);
+
+thresholds = unique(t.r_threshold);
+r = zeros(numel(thresholds),1);
+e = r;
+
+for k = 1:numel(thresholds)
+    rows = t(t.r_threshold==thresholds(k),:);
+    [e(k),j] = min(rows.hover_effort);
+    r(k) = rows.r_F0(j);
+end
+
+[r,idx] = sort(r);
+e = e(idx);
+
+authority_retained_percent = [80; 92.5];
+authority_compromise_percent = 100-authority_retained_percent;
+reference_authority = repmat(ref.r_F0,2,1);
+reference_hover_effort = repmat(ref.hover_effort,2,1);
+target_authority = reference_authority .* ...
+    authority_retained_percent/100;
+interpolated_hover_effort = interp1(r,e,target_authority,'linear');
+
+assert(all(isfinite(interpolated_hover_effort)), ...
+    'Trade-off interpolation outside sampled range.');
+
+hover_effort_reduction_percent = 100 * ...
+    (1-interpolated_hover_effort./reference_hover_effort);
+
+tradeoff = table(authority_compromise_percent, ...
+    authority_retained_percent,reference_authority, ...
+    reference_hover_effort,target_authority, ...
+    interpolated_hover_effort,hover_effort_reduction_percent);
+
+writetable(tradeoff,fullfile(tables_folder, ...
+    'authority_effort_key_points.csv'));
+
+fprintf('\nAUTHORITY-EFFORT TRADE-OFF\n');
+disp(tradeoff);
 summary = struct('output_folder',out,'cases',cases, ...
     'nondominated',nondominated,'coverage',coverage);
 fprintf('\nSTUDY 04 | %d/%d saved | %d feasible\n', ...
