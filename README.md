@@ -1,4 +1,4 @@
-﻿# Fully Actuated Multirotor Toolkit
+# Fully Actuated Multirotor Toolkit
 
 MATLAB tools for analyzing and optimizing fixed-configuration, six-rotor fully actuated multirotors. This repository accompanies *Design Optimization of Fixed-Configuration Fully Actuated Multirotors* and includes the source code, numerical results, and figures used in the paper.
 
@@ -59,10 +59,10 @@ Saved optimization results are supplied under [`results/`](results/). The studie
 
 | Study | Scope | Main output |
 | --- | --- | --- |
-| **01 â€” Optimization objectives** | Optimize four performance objectives independently using unrestricted P1 geometry. | [Objective summary](results/study_01/tables/objective_summary.csv) |
-| **02 â€” Multiple optima** | Examine geometrically distinct configurations attaining the force-authority, singular-value, and condition-number bounds within numerical tolerance. | [Geometric analysis](results/study_02/tables/study02_manuscript_summary.csv) |
-| **03 â€” Reduced parameterizations** | Compare the six-variable spatial P2 family with the two-variable planar P3 family. | [Performance comparison](results/study_03/tables/parameterization_comparison.csv) |
-| **04 â€” Authorityâ€“effort trade-off** | Minimize hover effort subject to increasing force-authority requirements. | [Trade-off values](results/study_04/tables/authority_effort_key_points.csv) Â· [Figure](results/study_04/figures/pareto_authority_effort.pdf) |
+| **01 — Optimization objectives** | Optimize four performance objectives independently using unrestricted P1 geometry. | [Objective summary](results/study_01/tables/objective_summary.csv) |
+| **02 — Multiple optima** | Examine geometrically distinct configurations attaining the force-authority, singular-value, and condition-number bounds within numerical tolerance. | [Geometric analysis](results/study_02/tables/study02_manuscript_summary.csv) |
+| **03 — Reduced parameterizations** | Compare the six-variable spatial P2 family with the two-variable planar P3 family. | [Performance comparison](results/study_03/tables/parameterization_comparison.csv) |
+| **04 — Authority–effort trade-off** | Minimize hover effort subject to increasing force-authority requirements. | [Trade-off values](results/study_04/tables/authority_effort_key_points.csv) · [Figure](results/study_04/figures/pareto_authority_effort.pdf) |
 
 ### Regenerate tables and figures
 
@@ -107,11 +107,10 @@ Solver settings, design constraints, random seeds, and study-specific tolerances
 
 ## Reproducibility and interpretation
 
-The reported attainment of analytical bounds is numerical and subject to the specified tolerances. The configurations collected in Study 02 are distinct under the implemented geometry-distance criterion; this does not establish an exhaustive characterization of all optimal geometries. Study 04 provides a sampled authorityâ€“effort frontier, not a proof of the complete Pareto set. The `.mat` files preserve the numerical archives; the reporting routines regenerate derived `.csv` tables and figures.
+The reported attainment of analytical bounds is numerical and subject to the specified tolerances. The configurations collected in Study 02 are distinct under the implemented geometry-distance criterion; this does not establish an exhaustive characterization of all optimal geometries. Study 04 provides a sampled authority–effort frontier, not a proof of the complete Pareto set. The `.mat` files preserve the numerical archives; the reporting routines regenerate derived `.csv` tables and figures.
 
 When citing the software, please reference *Design Optimization of Fixed-Configuration Fully Actuated Multirotors*. Publication details will be added once available.
 
 ## License
 
 MIT - see [LICENSE](LICENSE).
-
